@@ -12,6 +12,7 @@
   - [User enumeration](#user-enumeration)
   - [IDOR](#idor)
   - [File inclusion](#file-inclusion)
+  - [SSRF](#ssrf)
 - [Usefull Windows commands](#usefull-windows-commands)
 
 # Getting file into target
@@ -149,7 +150,17 @@ Insecure Direct Object Request
 
 - null byte = %00, injection (terminate string)
 - curl -X METHOD -d [data]
-- 
+
+## SSRF
+- Server-Side Request Fogery
+- Where? 
+  - Full Paramter in the address bar ("value="http..../name")
+  - partial URL
+  - Blind: requestbin.com
+  - ../ => directory trasversal
+  - &x= ==> ignore everything that comes after that
+
+
 # Usefull Windows commands
 - Find file: wmic find users || dir /p datei.txt (find file)
 - Windows: get file 
