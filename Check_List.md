@@ -16,6 +16,11 @@
   - [XSS](#xss)
   - [Command injection](#command-injection)
   - [database](#database)
+- [burpsuite](#burpsuite)
+  - [Repeater](#repeater)
+  - [Intruder](#intruder)
+    - [Macros](#macros)
+  - [Decoder, Comparer, Sequencer](#decoder-comparer-sequencer)
 - [Usefull Windows commands](#usefull-windows-commands)
 
 # Getting file into target
@@ -213,7 +218,50 @@ Insecure Direct Object Request
 admin123' UNION SELECT SLEEP(5),2 where database() like 'u%';--
 admin123' UNION SELECT SLEEP(5),2;--
 
-https://10-10-109-51.p.thmlabs.com
+# burpsuite
+
+## Repeater
+- manipulate the request
+- check response
+- 
+## Intruder
+- brute force and fuzzing
+- Positions: where to insert payload
+- Attack types 
+  - **sniper**: one set of payload (wordlist) / i.g. username/password
+  - **battering ram**: same payload in every position
+  - **pitchfork**: several sniper at the same time, one payload per position. For credentials
+  - **Clusterbomb**: multiple payload, individual iteration, every combination
+
+- Payload: define list file, regex or other condition
+- Filtering results: 
+  - status (200, 401, 302)
+  - size: sucess 400 bytes, failed 600 bytes
+
+- CSRF Token: 
+  - token changed by every update of the page
+  - define macros
+  
+### Macros
+- Repeated actions
+- project options + add + selection action to be done
+- Session handling rule: select macro + select where to do it (intruder, repeater, target) + update only "name of the field", 
+
+## Decoder, Comparer, Sequencer
+- Decoder
+  - Encode e decode data
+  - hashsums, ASCII, binary, hexa, etc
+
+- Comparer
+  - compare data
+  - compare responses after logins attempt
+
+- Sequencer
+  - measure entropy of tokens
+  - analyze after an amount of tokens
+  - Auto Analyze = capture every 2000 requests
+  
+
 # Usefull Windows commands
 - Find file: wmic find users || dir /p datei.txt (find file)
 - Windows: get file 
