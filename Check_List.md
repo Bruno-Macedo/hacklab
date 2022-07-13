@@ -1,3 +1,6 @@
+- [Net Sec](#net-sec)
+  - [passive](#passive)
+  - [active](#active)
 - [Getting file into target](#getting-file-into-target)
 - [Working with executables](#working-with-executables)
   - [finding them](#finding-them)
@@ -7,7 +10,6 @@
   - [Recoinaissance](#recoinaissance)
 - [Basic Enum](#basic-enum)
 - [Web hacking](#web-hacking)
-  - [passive](#passive)
   - [Subdomain](#subdomain)
   - [Wildcards](#wildcards)
   - [User enumeration](#user-enumeration)
@@ -16,6 +18,7 @@
   - [SSRF](#ssrf)
   - [XSS](#xss)
   - [Command injection](#command-injection)
+  - [Authentication](#authentication)
   - [database](#database)
     - [Steps](#steps)
     - [UNION](#union)
@@ -31,6 +34,19 @@
     - [Macros](#macros)
   - [Decoder, Comparer, Sequencer](#decoder-comparer-sequencer)
 - [Usefull Windows commands](#usefull-windows-commands)
+
+
+# Net Sec
+
+## passive
+- whois
+- nslookup -type=?? URL SERVER
+- dig SERVER URL TYPE
+- shodan.io [check black friday - https://www.shodan.io/]
+- 
+## active
+- 
+
 
 # Getting file into target
 - Option 1 - starting local server
@@ -85,11 +101,22 @@
 - db_nmap [--script vuln] -sC (common scripts) -A (OS) -sS (Syn) -p- (all ports) -sV (versions) -Pn (no ping)
   - --scrip vuln: most commom vulnerability scrips, CVEs will be shown
   - -sC: other common scripts
-  - -A: basic scann with OS include
+  - -A: basic scan with OS include
+    - -sV -O -sC [default scripts] --traceroute
   - -sS: syn
   - -p-: all ports
-  - -sV: version of services vound
+  - -sV: version of services found
   - -Pn: no ping
+  - -T[0-5] = Control speed
+  - -S [Spoofed] -e [INTERFACE] -Pn [NO Ping] => we need to monitor the traffic
+  - --spoof-mac [MAC]
+  - -f[-f] => fragment
+  - --reason / -v / -vv / -d / -dd
+
+
+- Output
+  - -oN = normal output
+  - -oG = grep output
 
 - hosts: list hosts from db
   - -a: add
@@ -101,6 +128,7 @@
  - Common services: http, ftp, smb, ssh, rdp
 
 # Basic Enum
+
 - enum4linux IP_
 - metasploit (smb/enum || ssh/enum)
 - gobuster / ffuf
@@ -113,13 +141,8 @@
 - PowerSploit (windows)
   - in the target 
 
-# Web hacking
 
-## passive
-- whois
-- nslookup -type=?? URL SERVER
-- dig SERVER URL TYPE
-- 
+# Web hacking
 
 ## Subdomain
 - search certificates: 
@@ -199,6 +222,16 @@ Insecure Direct Object Request
 - verbose: output/feedback
 - $payload = "\x2f\x65\x74\x2f\x70\x61\x73\x73\x77\x64"
 
+## Authentication
+- Brute force: 
+  - in Header ==> **X-Forwarded-For**: [IP] ==> avoid IP blocking
+  - intercalate correct login AND brute force (intruder)
+
+- Blocked account
+  - enumerate username until valid one ==> NULL payload for password + several tries until get different response
+  - try password with these usernames ==> grep warning for incorrect passwords
+
+
 ## database
 
 ### Steps
@@ -215,6 +248,7 @@ Insecure Direct Object Request
 - Bypass login: 
   - admin'-- [everything here is a comment and will be ignored]
   - or 1 = 1'-- ==> will always return true
+  - header:  X-Forwarded-For: IP
 
 ### UNION
 - join two or more tables + number o columns and data type muss be equal
