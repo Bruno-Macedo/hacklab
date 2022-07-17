@@ -1,6 +1,7 @@
 - [Net Sec](#net-sec)
   - [passive](#passive)
   - [active](#active)
+    - [Hydra](#hydra)
 - [Getting file into target](#getting-file-into-target)
 - [Working with executables](#working-with-executables)
   - [finding them](#finding-them)
@@ -45,7 +46,16 @@
 - shodan.io [check black friday - https://www.shodan.io/]
 - 
 ## active
-- 
+- interacting
+- nmap
+- https://www.rapid7.com/db/
+- searchsploit
+  
+
+### Hydra
+- hydra -l username -P wordlist.txt server service
+- -d = debug
+- -vv = verbpse
 
 
 # Getting file into target
@@ -98,9 +108,12 @@
 
 ## Recoinaissance
 
-- db_nmap [--script vuln] -sC (common scripts) -A (OS) -sS (Syn) -p- (all ports) -sV (versions) -Pn (no ping)
-  - --scrip vuln: most commom vulnerability scrips, CVEs will be shown
+- db_nmap 
+  - --scrip *script_name*: most commom vulnerability scrips, CVEs will be shown
+    - https://www.exploit-db.com/
+    - https://nvd.nist.gov/vuln/full-listing
   - -sC: other common scripts
+  - -sS (Syn), -sA(Ack)
   - -A: basic scan with OS include
     - -sV -O -sC [default scripts] --traceroute
   - -sS: syn
