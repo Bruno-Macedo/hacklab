@@ -1,9 +1,14 @@
 - [Net Sec](#net-sec)
   - [passive](#passive)
   - [active](#active)
-    - [Hydra](#hydra)
+    - [](#)
   - [Shell](#shell)
     - [Priv Escalation](#priv-escalation)
+      - [shared libraries](#shared-libraries)
+      - [capabilities](#capabilities)
+      - [Cronjobs](#cronjobs)
+      - [PATH](#path)
+      - [NFS](#nfs)
 - [Getting file into target](#getting-file-into-target)
 - [Working with executables](#working-with-executables)
   - [finding them](#finding-them)
@@ -54,7 +59,9 @@
 - searchsploit
   
 
-### Hydra
+### 
+
+
 - hydra -l username -P wordlist.txt server service
 - -d = debug
 - -vv = verbpse
@@ -87,13 +94,36 @@
     - find / = directory config
     - -perm -u=s = SUID
     - -name perl*, python*, gcc* = dev tools
-    - -type f -perm -04000 -ls 2>/dev/null ==> *SUID or SGID* files
+    - find / -type f -perm -04000 -ls 2>/dev/null ==> *SUID or SGID* files
+    - find / -writable 2>/dev/null ==> find writable folders
 
-  - Check shared libraries sudo -l ==> LD_PRELOAD ==>   https://rafalcieslak.wordpress.com/2013/04/02/dynamic-linker-tricks-using-ld_preload-to-cheat-inject-features-and-investigate-programs/
+#### shared libraries 
+- sudo -l ==> LD_PRELOAD ==>   
+- https://rafalcieslak.wordpress.com/2013/04/02/dynamic-linker-tricks-using-ld_preload-to-cheat-inject-features-and-investigate-programs/
+- ldd = shared object dependencies
 
-  - capabilities
-    - getcap -r /
+#### capabilities
+- getcap -r / 2>/dev/null
 
+#### Cronjobs
+- privilege of the owner
+- find script with root privilege
+- /etc/crontab
+- check if file has no fullpath + create own script with reverse shell
+
+#### PATH
+- echo $PATH
+- export PATH=/path/to/folder:$PATH
+- PATH=$PATH:/path/to/folder
+- find / -writable 2>/dev/null ==> find writable folders
+  - find / -writable 2>/dev/null | grep usr | cut -d "/" -f 2,3 | sort -u
+  - find / -writable 2>/dev/null | cut -d "/" -f 2,3 | grep -v proc | sort -u ==> exclude running process
+
+#### NFS
+- find root key + connect
+- /etc/exports ==> find no_root_squash = create x with SUID
+- showmount -e target-IP
+- mount no_root_squash from /etc/exports
 
 # Getting file into target
 - Option 1 - starting local server
