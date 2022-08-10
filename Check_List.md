@@ -95,6 +95,7 @@
     - -perm -u=s = SUID
     - -name perl*, python*, gcc* = dev tools
     - find / -type f -perm -04000 -ls 2>/dev/null ==> *SUID or SGID* files
+    - find / -perm -u=s -type f 2>/dev/null
     - find / -writable 2>/dev/null ==> find writable folders
 
 #### shared libraries 
