@@ -48,7 +48,9 @@
     - [getting packages](#getting-packages)
     - [weak IV traffic](#weak-iv-traffic)
     - [evil twin](#evil-twin)
-- [Active Directory](#active-directory)
+- [Attack strategies](#attack-strategies)
+  - [Active Directory](#active-directory)
+  - [kereberos](#kereberos)
 
 
 # Net Sec
@@ -198,7 +200,6 @@
   - -sS (Syn), -sA(Ack)
   - -A: basic scan with OS include
     - -sV -O -sC [default scripts] --traceroute
-  - -sS: syn
   - -p-: all ports
   - -sV: version of services found
   - -Pn: no ping
@@ -530,7 +531,9 @@ admin123' UNION SELECT SLEEP(5),2;--
 - deauthenticate client
 - force clien to connect to fake ap
 
-# Active Directory
+# Attack strategies
+
+## Active Directory
 - port 139/445
 - Enum4linux = Enumerate
 - kerbrute = brute force in kerberus active directory
@@ -542,3 +545,11 @@ admin123' UNION SELECT SLEEP(5),2;--
   - secretsdump.py -dc-ip ip host.local/user@ip
 - Pass the hash
   - evil-winrm -i IP -u USERNAME -H hash
+
+## kereberos
+- authentication service
+- ticket system
+- Enumerate users
+  - kerbrute userenum -d domain --dc domain string wordlist.txt
+- Rubel.exe (in the victim's machine) to find hashes
+- 
