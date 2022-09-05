@@ -67,6 +67,9 @@
     - [proxy](#proxy)
   - [GIt enumeration](#git-enumeration)
     - [Stabilize and Post Exploit windows](#stabilize-and-post-exploit-windows)
+    - [Command and Control](#command-and-control)
+      - [Empire (windows) / Starkiller](#empire-windows--starkiller)
+      - [Starkiller](#starkiller)
 
 
 # Net Sec
@@ -765,4 +768,40 @@ admin123' UNION SELECT SLEEP(5),2;--
   - net user USERNAME PASS /add
   - net localgroup Administrators Username /add
 
+### Command and Control
+- Consolidate attack + simplifiy post exploitation
+  
+#### Empire (windows) / Starkiller
+- powershell-empire server + client
+  - different location:
+    - /usr/share/powershell-empire/empire/client/config.yaml
+    - connect HOSTNAME --username=USERNAME --password=PASSWORD
+- Starkiller: app
+  - user: empireadmin pass: password123
+- Listener: listen connection
+- Stargers: payloads for robust shell
+- Agents: sessions (like metasploit)
+- Modules (further agends)
 
+- Start listener
+  - uselistener NAME
+  - set OPTION VALUE
+  - execute
+  
+- Stagers
+  - usestager 
+  - Place payload + execute it
+  - interact NAME
+  - help = display commandos
+  
+
+- Starkiller
+  - GUI
+
+
+
+
+
+#### Starkiller
+- GUI
+- create listener
