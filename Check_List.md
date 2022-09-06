@@ -69,7 +69,7 @@
     - [Stabilize and Post Exploit windows](#stabilize-and-post-exploit-windows)
     - [Command and Control](#command-and-control)
       - [Empire (windows) / Starkiller](#empire-windows--starkiller)
-      - [Starkiller](#starkiller)
+        - [Hop Listener](#hop-listener)
 
 
 # Net Sec
@@ -651,6 +651,7 @@ admin123' UNION SELECT SLEEP(5),2;--
 -  tunnelling/proxying: route all traffic (a lot of traffic)
 -  port forwarding: create connection (few ports)
 -  ProxyChain
+-  firewall-cmd --zone=public --add-port PORT/tcp
 
 ### ssh
 - Port Forwarding
@@ -784,8 +785,8 @@ admin123' UNION SELECT SLEEP(5),2;--
 - Modules (further agends)
 
 - Start listener
-  - uselistener NAME
-  - set OPTION VALUE
+  - uselistener [NAME]
+  - set [OPTION_VALUE]
   - execute
   
 - Stagers
@@ -794,14 +795,25 @@ admin123' UNION SELECT SLEEP(5),2;--
   - interact NAME
   - help = display commandos
   
-
 - Starkiller
   - GUI
 
+##### Hop Listener
+- noo connection forwarding
+- create files copied across compromised to target = reference back to our listener
+- Every connection happens with the compromised who sends to the target
 
 
-
-
-#### Starkiller
-- GUI
-- create listener
+- listener [http_hop]
+  - .php files that need to be sent to compromised
+  - host: compromised
+  - redirectlistener: existing listener that is running
+  - port: the webserver will host the hop file in this port
+- Create Stager: 
+  - starger [multi/launcher]
+    - set listener
+- set files on jumpserver
+  - transfer created files to compromised server
+  - open port firewall
+  - make sure we have the access to the target
+  - use module to escalate privilege
