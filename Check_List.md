@@ -628,6 +628,11 @@ admin123' UNION SELECT SLEEP(5),2;--
 -  No dns if web: add to etc/hosts
 -  OS: mostly on the server than guessing from nmap
 -  get shell if possible + stabilize the shell
+   -  python3 -c 'import pty;pty.spawn("/bin/bash")' = better view
+   -  export TERM=xterm = commands like clear
+   -  ctr + z = back to our shel
+   -  stty raw -echo; fg = back to reverse shell
+   -  l
 -  get ssh keys
 
 -  using pre installed tools
@@ -817,3 +822,9 @@ admin123' UNION SELECT SLEEP(5),2;--
   - open port firewall
   - make sure we have the access to the target
   - use module to escalate privilege
+
+
+  - In the machine with evil-win open firewall port
+    - cd w
+    - chisel client => attacking
+    - chisel server => victim
