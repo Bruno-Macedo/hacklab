@@ -1,5 +1,6 @@
 - [Net Sec](#net-sec)
   - [passive](#passive)
+    - [recon-ng](#recon-ng)
   - [active](#active)
   - [Hydra](#hydra)
   - [Shell](#shell)
@@ -80,8 +81,38 @@
 - whois
 - nslookup -type=?? URL SERVER
 - dig SERVER URL TYPE
-- shodan.io [check black friday - https://www.shodan.io/]
-- 
+- host
+- Google Hacking Database
+  - [intitle:"index of" "nginx.log"](https://www.exploit-db.com/google-hacking-database)
+  - 
+- Google
+  - blabla site:
+  - filetype:pdf  inurl:www.google.de
+  - site:hs-worms.de filetype:docx
+  - *intitle:index.of site:*
+  - *intitle:login*
+  - https://web.dev/measure/
+  - robots.txt
+
+- Maltego
+  - graphical
+
+- DNS:
+  - shodan.io [check black friday - https://www.shodan.io/]
+  - https://viewdns.info/
+  - https://threatintelligenceplatform.com/
+
+ ### recon-ng
+- Workspace:
+  - workspace create NAME
+  - db schmea = check database
+- marketplace search MODULE
+  - info, install, remove MODULE
+- Modules
+  - module search/load  
+  - options list/set/unset
+
+
 ## active
 - interacting
 - nmap
