@@ -8,6 +8,7 @@
     - [hashcat](#hashcat)
     - [John](#john)
     - [Hydra](#hydra)
+  - [Phishing](#phishing)
   - [Shell](#shell)
     - [Priv Escalation](#priv-escalation)
       - [shared libraries](#shared-libraries)
@@ -210,6 +211,22 @@
 
 - SSH
   - -L [USER_LIST] -P [PASS_LIST] ssh://IP -v
+
+## Phishing
+- Steps
+  - register domain name
+  - ssl/tsl certificated
+  - email server/account
+  - Dns records
+  - web server
+
+- GoPhish
+  - manage phishing campaings
+
+- Droppers
+  - poison, downloaded file
+
+
 
 
 ## Shell
