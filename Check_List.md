@@ -10,7 +10,6 @@
     - [Hydra](#hydra)
   - [Phishing](#phishing)
   - [Lay of the Land](#lay-of-the-land)
-  - [Find AV](#find-av)
   - [Shell](#shell)
     - [Priv Escalation](#priv-escalation)
       - [shared libraries](#shared-libraries)
@@ -256,9 +255,13 @@
 
 - IDS, IPDS, Endpoint Detection and Response
 
-
-## Find AV
-- wmic
+- Enumerate services, hidden folders and process, shared files/printers
+- wmic product get name,version
+  - wmic service where "name like 'name'" get Name,Version,Pathname
+- get-ChildItem -Hidden -Path C:\Users\NANE
+- get-Process -Name
+- netstat -noa
+- net start
 
 
 ## Shell
@@ -682,7 +685,7 @@ admin123' UNION SELECT SLEEP(5),2;--
   - set-netFirewallprofile -Profile NAME,nAME,NAMe, -enables Flase
   - | select Displayname, Enables, Description
   - get-netfirewallrulle | select Fields
-  - get-MpThread: findings by Denfender
+  - get-MpThreat: findings by Denfender
 
 - Test Connection
   - Test-NetConnection / TCPClient
@@ -697,6 +700,15 @@ admin123' UNION SELECT SLEEP(5),2;--
   - reg query HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\WINEVT\Channels\Microsoft-Windows-Sysmon/Operational
   - findstr /si '<ProcessCreate onmatch="exclude">' C:\tools\*
 
+- Services
+  - wmic product get name,version
+    - wmic service where "name like 'name'" get Name,Version,Pathname
+  - get-ChildItem -Hidden -Path C:\Users\NANE
+  - get-Process
+    - -Name
+  - netstat -noa
+  - net start
+  - nslookup
 
 - findstr
 - Windows: get file 
@@ -876,6 +888,9 @@ admin123' UNION SELECT SLEEP(5),2;--
 -  using pre installed tools
    -  arp -a => arp neighbour cache
    -  netstat -an => open ports / connections
+      -  -a = all
+      -  -n = address and port
+      -  -o = process id
    -  /etc/hosts
    -  /etc/resolv.conf
    -  ifconfig - nmcli dev show / ipconfig /all
