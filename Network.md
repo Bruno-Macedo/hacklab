@@ -1,4 +1,3 @@
-- [Network Assesment](#network-assesment)
 - [Basic Steps](#basic-steps)
   - [active](#active)
   - [Metasploit with database](#metasploit-with-database)
@@ -21,7 +20,7 @@
 - [Git Enumeration](#git-enumeration)
 - [Antivirus Evasion](#antivirus-evasion)
   - [Cross compilation](#cross-compilation)
-  - [How AV Works](#how-av-works)# Network Assesment
+  - [How AV Works](#how-av-works)
 
 # Basic Steps
 - Enumerate
@@ -31,6 +30,7 @@
   - Publici interface?
   - git server ?
   - public IP
+    - arp
 - find services running, find cve for these services
 - stablish stable connection (pivoting): reverse shell, proxy, ssh, port forwarding, socat, sshuttle
 - get ssh key if they are available

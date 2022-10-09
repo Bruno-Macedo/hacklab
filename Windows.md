@@ -206,17 +206,7 @@
 
 ## BLOODHOUND
 - graphical interface
-- In- [WINDOWS](#windows)
-- [Commands](#commands)
-  - [Stabilize and Post Exploit windows](#stabilize-and-post-exploit-windows)
-- [ACTIVE DIRECTORY](#active-directory)
-  - [COMMANDS](#commands-1)
-- [KERBEROS](#kerberos)
-- [PERSISTANCE](#persistance)
-  - [POWERVIEW](#powerview)
-  - [BLOODHOUND](#bloodhound)
-  - [MIMIKATZ](#mimikatz)
-  - [create reverse shell](#create-reverse-shell) the target:
+- In the target:
   - Invoke-Bloodhound -CollectionMethod All -Domain CONTROLLER.local -ZipFileName loot.zip
 - in the attacker
   - neo4j console => database
