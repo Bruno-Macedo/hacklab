@@ -130,6 +130,11 @@
   - AD Domains: collection of components within AD
   - Forestr: domains trust each other
 
+- Steps
+  - get access to one account at least
+  - enumerate once inside
+  - phishing and OSINT
+
 - Accounts
   - Builin/Administrator = local admin
   - Domain Admin: all resources
@@ -137,6 +142,24 @@
   - schema admin: modify domain/forest
   - server operator: manage domain server
   - account operator: manage users
+
+## NTLM
+- New technology LAN Manager
+- Challenge-Response - Net-NTLM
+- security protocols for authentication
+- password spraying (one password, several users)
+
+## LDAP
+- Lightweight Directory Access Protocol
+- direct verify credentials
+- Pass-back
+  - rogue LDAP server
+  - OpenLDAP: install slapd ldap-utils && sudo systemctl enable slapd
+  - sudo dpkg-reconfigure -p low slapd
+  - downgrade own ldap server
+  - dn: cn=config
+replace: olcSaslSecProps
+olcSaslSecProps: noanonymous,minssf=0,passcred
 
 ## COMMANDS
 - systeminfo ==> command
