@@ -185,6 +185,18 @@ olcSaslSecProps: noanonymous,minssf=0,passcred
       - inject local admin
       - Exfiltrate credentials = Get-FindCredentials -WimFile FILE
 
+## Config Files
+- web config files
+- service
+- registry keys
+- centrally deployed applications
+- antivirus-files
+  - sqlitebrowser file.db
+- Tools
+  - seatbelt: https://github.com/GhostPack/Seatbelt
+
+
+
 ## COMMANDS
 - systeminfo ==> command
   - Os config + Domain
