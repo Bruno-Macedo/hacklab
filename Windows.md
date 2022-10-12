@@ -130,6 +130,10 @@
   - AD Domains: collection of components within AD
   - Forestr: domains trust each other
 
+
+## ENUMERATING
+
+## BREACHING
 - Steps
   - get access to one account at least
   - enumerate once inside
@@ -143,13 +147,13 @@
   - server operator: manage domain server
   - account operator: manage users
 
-## NTLM
+### NTLM
 - New technology LAN Manager
 - Challenge-Response - Net-NTLM
 - security protocols for authentication
 - password spraying (one password, several users)
 
-## LDAP
+### LDAP
 - Lightweight Directory Access Protocol
 - direct verify credentials
 - Pass-back
@@ -161,7 +165,7 @@
 replace: olcSaslSecProps
 olcSaslSecProps: noanonymous,minssf=0,passcred
 
-## Authentication Relays
+### Authentication Relays
 - SMB = Server Message Block
   - Communication Client-Server on Microsoft AD
 
@@ -170,7 +174,7 @@ olcSaslSecProps: noanonymous,minssf=0,passcred
   - race condition
   - Responder ==> intercept connections (similar to wifi)
 
-## MDT
+### MDT
 - Microsoft Deployment Toolkit
   - deploy images
   - MSCCM = Microsoft System Center COnfiguration Manager = updates
@@ -185,7 +189,7 @@ olcSaslSecProps: noanonymous,minssf=0,passcred
       - inject local admin
       - Exfiltrate credentials = Get-FindCredentials -WimFile FILE
 
-## Config Files
+### Config Files
 - web config files
 - service
 - registry keys
@@ -197,7 +201,7 @@ olcSaslSecProps: noanonymous,minssf=0,passcred
 
 
 
-## COMMANDS
+# COMMANDS
 - systeminfo ==> command
   - Os config + Domain
   - Domain = AD
