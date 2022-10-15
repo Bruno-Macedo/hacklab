@@ -177,34 +177,6 @@
   - Set-ADUser -ChangePasswordAtLogon $true -Identity sophie -Verbose
 
 
-
-
-## ENUMERATING
-- With GUI:
-  - xfreerdp /d:za.tryhackme.com /u:'kimberley.smith' /p:'Password!' /v:thmjmp1.za.tryhackme.com
-  - Microsoft Management COnsole (MMC)
-  
-- cmd
-  - net-command
-  - net user /domain
-    - net user.name /domain
-  - net group /domain
-    - net group "group-name" /domain
-  - net accounts /domain = password policy
-  
-- Powershell
-  - get-ADuser -Identity USER -Server SERVER -Properties *
-    - -Filter 'Name -like "*smt"'
-    - | Format-Table Name,Smt -A
-  - get-ADGroup
-  - Get-ADGroupMember
-  - Get-ADObject
-    - Get-ADObject -Filter 'badPwdCount -gt 0' -Server za.tryhackme.com
-  - get-Addomain
-  - Change
-    - set-ADAccountPassword
-
-
 ### Credential Injection
 - runas.exe
   - inject credential into memory
@@ -277,6 +249,49 @@ olcSaslSecProps: noanonymous,minssf=0,passcred
 - Tools
   - seatbelt: https://github.com/GhostPack/Seatbelt
 
+## ENUMERATING
+- With GUI:
+  - xfreerdp /d:za.tryhackme.com /u:'kimberley.smith' /p:'Password!' /v:thmjmp1.za.tryhackme.com
+  - Microsoft Management COnsole (MMC)
+  
+- cmd
+  - net-command
+  - net user /domain
+    - net user.name /domain
+  - net group /domain
+    - net group "group-name" /domain
+  - net accounts /domain = password policy
+  
+- Powershell
+  - get-ADuser -Identity USER -Server SERVER -Properties *
+    - -Filter 'Name -like "*smt"'
+    - | Format-Table Name,Smt -A
+  - get-ADGroup
+  - Get-ADGroupMember
+  - Get-ADObject
+    - Get-ADObject -Filter 'badPwdCount -gt 0' -Server za.tryhackme.com
+  - get-Addomain
+  - Change
+    - set-ADAccountPassword
+
+### BLOODHOUND
+- Sharphound
+  - Gather information
+  - Sharphound.exe --CollectionMethods <Methods> --Domain za.tryhackme.com --ExcludeDCs
+  - https://bloodhound.readthedocs.io/en/latest/data-collection/sharphound-all-flags.html
+
+- Bloodhound: create graphic
+  - graphical interface
+  - https://bloodhound.readthedocs.io/en/latest/data-analysis/edges.html
+- In the target:
+  - Invoke-Bloodhound -CollectionMethod All -Domain CONTROLLER.local -ZipFileName loot.zip
+- in the attacker
+  - neo4j console => database
+  - bloodhound
+    - import looted files
+
+
+
 # COMMANDS
 - systeminfo ==> command
   - Os config + Domain
@@ -334,14 +349,6 @@ olcSaslSecProps: noanonymous,minssf=0,passcred
    - Get-NetGroupMember
    - Get-NetGPO  / Invoke-ShareFinder = shares
 
-## BLOODHOUND
-- graphical interface
-- In the target:
-  - Invoke-Bloodhound -CollectionMethod All -Domain CONTROLLER.local -ZipFileName loot.zip
-- in the attacker
-  - neo4j console => database
-  - bloodhound
-    - import looted files
 
 ## MIMIKATZ
 - dumping credentials   
