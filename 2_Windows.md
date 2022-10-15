@@ -180,6 +180,36 @@
 
 
 ## ENUMERATING
+- With GUI:
+  - xfreerdp /d:za.tryhackme.com /u:'kimberley.smith' /p:'Password!' /v:thmjmp1.za.tryhackme.com
+  - Microsoft Management COnsole (MMC)
+  
+- cmd
+  - net-command
+  - net user /domain
+    - net user.name /domain
+  - net group /domain
+    - net group "group-name" /domain
+  - net accounts /domain = password policy
+  
+- Powershell
+  - get-ADuser -Identity USER -Server SERVER -Properties *
+    - -Filter 'Name -like "*smt"'
+    - | Format-Table Name,Smt -A
+  - get-ADGroup
+  - Get-ADGroupMember
+  - Get-ADObject
+    - Get-ADObject -Filter 'badPwdCount -gt 0' -Server za.tryhackme.com
+  - get-Addomain
+  - Change
+    - set-ADAccountPassword
+
+
+### Credential Injection
+- runas.exe
+  - inject credential into memory
+  - runas.exe /netonly /user:<domain>\<username> cmd.exe
+  - check SYSVOL
 
 ## BREACHING
 - Steps
