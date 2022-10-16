@@ -96,7 +96,6 @@
 -  stty raw -echo; fg = back to reverse shell
 
 
-
 # Privilege Escalation
 - https://tryhackme.com/room/introtoshells
 - https://tryhackme.com/room/linprivesc

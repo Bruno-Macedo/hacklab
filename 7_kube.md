@@ -4,6 +4,7 @@
   - https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/#install-kubectl-binary-with-curl-on-linux
 
 - Commands:
+  - /var/run/secrets/kubernetes.io/serviceaccount/token
   - kubectl get 
     - pods
     - secrets
