@@ -109,7 +109,9 @@ Insecure Direct Object Request
 - Bidirectional
 - Exploit message content
 - Change "X-Forwarded-For" header
-  
+- Cross-site WebSockets
+  - cross domain connection
+  - 
   
 ## Command injection
 - blind: no output, test with ping/sleep/timeout(win) || force output > etwas
