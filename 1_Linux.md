@@ -16,6 +16,7 @@
 - [Uploading Files](#uploading-files)
   - [DNS, SMB, SNMP](#dns-smb-snmp)
 - [Searchexploit](#searchexploit)
+- [Code Analyse](#code-analyse)
 
 
 # Linux
@@ -204,3 +205,7 @@
 
 # Searchexploit
 - m = copie
+
+# Code Analyse
+- snyk --scan-all-unmanaged
+  - unpack zip file
