@@ -206,7 +206,7 @@
 - Get-Localgroup
 - Network
   - get-NetIPAddress
-  - Get-NetTCPConnection
+  - Get-NetTCPConnection 
   - Test-NetConnection
   - Invoke-WebRequest
 - Patches
