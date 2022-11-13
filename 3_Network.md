@@ -13,6 +13,7 @@
   - [CHISEL](#chisel)
   - [SSHUTTLE](#sshuttle)
   - [PROXY](#proxy)
+  - [SS](#ss)
   - [Empire (windows) / Starkiller](#empire-windows--starkiller)
   - [Hop Listener](#hop-listener)
 - [Git Enumeration](#git-enumeration)
@@ -235,6 +236,14 @@
   
 - FoxyProxy
   - better for web
+
+## SS
+- tool for investigate sockets
+  - -t TCP socket
+  - -u UDP#
+  - -l listening
+  - -p process
+  - -n no name
 
 ## Empire (windows) / Starkiller
 - powershell-empire server + client

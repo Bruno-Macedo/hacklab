@@ -207,7 +207,8 @@ Find content: '+UNION+SELECT+colum1,+column2,+FROM+discovered_table--
   - --risk= ??
   - --dbms=type of db
   - --technique=???
-  - --dumb
+  - --dumb = output_database
+  - --dbms=DATA_BASE_TYPE
 
 ##### Provoking errors
 - Oracle

@@ -31,6 +31,7 @@
 # John
 - Using rules
   - john --wordlist=existing_list --rules=pick_one --stdout
+  - --format=ENCRYPTION
   - adding rule
     - conf file: [rule_name] Az"[0-9]" ^[!@#$]
 
