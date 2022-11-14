@@ -49,10 +49,11 @@
   - hydra -l USERNAME -P wordlist.xt server *request* **"/[request]:[body_request]"** -vV -f
   - hydra -l USERNAME -P wordlist.xt server *request* **"/[request]:username=^USER^&password=^PASS^:F=incorrect"** -v
     - Request: HTTP-FORM-GET, HTTP-FORM-POST, HTTP-GET, HTTP-HEAD, HTTP-POST, HTTP-PROXY, HTTPS-FORM-GET, HTTPS-FORM-POST, HTTPS-GET, HTTPS-HEAD, HTTPS-POST, HTTP-Proxy
-    - IP/URL http-get-form | http-post-form "/login-get/index.php:[BODY_CONTENT]username=^USER^&PASSWORD=^PASS:S=logout.php" -f
+    - IP/URL http-get-form | http-post-form "/login-get/index.php:[BODY_CONTENT]&username=^USER^&PASSWORD=^PASS:S=logout.php" -f
     - for post: whole POST BODY
       - S= [message_for_success]
       - F= [message_for_failed]
+      - -V Verbose
       - -f = stop attack after finding
 
 - FTP

@@ -1,10 +1,8 @@
-- [WINDOWS](#windows)
 - [Commands](#commands)
   - [Stabilize and Post Exploit windows](#stabilize-and-post-exploit-windows)
   - [Powershell](#powershell)
     - [Enumeration](#enumeration)
-
-# WINDOWS
+- [SMB](#smb)
 
 # Commands
 - systeminof
@@ -215,3 +213,12 @@
   - Get-ScheduledTask
 - Owner
   - Get-Acl
+
+# SMB
+- Server Message BLock
+- share of files on the network
+- Commands
+  - smbclient -L \\IP => find shares
+  - smbclient \\\\IP\\SHARENAME = open share
+    - smbclient -U username \\\\IP\\SHARENAME =
+  - get ==> download file
