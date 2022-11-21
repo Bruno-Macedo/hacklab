@@ -278,3 +278,6 @@
 - services: display services found in scans
  - From services google for vulnerabilities /also search in metasploit
  - Common services: http, ftp, smb, ssh, rdp
+
+- Search script
+  - locate -r nse$ | grep NAME
