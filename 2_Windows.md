@@ -3,6 +3,7 @@
   - [Powershell](#powershell)
     - [Enumeration](#enumeration)
 - [SMB](#smb)
+- [RDP](#rdp)
 
 # Commands
 - systeminof
@@ -222,3 +223,9 @@
   - smbclient \\\\IP\\SHARENAME = open share
     - smbclient -U username \\\\IP\\SHARENAME =
   - get ==> download file
+- Scripts
+  - smb-enum*
+  - smb-vuln*
+
+# RDP
+xfreerdp /f /u:USERNAME /p:PASSWORD /v:HOST[:PORT]
