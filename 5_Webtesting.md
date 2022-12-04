@@ -25,6 +25,7 @@
   - [Intruder](#intruder)
     - [Macros](#macros)
   - [Decoder, Comparer, Sequencer](#decoder-comparer-sequencer)
+  - [Wordpres](#wordpres)
 
 # Web hacking
 
@@ -301,3 +302,13 @@ admin123' UNION SELECT SLEEP(5),2;--
   - measure entropy of tokens
   - analyze after an amount of tokens
   - Auto Analyze = capture every 2000 requests
+
+## Wordpres
+- wpscan
+  - -v verbose
+  - -o output
+  - --enumerate
+  - -U username
+  - -P password
+  - --url
+- 

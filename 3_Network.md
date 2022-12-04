@@ -90,6 +90,7 @@
   - site:hs-worms.de filetype:docx
   - *intitle:index.of site:*
   - *intitle:login*
+  - cache:url
   - https://web.dev/measure/
   - robots.txt
 
