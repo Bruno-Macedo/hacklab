@@ -41,6 +41,7 @@
 - -d = debug
 - -v = verbose
 - -V = show attempts
+  - vV = more info
 - -f = terminate if found
 - -t = number threadlos
 
