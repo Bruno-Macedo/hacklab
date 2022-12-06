@@ -69,6 +69,12 @@
   - email server/account
   - Dns records
   - web server
+  
+- emlAnalyzer
+  - --header
+  - -u
+  - --text
+  - --extract-all
 
 - GoPhish
   - manage phishing campaings
