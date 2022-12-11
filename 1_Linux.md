@@ -20,7 +20,8 @@
 - [METASPLOIT](#metasploit)
   - [Meterpreter](#meterpreter)
   - [Metasploit with database](#metasploit-with-database)
-    - [NMAP - DB_NMAP](#nmap---db_nmap)
+    - [NMAP - DB\_NMAP](#nmap---db_nmap)
+- [Memory Dump](#memory-dump)
 
 
 # Linux
@@ -281,3 +282,17 @@
 
 - Search script
   - locate -r nse$ | grep NAME
+
+# Memory Dump
+- volatility
+  - -f = memory dump file
+  - -v = verbosity
+  - -p = override location of pluggins
+  - -o = outputlit
+- Pluggins
+  - listing process
+  - network connections
+  - clipboard, text, cmd
+  - imageinfo = find OP
+    - python3 vol.py -f file.vmem  windows.info
+    - many other pluggins
