@@ -20,6 +20,7 @@
 - [Antivirus Evasion](#antivirus-evasion)
   - [Cross compilation](#cross-compilation)
   - [How AV Works](#how-av-works)
+- [Wireshark](#wireshark)
 
 # Basic Steps
 - Enumerate
@@ -345,3 +346,20 @@
   - line by line execution
   - pre-defined rules
   - no gan, no gui + VM = sandbox
+
+
+# Wireshark
+- statistical of
+  - protocol
+  - ip
+  - ports
+  - services
+- watch out
+  - addreses in user
+  - suspicious address
+  - suspecious port
+  - services in user
+  - level of traffic
+- Check queries
+  - dns
+  - http

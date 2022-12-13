@@ -43,6 +43,7 @@
 - -V = show attempts
   - vV = more info
 - -f = terminate if found
+- -s = port to connect
 - -t = number threadlos
 
 - web
