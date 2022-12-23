@@ -14,3 +14,15 @@
   - Disable macros
   - [Microsoft Attack surface reduction (ASR) rules reference](https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/attack-surface-reduction-rules-reference?view=o365-worldwide)
   - patch software
+
+## Defense in Depth
+- Severel layers of defense
+- secure everything on the way
+- Levels
+  - Perimeter
+    - WAF, FIrewalls, DMZ
+  - layers
+   - apllication of sensors, analytics, alerting,
+   - first level defense, network segmentation, zeto trust, least privileged access
+  - response
+    - Detection, log collection, analytics
