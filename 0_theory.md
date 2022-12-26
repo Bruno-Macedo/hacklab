@@ -35,7 +35,7 @@
 - Method 1
   - Generate payload with metasploit
   - identify the value in the register (gdb i r)
-  - compare patter offser
+  - compare patter offset
     - /usr/share/metasploit-framework/tools/exploit/pattern_offset.rb -l # -q memory
 
 - Method 2
@@ -187,4 +187,3 @@
   - big endian: most significant byte far left
   - little endien: most significant byte far right
 
-## Dta
