@@ -48,6 +48,7 @@
       - Input - Buffer = Overflow
     - Find addresses:
       - disassemble [Funcion_Name]
+      - print& function_Name = shows first address
     - Examine the dump hex code
       - x/100x $rsp-200
     - Show all registers
@@ -57,6 +58,36 @@
 - NOP instruction
   - no operation instruction = does nothing = \x90
   - python -c "print 'NOP'*no_of_nops + 'shellcode' + 'random_data'*no_of_random_data + 'memory address'"
+
+### pwntools
+- Debug exploit
+- Commands
+  - Stack canaries: detection of stack overflow
+  - NX: non-executable, set memory segment to be writable or executable
+  - PIR: Position Independent Executable: program dependencies into rando location
+
+- Control EIP/RIP (instruction pointer) to execute overflow
+  
+- Cyclic
+  - create customized overflows
+  - padding = space until return address (EIP)
+
+- Networking
+  - Generate payload to overwrite eip
+  
+- Shellcraft
+  - shell payload craft
+  - find EIP with cyclic
+  - find ESP ==> + 200 offset
+  - How to point EIP to shellcode?
+    - NOP = space holder = pass te eip to the next space
+    - big lading pad of NPS + direct EIP to middle of stack = we land in our NOP + NOP will pass the eip to our code
+  - payload: shellcraft
+    - -f a = asci
+    - -f s = string
+    - shellcraf i386.linux.sh
+    - shellcraft i386.linux.execve "/bin///sh" "['sh','-p']" -f a
+
 
 # Assembly in Windows
 [Tryhackme - Windows x64 Assembly](https://tryhackme.com/room/win64assembly)
