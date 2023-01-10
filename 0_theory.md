@@ -32,6 +32,8 @@
 - Generating cyclic patterns
   - /usr/share/metasploit-framework/tools/exploit/pattern_create.rb -l 600
 
+- [Buffer overflow Cheat Sheet](https://github.com/Tib3rius/Pentest-Cheatsheets/blob/master/exploits/buffer-overflows.rst)
+
 ```
 from pwn import *
 
