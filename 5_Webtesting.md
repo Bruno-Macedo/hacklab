@@ -308,6 +308,15 @@ admin123' UNION SELECT SLEEP(5),2;--
   - -v verbose
   - -o output
   - --enumerate
+    - u = user
+    - dbd = database
+    - at = all theme
+    - vt = vulnerable themes
+    - p = popular plugins
+    - ap = all plugings
+    - vp = vulnerable pluging
+    - tt = timthumbs
+    - cb = config backups
   - -U username
   - -P password
   - --url
