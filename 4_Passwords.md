@@ -4,6 +4,7 @@
 - [John](#john)
 - [Hydra](#hydra)
 - [Creating Wordlists](#creating-wordlists)
+- [Mozillas files](#mozillas-files)
 
 # Passwords
 
@@ -88,3 +89,13 @@
 - cupp
   - based on information of the target, birthdate, pet, etc
   - https://github.com/Mebus/cupp.git
+
+# Mozillas files
+- Files
+  - .db
+  - logins.json
+  - cookies.sqlite
+- https://github.com/lclevy/firepwd.git
+- https://github.com/unode/firefox_decrypt.git
+- msfconsole:
+  -  use post/multi/gather/firefox_creds = extract files

