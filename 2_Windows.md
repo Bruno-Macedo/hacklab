@@ -1,3 +1,4 @@
+- [Internal](#internal)
 - [Commands](#commands)
   - [Stabilize / Post Exploit / Persistance windows](#stabilize--post-exploit--persistance-windows)
     - [Tampering with low users](#tampering-with-low-users)
@@ -6,12 +7,33 @@
     - [Schedule Tasks](#schedule-tasks)
     - [Logon as Trigger](#logon-as-trigger)
     - [Login Screen](#login-screen)
-    - [Existing Services](#existing-services)
+    - [Web shell | mssql](#web-shell--mssql)
   - [Powershell](#powershell)
     - [Enumeration](#enumeration)
 - [SMB](#smb)
 - [RDP](#rdp)
 - [Bypass Applocker](#bypass-applocker)
+
+# Internal
+- Process analyser
+  - Procmon, Process Explorer, Process Hacker 2
+- DLL
+  - library with code and data shared by programs
+  - modularization of code
+  - code reuse
+  - better memory usage
+  - Dependency ==> target of hijacking/injection
+  - Load?
+    - *load-time dynamic*: calls to the dll (with header and import)
+    - *run-time dynamic link*: separte function 
+  
+- PE = Portable Executable
+  - .exe files
+
+- Internals
+  - Win64 API
+  - interaction with memory
+  - user x kernel mode ==> API call = Switching Point
 
 # Commands
 - systeminof
@@ -235,7 +257,7 @@
   - Ease access 
   - c:\Windows\System32\sethc.exe
 
-### Existing Services
+### Web shell | mssql
 - web shell to web directory
 - default web server: iis apppool\defaultapppool
 
