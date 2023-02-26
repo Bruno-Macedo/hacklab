@@ -1,4 +1,5 @@
 - [Internal](#internal)
+  - [Abusing Internals](#abusing-internals)
 - [Commands](#commands)
   - [Stabilize / Post Exploit / Persistance windows](#stabilize--post-exploit--persistance-windows)
     - [Tampering with low users](#tampering-with-low-users)
@@ -34,6 +35,10 @@
   - Win64 API
   - interaction with memory
   - user x kernel mode ==> API call = Switching Point
+
+- ASLR = Address Space Layout Randomization 
+
+## Abusing Internals
 
 # Commands
 - systeminof
