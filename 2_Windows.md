@@ -39,6 +39,18 @@
 - ASLR = Address Space Layout Randomization 
 
 ## Abusing Internals
+- [Abusing Internals](https://tryhackme.com/room/abusingwindowsinternals)
+- Basic steps
+  - Open process
+  - Allocate memory
+  - write malicious code
+  
+- Injector
+- hollowing - unmapping process
+- Hijacking
+- DLL
+- 
+
 
 # Commands
 - systeminof
@@ -265,7 +277,6 @@
 ### Web shell | mssql
 - web shell to web directory
 - default web server: iis apppool\defaultapppool
-
 
 ## Powershell
 - .NET framkework: software plattform für windows

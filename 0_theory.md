@@ -156,3 +156,19 @@
   - big endian: most significant byte far left
   - little endien: most significant byte far right
 
+# Firewalls
+- Tools
+  - Compressor
+  - Emulator
+
+- Detection
+  - Static: signarute, pattern-matching
+  - Dynamic: run time detection
+  - Heuristic/Behavioral: source code compare; 
+
+- Yara
+  - rule-base detection
+
+- Testing files
+  - [AntiscanMe](https://antiscan.me/)
+  - [Scan Jotti](https://virusscan.jotti.org/)
