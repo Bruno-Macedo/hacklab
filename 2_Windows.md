@@ -49,7 +49,11 @@
 - hollowing - unmapping process
 - Hijacking
 - DLL
-- 
+- Invoke function pointers
+- Asynchronous procedure calls
+- Section manipulation
+
+- [Malware hook](https://www.sentinelone.com/labs/how-trickbot-malware-hooking-engine-targets-windows-10-browsers/)
 
 
 # Commands
@@ -278,6 +282,7 @@
 - web shell to web directory
 - default web server: iis apppool\defaultapppool
 
+
 ## Powershell
 - .NET framkework: software plattform für windows
 - Commands = cmdlets
@@ -370,6 +375,10 @@
 - Scripts
   - smb-enum*
   - smb-vuln*
+
+- Transfer files
+  - smbclient -U USER '//IP/folder'
+  - put file.name
 
 # RDP
 - Basic login

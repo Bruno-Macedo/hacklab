@@ -156,7 +156,7 @@
   - big endian: most significant byte far left
   - little endien: most significant byte far right
 
-# Firewalls
+# Firewalls and AntiVirus Evasion
 - Tools
   - Compressor
   - Emulator
@@ -172,3 +172,31 @@
 - Testing files
   - [AntiscanMe](https://antiscan.me/)
   - [Scan Jotti](https://virusscan.jotti.org/)
+
+## Create Payload
+- Assembly
+- Write in a section of the PE
+- Extract hex value from compiled code
+```
+1. Write assemble code
+2. Extract hex from the code: objcopy -j .text -O binary thm thm.text
+3. Convert to hex: xxd -i thm.text
+```
+
+- Staged x Stageless payload
+  - Stageless: complete shellcode
+  - staged: partial shellcode that "contacts" the complete one. First shellcode connects to attacker, Second donwload the final shellcode (less noisi, direct in memory)
+
+- Encoding and Encrypting
+  - msfvenom --list encoders / encrpyt
+  - -e encoder_option
+  - -i interation
+
+- Packers
+  - transform structure of program
+  - compress + protect agains reverse engineering
+  - In memory scan: wait to send commands after the shell is running
+  - Use smaller palyoad
+
+- Binders
+  - program to merge 2 or + executables

