@@ -129,7 +129,8 @@
 
 - cdecl
   - C Declaration
-  - parameters on stack: right to lefht
+  - parameters on stack: righsudo date -s "$(curl http://s3.amazonaws.com -v 2>&1 | \
+  grep "Date: " | awk '{ print $3 " " $5 " " $4 " " $7 " " $6 " GMT"}')"t to lefht
   - RBP saved
   - return via EAX
   - caller: cleans stack
@@ -173,7 +174,7 @@
   - [AntiscanMe](https://antiscan.me/)
   - [Scan Jotti](https://virusscan.jotti.org/)
 
-## Create Payload
+## Creating Payload
 - Assembly
 - Write in a section of the PE
 - Extract hex value from compiled code
@@ -199,4 +200,12 @@
   - Use smaller palyoad
 
 - Binders
-  - program to merge 2 or + executables
+  - program to merge 2 or + executablessudo date -s "$(curl http://s3.amazonaws.com -v 2>&1 | \
+  grep "Date: " | awk '{ print $3 " " $5 " " $4 " " $7 " " $6 " GMT"}')"
+
+## Obfuscation
+- [Very good explained](https://cybersecurity.springeropen.com/articles/10.1186/s42400-020-00049-3)
+- Prevent software analysis
+- Bypass AV - signature base
+- Layers of obfuscation: code, layout, etc.
+  - How: merge, splitting, encoding, replacing
