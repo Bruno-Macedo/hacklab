@@ -1,31 +1,34 @@
 # Basic Steps
-- nmap (all ports)
-  - script: locate -r nse$ | grep NAME
+## Automatic web enum
 - dirb | dirsearch
 - linpeas
+- wpsscan -U user -P password
+
+## Basic network
+- nmap (all ports)
+  - script: locate -r nse$ | grep NAME
+- nmap Scrips
+  - locate -r nse$ | grep mysql = nmap script
+
+## Linux
 - sudo -l
 - find / -perm -u=s -type f 2>/dev/null
 - find / -type f -perm -04000 -ls 2>/dev/null 
 - psexec.py
-- locate -r nse$ | grep mysql = nmap script
-- msfvenom - reverse -f aspx -o app.aspx
-- wpsscan -U user -P password
-- windows
-  - /priv
-  - smb read/write
-  - browser cache
-  - 
-- stabilize
+  
+- Shell stabilize
   -  python3 -c 'import pty;pty.spawn("/bin/bash")'
   - python3 -c  import pty;pty.spawn('/bin/bash') 
   - export TERM=xterm
 
-# Brainpan 1
+## Payloads
+- msfvenom - reverse -f aspx -o app.aspx
 
-EIP Offset: 524
-ESP Offset: 528
-
-
-   : jmp esp |  {PAGE_EXECUTE_READ} [brainpan.exe] ASLR: False, Rebase: False, SafeSEH: False, OS: False, v-1.0- (C:\Users\admin\Desktop\brainpan.exe)
-0x
+## Windows
+- /priv
+- smb read/write
+- browser cache
+- scheduled task
+- UAC
+- 
 

