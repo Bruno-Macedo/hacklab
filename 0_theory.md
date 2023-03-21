@@ -208,4 +208,10 @@
 - Prevent software analysis
 - Bypass AV - signature base
 - Layers of obfuscation: code, layout, etc.
-  - How: merge, splitting, encoding, replacing
+  - How: merge, splitting, encoding, replacing, no traceble name
+
+## Signature Evasion
+- Split file until kilobyte range
+- [Find-AVSignature](https://github.com/PowerShellMafia/PowerSploit/blob/master/AntivirusBypass/Find-AVSignature.ps1)
+- Other tools: DefenderCheck, ThreatCheck, AMSITrigger
+  
