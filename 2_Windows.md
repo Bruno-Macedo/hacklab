@@ -18,7 +18,7 @@
   - [Auto Elevating](#auto-elevating)
   - [Enviroment Variable](#enviroment-variable)
 - [Runtime Detection](#runtime-detection)
-- [Evade Loggin](#evade-loggin)
+- [Evade Logging](#evade-logging)
 - [Bypass Applocker](#bypass-applocker)
 
 # Internal
@@ -521,7 +521,7 @@ full_attack = '''powershell /w 1 /C "sv {0} -;sv {1} ec;sv {2} ((gv {3}).value.t
 .SetValue($null,$true)
 ```
 
-# Evade Loggin
+# Evade Logging
 
 - Methodology
   - disable logging (1)
