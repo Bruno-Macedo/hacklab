@@ -30,5 +30,6 @@
 - browser cache
 - scheduled task
 - UAC
-- 
+- Check loggings
+  - sysmon enable / powershell loggging enabled ?
 
