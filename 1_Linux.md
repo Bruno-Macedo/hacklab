@@ -331,6 +331,12 @@
   -  -f = 8 bytes / -ff 16 byes = fragmentation
   - --mtu 128 = custom size
 
+- Route
+  - --ip-options "L IP IP" = loose route packets routed to L IP
+  - --ip-options "S IP IP" = strict route, every hope defined
+  - --proxies proto://host:port,proto://host:port
+    - HTTP:HOST1:PORT,SOCKS4://HOST2:Port
+
 - Output
   - --reason / -v / -vv / -d / -dd
   - -oN = normal output
