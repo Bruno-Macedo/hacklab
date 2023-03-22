@@ -188,10 +188,6 @@
   - Stageless: complete shellcode
   - staged: partial shellcode that "contacts" the complete one. First shellcode connects to attacker, Second donwload the final shellcode (less noisi, direct in memory)
 
-- Encoding and Encrypting
-  - msfvenom --list encoders / encrpyt
-  - -e encoder_option
-  - -i interation
 
 - Packers
   - transform structure of program
@@ -200,7 +196,8 @@
   - Use smaller palyoad
 
 - Binders
-  - program to merge 2 or + executablessudo date -s "$(curl http://s3.amazonaws.com -v 2>&1 | \
+  - program to merge 2 or + executables 
+  - sudo date -s "$(curl http://s3.amazonaws.com -v 2>&1 | \
   grep "Date: " | awk '{ print $3 " " $5 " " $4 " " $7 " " $6 " GMT"}')"
 
 ## Obfuscation
@@ -214,3 +211,4 @@
 - Split file until kilobyte range
 - [Find-AVSignature](https://github.com/PowerShellMafia/PowerSploit/blob/master/AntivirusBypass/Find-AVSignature.ps1)
 - Other tools: DefenderCheck, ThreatCheck, AMSITrigger
+

