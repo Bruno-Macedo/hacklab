@@ -15,6 +15,11 @@
 - find / -perm -u=s -type f 2>/dev/null
 - find / -type f -perm -04000 -ls 2>/dev/null 
 - psexec.py
+- lscpu
+- lsblk -a
+- lsusb -v
+- lspci -t -v
+- fidlist -l
   
 - Shell stabilize
   -  python3 -c 'import pty;pty.spawn("/bin/bash")'
@@ -26,10 +31,12 @@
 
 ## Windows
 - /priv
+- systeminfo
 - smb read/write
 - browser cache
 - scheduled task
 - UAC
 - Check loggings
   - sysmon enable / powershell loggging enabled ?
+- echo %VARIABLE%
 

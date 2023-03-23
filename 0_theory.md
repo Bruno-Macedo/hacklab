@@ -212,3 +212,6 @@
 - [Find-AVSignature](https://github.com/PowerShellMafia/PowerSploit/blob/master/AntivirusBypass/Find-AVSignature.ps1)
 - Other tools: DefenderCheck, ThreatCheck, AMSITrigger
 
+## Firewalls
+- Statefull: stablished tcp session, detect/block packet outside session
+- Stateless: individual packeges, no analysis of session
