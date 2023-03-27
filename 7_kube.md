@@ -11,7 +11,7 @@
   - check folders
   - check git
   - create all allowed pod: https://github.com/BishopFox/badPods/tree/main/manifests/everything-allowed
-  - go to host folder
+  - go to host folderLand
   - proc/self/cgroup
 
 - Commands:

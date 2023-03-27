@@ -423,6 +423,7 @@
   - [ifconfig me](https://ifconfig.me/) + [ARINS RDAP](https://rdap.apnic.net/ip/1.1.1.1)
 - systeminfo (windows) / lscpu
   - also: hostanme, Sotrage serial number, BIOS/UEFI version, OS version, Network adaptor, Virtualization checks, Signed user
+  - less memory or space MAYBE sandbox
 - NOT in AD
   - but collect info
   - variables

