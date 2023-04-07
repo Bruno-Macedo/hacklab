@@ -1,4 +1,5 @@
 - [Sysinternals](#sysinternals)
+  - [Tools](#tools)
   - [Abusing Internals](#abusing-internals)
 - [Commands](#commands)
   - [Stabilize / Post Exploit / Persistance windows](#stabilize--post-exploit--persistance-windows)
@@ -32,14 +33,26 @@
 - [Where Download](https://learn.microsoft.com/en-us/sysinternals/downloads/)
 - [Where Download 2](https://live.sysinternals.com/)
 - Download
-  - Method 1
+  - Install WebDAV
     - get-service webclient && start-service webclient ==> run webclient
     - control.exe /name Microsoft.NetworkAndSharingCenter ==> turn on network discovery
     - Install-WindowsFeature WebDAV-Redirector -Restart
     - Get-WindowsFeature WebDAV-Redirector | Format-Table -Autosize
-  - Method 2
+  - Run
     - net use * \\live.sysinternals.com\tools\procmon.exe
   - \\live.sysinternals.com\tools\procmon.exe
+
+```
+# Troubeshoot
+
+- services.msc + enable:
+  - DNS Client
+  - Function Discovery Resource Publication
+  - SSDP Discovery
+  - UPnP Device Host
+```
+
+## Tools
 - Process analyser
   - Procmon, Process Explorer, Process Hacker 2
 - DLL
@@ -62,6 +75,70 @@
 
 - ASLR = Address Space Layout Randomization 
 
+- **Sigcheck**
+  - file version number
+  - -u: VirusTotal
+  - -e: image
+  
+- **Streams**
+  - Downloaded file
+  - streams Path\To\File --acepteula
+  - get-item -path Path\to\file -stream * || get-content
+  - file.txt:streamName.txt
+  
+- **SDelete**
+  - Secure delete
+
+- **TCPView**
+  - all tcp and udp endpoints = resmon (Resource Monitor)
+  
+- **Autoruns**
+  - autostart apps/scripts
+  
+- **ProcDump**
+  - monitor cpu spikes + crash dumps
+  - create dump ==> also with process explorer
+  
+- **Process Explorer**
+  - actice process + handles or dll
+  - agent process, properties and threads
+  - procexp
+  
+- **Process Monitor**
+  - file system, registry and process/thread history
+  - procmon
+  
+- **PsExec**
+  - like telnet
+  - psexec (psexec -accepteula -i -s cmd.exe)
+  - psexec \\IP -accepteula -i -s DOMAIN\User run_smt
+  - psexec \@hostname. -accepteula -i -s DOMAIN\User run_smt
+  
+- **Sysmon**
+  - event log: process, network, file change and creation
+  - [Config File](https://github.com/SwiftOnSecurity/sysmon-config)
+  - Get-WinEvent | wevutil.exe 
+  - Filter: Get-WinEvent
+    - */System/EventID=ID
+    - */EventData/Data[@Name="<XML Attribute/Name>"]
+    - *EventData/Data=Data
+    - Get-WinEvent -Path <Path to Log> -FilterXPath '*/System/EventID=3 and */EventData/Data[@Name="DestinationPort"] and */EventData/Data=4444'
+    - *LSASS* = Get-WinEvent -Path <Path to Log> -FilterXPath '*/System/EventID=10 and */EventData/Data[@Name="TargetImage"] and */EventData/Data="C:\Windows\system32\lsass.exe"'
+    - *Malware*= Get-WinEvent -Path <Path to Log> -FilterXPath '*/System/EventID=3 and */EventData/Data[@Name="DestinationPort"] and */EventData/Data=<Port>'
+    - *Persistence* = Binary / app in the startup
+    - *RegKey* = Modifications in registry
+    - *Evasion* = 
+- **WinObj**
+  - NT Object Manager name space
+
+- **BgInfo**
+  - Sysinfo
+- **RegJump**
+  - RegJump Registry/Path
+  - = reg query = Get-Item = Get-ItemProperty
+- **Strings**
+  - scan for UNICODE or ASCI
+
 ## Abusing Internals
 - [Abusing Internals](https://tryhackme.com/room/abusingwindowsinternals)
 - Basic steps
@@ -78,6 +155,7 @@
 - Section manipulation
 
 - [Malware hook](https://www.sentinelone.com/labs/how-trickbot-malware-hooking-engine-targets-windows-10-browsers/)
+
 
 
 # Commands
@@ -354,6 +432,7 @@
     -  -Pattern API_KEY
   
 - Measure-Object = count
+- Oldest -MaxEvent 1
 - Base64
   - certutil.exe -decode INPUT_FILE OUTPUT_FILE
   - Encode: 
