@@ -19,13 +19,13 @@
         - [sqlmap](#sqlmap)
         - [Provoking errors](#provoking-errors)
       - [Time](#time)
-    - [SQLMAP](#sqlmap-1)
 - [Burpsuite](#burpsuite)
   - [Repeater](#repeater)
   - [Intruder](#intruder)
     - [Macros](#macros)
   - [Decoder, Comparer, Sequencer](#decoder-comparer-sequencer)
   - [Wordpres](#wordpres)
+- [API](#api)
 
 # Web hacking
 
@@ -320,4 +320,22 @@ admin123' UNION SELECT SLEEP(5),2;--
   - -U username
   - -P password
   - --url
-- 
+-
+
+# API
+
+- **BOLA - Broken Object Level Authorisation**
+  - Deserialisation
+  - endpoind/user/NUMBER
+  - Identifiy who made request + authorization 
+- **BUA - Broken User Authentication**
+  - No token for authentication
+  - poor encryption
+- **Excessive Data Exposure**
+  - The application tells more than it should
+- **Lack of Resozrce & Rate Limiting**
+  - DoS
+  - A lot of requests
+  - Mitigation: captcha, time between request
+- **Broken Leval Authorisation**
+  - 
