@@ -323,7 +323,6 @@ admin123' UNION SELECT SLEEP(5),2;--
 -
 
 # API
-
 - **BOLA - Broken Object Level Authorisation**
   - Deserialisation
   - endpoind/user/NUMBER
@@ -338,4 +337,19 @@ admin123' UNION SELECT SLEEP(5),2;--
   - A lot of requests
   - Mitigation: captcha, time between request
 - **Broken Leval Authorisation**
-  - 
+- **Mass Assignment**
+  - client-side date BOUND with server-side object
+  - edit fixed/read-only fields, like ID/username
+  - Solution: not bind input to variable automatically + allowlist of properties that can be updated
+- **Security Misconfiguration**
+  - error handling with full information
+  - solution: no default username:password + no directory listing + set permisions for folder/files + turn off debugging 
+- **Injection**
+  - user input not filtered
+  - solution: good libraries + validation of user input
+- **Improper assets management**
+  - access to deprecated/unpatched API calls
+  - solution: block old api calls + Q&A R&D separated + documentation
+- **Logging & Monitoring**
+  - activities, request and all should be logged: endpoint, visitor's IP, input
+  - solution: SIEM + alerts + see denied access/failed authentication/input validations/
