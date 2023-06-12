@@ -479,6 +479,10 @@
 - Transfer files
   - smbclient -U USER '//IP/folder'
   - put file.name
+  - smbclient -c 'put pat.exe' -U USER -W ZA '//TARGET' PASSWORD
+
+
+
 
 # RDP
 - Basic login

