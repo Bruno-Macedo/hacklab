@@ -1,4 +1,7 @@
 # Basic Steps
+
+[Tyler's Notebook](https://southeasttech-my.sharepoint.com/:o:/g/personal/tyler_ramsbey_southeasttech_edu/EmrNEjx_FjRKjYRotc9TikMB7DtzCwhKWOAEovdtZADBgg?rtime=bQkHVxRr20g)
+
 ## Automatic web enum
 - dirb | dirsearch
 - linpeas
