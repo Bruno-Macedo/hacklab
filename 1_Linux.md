@@ -248,6 +248,8 @@
 - unsetg => unset global values
 - background => putting a session in backgrou
 - sessions => display sessions
+- Direct execution
+  - msf -q -x "use exploit/path/to; set payload path/to/payload; set optionsName Name; exploit""
 
 ## msfvenom
 - Many platforms and formats
