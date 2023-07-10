@@ -128,6 +128,26 @@
 - (windows) netsh advfirewall firewall add rule name="NAME" dir=in action=allow protocol=tcp localport=PORT
 
 ## SSH
+[Port Forwarding](https://notes.benheater.com/books/network-pivoting)
+
+```
+# sshd_config
+# config for specific user
+Match junkuser
+    PermitRootLogin no
+    PermitTTY no
+    PermitUserRC no
+    ForceCommand "echo 'This account is for port forwarding only'"
+    PasswordAuthentication yes
+    PermitEmptyPasswords no
+    MaxAuthTries 2   
+    AllowAgentForwarding no
+    X11Forwarding no
+	X11UseLocalhost no
+
+
+```
+
 - Port Forwarding
   - ssh -L [myport]:target:[open_port_target] user@[public_ip] -fN
 - Proxy
