@@ -159,6 +159,7 @@
 
 
 # Commands
+- powershell -exec bypass
 - systeminof
   - part of Active Directory (workgroup / domain)
 - wmic = Windows Management Instrumentation Command-line
@@ -480,8 +481,6 @@
   - smbclient -U USER '//IP/folder'
   - put file.name
   - smbclient -c 'put pat.exe' -U USER -W ZA '//TARGET' PASSWORD
-
-
 
 
 # RDP
