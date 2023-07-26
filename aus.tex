@@ -1,0 +1,424 @@
+\hypertarget{offensive-security-oscp-exam-report}{%
+\section{Offensive Security OSCP Exam
+Report}\label{offensive-security-oscp-exam-report}}
+
+\hypertarget{introduction}{%
+\subsection{Introduction}\label{introduction}}
+
+The Offensive Security Exam penetration test report contains all efforts
+that were conducted in order to pass the Offensive Security exam. This
+report will be graded from a standpoint of correctness and fullness to
+all aspects of the exam. The purpose of this report is to ensure that
+the student has a full understanding of penetration testing
+methodologies as well as the technical knowledge to pass the
+qualifications for the Offensive Security Certified Professional.
+
+\hypertarget{objective}{%
+\subsection{Objective}\label{objective}}
+
+The objective of this assessment is to perform an internal penetration
+test against the Offensive Security Exam network. The student is tasked
+with following methodical approach in obtaining access to the objective
+goals. This test should simulate an actual penetration test and how you
+would start from beginning to end, including the overall report. An
+example page has already been created for you at the latter portions of
+this document that should give you ample information on what is expected
+to pass this course. Use the sample report as a guideline to get you
+through the reporting.
+
+\hypertarget{requirements}{%
+\subsection{Requirements}\label{requirements}}
+
+The student will be required to fill out this penetration testing report
+fully and to include the following sections:
+
+\begin{itemize}
+\tightlist
+\item
+  Overall High-Level Summary and Recommendations (non-technical)
+\item
+  Methodology walkthrough and detailed outline of steps taken
+\item
+  Each finding with included screenshots, walkthrough, sample code, and
+  proof.txt if applicable
+\item
+  Any additional items that were not included
+\end{itemize}
+
+\hypertarget{high-level-summary}{%
+\section{High-Level Summary}\label{high-level-summary}}
+
+I was tasked with performing an internal penetration test towards
+Offensive Security Exam. An internal penetration test is a dedicated
+attack against internally connected systems. The focus of this test is
+to perform attacks, similar to those of a hacker and attempt to
+infiltrate Offensive Security's internal exam systems - the THINC.local
+domain. My overall objective was to evaluate the network, identify
+systems, and exploit flaws while reporting the findings back to
+Offensive Security.
+
+When performing the internal penetration test, there were several
+alarming vulnerabilities that were identified on Offensive Security's
+network. When performing the attacks, I was able to gain access to
+multiple machines, primarily due to outdated patches and poor security
+configurations. During the testing, I had administrative level access to
+multiple systems. All systems were successfully exploited and access
+granted. These systems as well as a brief description on how access was
+obtained are listed below:
+
+\begin{itemize}
+\tightlist
+\item
+  192.168.xx.xx (hostname) - Name of initial exploit
+\item
+  192.168.xx.xx (hostname) - Name of initial exploit
+\item
+  192.168.xx.xx (hostname) - Name of initial exploit
+\item
+  192.168.xx.xx (hostname) - Name of initial exploit
+\item
+  192.168.xx.xx (hostname) - BOF
+\end{itemize}
+
+\hypertarget{recommendations}{%
+\subsection{Recommendations}\label{recommendations}}
+
+I recommend patching the vulnerabilities identified during the testing
+to ensure that an attacker cannot exploit these systems in the future.
+One thing to remember is that these systems require frequent patching
+and once patched, should remain on a regular patch program to protect
+additional vulnerabilities that are discovered at a later date.
+
+\hypertarget{methodologies}{%
+\section{Methodologies}\label{methodologies}}
+
+I utilized a widely adopted approach to performing penetration testing
+that is effective in testing how well the Offensive Security Exam
+environments is secured. Below is a breakout of how I was able to
+identify and exploit the variety of systems and includes all individual
+vulnerabilities found.
+
+\hypertarget{information-gathering}{%
+\subsection{Information Gathering}\label{information-gathering}}
+
+The information gathering portion of a penetration test focuses on
+identifying the scope of the penetration test. During this penetration
+test, I was tasked with exploiting the exam network. The specific IP
+addresses were:
+
+\textbf{Exam Network}
+
+\begin{itemize}
+\tightlist
+\item
+  192.168.
+\item
+  192.168.
+\item
+  192.168.
+\item
+  192.168.
+\item
+  192.168.
+\end{itemize}
+
+\hypertarget{penetration}{%
+\subsection{Penetration}\label{penetration}}
+
+The penetration testing portions of the assessment focus heavily on
+gaining access to a variety of systems. During this penetration test, I
+was able to successfully gain access to \textbf{X} out of the \textbf{X}
+systems.
+
+\hypertarget{system-ip-192.168.x.x}{%
+\subsubsection{System IP: 192.168.x.x}\label{system-ip-192.168.x.x}}
+
+\hypertarget{service-enumeration}{%
+\paragraph{Service Enumeration}\label{service-enumeration}}
+
+The service enumeration portion of a penetration test focuses on
+gathering information about what services are alive on a system or
+systems. This is valuable for an attacker as it provides detailed
+information on potential attack vectors into a system. Understanding
+what applications are running on the system gives an attacker needed
+information before performing the actual penetration test. In some
+cases, some ports may not be listed.
+
+\begin{longtable}[]{@{}ll@{}}
+\toprule
+Server IP Address & Ports Open \\
+\midrule
+\endhead
+192.168.x.x & \vtop{\hbox{\strut \textbf{TCP}:
+1433,3389}\hbox{\strut \textbf{UDP}: 1434,161}} \\
+\bottomrule
+\end{longtable}
+
+\textbf{Nmap Scan Results:}
+
+\emph{Initial Shell Vulnerability Exploited}
+
+\emph{Additional info about where the initial shell was acquired from}
+
+\textbf{Vulnerability Explanation:}
+
+\textbf{Vulnerability Fix:}
+
+\textbf{Severity:}
+
+\textbf{Proof of Concept Code Here:}
+
+\textbf{Local.txt Proof Screenshot}
+
+\textbf{Local.txt Contents}
+
+\hypertarget{privilege-escalation}{%
+\paragraph{Privilege Escalation}\label{privilege-escalation}}
+
+\emph{Additional Priv Esc info}
+
+\textbf{Vulnerability Exploited:}
+
+\textbf{Vulnerability Explanation:}
+
+\textbf{Vulnerability Fix:}
+
+\textbf{Severity:}
+
+\textbf{Exploit Code:}
+
+\textbf{Proof Screenshot Here:}
+
+\textbf{Proof.txt Contents:}
+
+\hypertarget{system-ip-192.168.x.x-1}{%
+\subsubsection{System IP: 192.168.x.x}\label{system-ip-192.168.x.x-1}}
+
+\hypertarget{service-enumeration-1}{%
+\paragraph{Service Enumeration}\label{service-enumeration-1}}
+
+\begin{longtable}[]{@{}ll@{}}
+\toprule
+Server IP Address & Ports Open \\
+\midrule
+\endhead
+192.168.x.x & \vtop{\hbox{\strut \textbf{TCP}:
+1433,3389}\hbox{\strut \textbf{UDP}: 1434,161}} \\
+\bottomrule
+\end{longtable}
+
+\textbf{Nmap Scan Results:}
+
+\emph{Initial Shell Vulnerability Exploited}
+
+\emph{Additional info about where the initial shell was acquired from}
+
+\textbf{Vulnerability Explanation:}
+
+\textbf{Vulnerability Fix:}
+
+\textbf{Severity:}
+
+\textbf{Proof of Concept Code Here:}
+
+\textbf{Local.txt Proof Screenshot}
+
+\textbf{Local.txt Contents}
+
+\hypertarget{privilege-escalation-1}{%
+\paragraph{Privilege Escalation}\label{privilege-escalation-1}}
+
+\emph{Additional Priv Esc info}
+
+\textbf{Vulnerability Exploited:}
+
+\textbf{Vulnerability Explanation:}
+
+\textbf{Vulnerability Fix:}
+
+\textbf{Severity:}
+
+\textbf{Exploit Code:}
+
+\textbf{Proof Screenshot Here:}
+
+\textbf{Proof.txt Contents:}
+
+\hypertarget{system-ip-192.168.x.x-2}{%
+\subsubsection{System IP: 192.168.x.x}\label{system-ip-192.168.x.x-2}}
+
+\hypertarget{service-enumeration-2}{%
+\paragraph{Service Enumeration}\label{service-enumeration-2}}
+
+\begin{longtable}[]{@{}ll@{}}
+\toprule
+Server IP Address & Ports Open \\
+\midrule
+\endhead
+192.168.x.x & \vtop{\hbox{\strut \textbf{TCP}:
+1433,3389}\hbox{\strut \textbf{UDP}: 1434,161}} \\
+\bottomrule
+\end{longtable}
+
+\textbf{Nmap Scan Results:}
+
+\emph{Initial Shell Vulnerability Exploited}
+
+\emph{Additional info about where the initial shell was acquired from}
+
+\textbf{Vulnerability Explanation:}
+
+\textbf{Vulnerability Fix:}
+
+\textbf{Severity:}
+
+\textbf{Proof of Concept Code Here:}
+
+\textbf{Local.txt Proof Screenshot}
+
+\textbf{Local.txt Contents}
+
+\hypertarget{privilege-escalation-2}{%
+\paragraph{Privilege Escalation}\label{privilege-escalation-2}}
+
+\emph{Additional Priv Esc info}
+
+\textbf{Vulnerability Exploited:}
+
+\textbf{Vulnerability Explanation:}
+
+\textbf{Vulnerability Fix:}
+
+\textbf{Severity:}
+
+\textbf{Exploit Code:}
+
+\textbf{Proof Screenshot Here:}
+
+\textbf{Proof.txt Contents:}
+
+\hypertarget{system-ip-192.168.x.x-3}{%
+\subsubsection{System IP: 192.168.x.x}\label{system-ip-192.168.x.x-3}}
+
+\hypertarget{service-enumeration-3}{%
+\paragraph{Service Enumeration}\label{service-enumeration-3}}
+
+\begin{longtable}[]{@{}ll@{}}
+\toprule
+Server IP Address & Ports Open \\
+\midrule
+\endhead
+192.168.x.x & \vtop{\hbox{\strut \textbf{TCP}:
+1433,3389}\hbox{\strut \textbf{UDP}: 1434,161}} \\
+\bottomrule
+\end{longtable}
+
+\textbf{Nmap Scan Results:}
+
+\emph{Initial Shell Vulnerability Exploited}
+
+\emph{Additional info about where the initial shell was acquired from}
+
+\textbf{Vulnerability Explanation:}
+
+\textbf{Vulnerability Fix:}
+
+\textbf{Severity:}
+
+\textbf{Proof of Concept Code Here:}
+
+\textbf{Local.txt Proof Screenshot}
+
+\textbf{Local.txt Contents}
+
+\hypertarget{privilege-escalation-3}{%
+\paragraph{Privilege Escalation}\label{privilege-escalation-3}}
+
+\emph{Additional Priv Esc info}
+
+\textbf{Vulnerability Exploited:}
+
+\textbf{Vulnerability Explanation:}
+
+\textbf{Vulnerability Fix:}
+
+\textbf{Severity:}
+
+\textbf{Exploit Code:}
+
+\textbf{Proof Screenshot Here:}
+
+\textbf{Proof.txt Contents:}
+
+\hypertarget{system-ip-192.168.x.x-4}{%
+\subsubsection{System IP: 192.168.x.x}\label{system-ip-192.168.x.x-4}}
+
+\textbf{Vulnerability Exploited: bof}
+
+Fill out this section with BOF NOTES.
+
+\textbf{Proof Screenshot:}
+
+\textbf{Completed Buffer Overflow Code:}
+
+Please see Appendix 1 for the complete Windows Buffer Overflow code.
+
+\hypertarget{maintaining-access}{%
+\subsection{Maintaining Access}\label{maintaining-access}}
+
+Maintaining access to a system is important to us as attackers, ensuring
+that we can get back into a system after it has been exploited is
+invaluable. The maintaining access phase of the penetration test focuses
+on ensuring that once the focused attack has occurred (i.e.~a buffer
+overflow), we have administrative access over the system again. Many
+exploits may only be exploitable once and we may never be able to get
+back into a system after we have already performed the exploit.
+
+\hypertarget{house-cleaning}{%
+\subsection{House Cleaning}\label{house-cleaning}}
+
+The house cleaning portions of the assessment ensures that remnants of
+the penetration test are removed. Often fragments of tools or user
+accounts are left on an organization's computer which can cause security
+issues down the road. Ensuring that we are meticulous and no remnants of
+our penetration test are left over is important.
+
+After collecting trophies from the exam network was completed, I removed
+all user accounts and passwords as well as the Meterpreter services
+installed on the system. Offensive Security should not have to remove
+any user accounts or services from the system.
+
+\hypertarget{additional-items}{%
+\section{Additional Items}\label{additional-items}}
+
+\hypertarget{appendix---proof-and-local-contents}{%
+\subsection{Appendix - Proof and Local
+Contents:}\label{appendix---proof-and-local-contents}}
+
+\begin{longtable}[]{@{}lll@{}}
+\toprule
+IP (Hostname) & Local.txt Contents & Proof.txt Contents \\
+\midrule
+\endhead
+192.168.x.x & hash\_here & hash\_here \\
+192.168.x.x & hash\_here & hash\_here \\
+192.168.x.x & hash\_here & hash\_here \\
+192.168.x.x & hash\_here & hash\_here \\
+192.168.x.x & hash\_here & hash\_here \\
+\bottomrule
+\end{longtable}
+
+\hypertarget{appendix---metasploitmeterpreter-usage}{%
+\subsection{Appendix - Metasploit/Meterpreter
+Usage}\label{appendix---metasploitmeterpreter-usage}}
+
+For the exam, I used my Metasploit/Meterpreter allowance on the
+following machine: \texttt{192.168.x.x}
+
+\hypertarget{appendix---completed-buffer-overflow-code}{%
+\subsection{Appendix - Completed Buffer Overflow
+Code}\label{appendix---completed-buffer-overflow-code}}
+
+\begin{verbatim}
+code here
+\end{verbatim}
