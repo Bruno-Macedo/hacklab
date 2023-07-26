@@ -1,0 +1,10 @@
+version: "3.7"
+
+services:
+  latex:
+    build: 
+      dockerfile: ./Dockerfile
+    volumes:
+      - ./Notes:/app
+    security_opt:
+      - no-new-privileges:true
