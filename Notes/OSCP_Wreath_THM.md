@@ -132,7 +132,8 @@ prod-serv
 # https://
 ```
 **Recommendation**
-As described in the previous issue, it is recommended to keep services updated. Additionaly, all servers should run its services with minimal privileges as possible. In case an attacker can access the server, keeping minimal privileges prevent attackers from performing privilege escalation and other attacks that may affect the confidentiality, integrity and availability of the server.
+As described in the previous issue, it is recommended to keep services updated. Additionaly, all servers should run its services with minimal privileges as possible. In case an attacker can access the server, keeping minimal privileges prevent attackers from performing privilege escalation and other attacks that may affect the confidentiality, integrity and availability of the server, including scanning other hosts in the network not accessible through public interface.
+
 Running services or command as *root* should be restricted to minimal essential tasks.
 
 # Narrative
@@ -246,10 +247,23 @@ prod-serv
 #
 ```
 
+Since this access was with root user, it was not necessary to escalate privilege to root. This access allows us to see the configuration of the server and scan other hosts in this network.
+
 After gaining this access, it was possible to create a reverse shell with the following command:
 ```
-??????
+nc -lvnp 5556
+
+# to stabilize this shell, the following commands were executed
+python3 -c 'import pty;pty.spawn("/bin/bash")' 
+export TERM=xterm
 ```
+The result is a stabilized shell as shown above:
+![Result](Screenshot_2023-09-05_21-23-15.png)
+
+Accessing the folder */root/.ssh/id_rsa*, it was possible to access the private key to access the server through ssh and transfer it to the attacking machine.
+
+## Pivoting and Accessing other Servers
+The next step was using this server to discover and enumerate possibles endpoints in this network.
 
 ## Maintaining Access
 
