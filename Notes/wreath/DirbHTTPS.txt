@@ -1,0 +1,60 @@
+
+-----------------
+DIRB v2.22    
+By The Dark Raver
+-----------------
+
+OUTPUT_FILE: hacklab/Notes/wreath/DirbHTTPS.txt
+START_TIME: Tue Sep  5 17:53:08 2023
+URL_BASE: https://thomaswreath.thm/
+WORDLIST_FILES: /usr/share/dirb/wordlists/common.txt
+
+-----------------
+
+GENERATED WORDS: 4612
+
+---- Scanning URL: https://thomaswreath.thm/ ----
++ https://thomaswreath.thm/cgi-bin/ (CODE:403|SIZE:217)
+==> DIRECTORY: https://thomaswreath.thm/css/
+==> DIRECTORY: https://thomaswreath.thm/fonts/
+==> DIRECTORY: https://thomaswreath.thm/img/
++ https://thomaswreath.thm/index.html (CODE:200|SIZE:15383)
+==> DIRECTORY: https://thomaswreath.thm/js/
+==> DIRECTORY: https://thomaswreath.thm/noindex/
+
+---- Entering directory: https://thomaswreath.thm/css/ ----
+(!) WARNING: Directory IS LISTABLE. No need to scan it.
+    (Use mode '-w' if you want to scan it anyway)
+
+---- Entering directory: https://thomaswreath.thm/fonts/ ----
+(!) WARNING: Directory IS LISTABLE. No need to scan it.
+    (Use mode '-w' if you want to scan it anyway)
+
+---- Entering directory: https://thomaswreath.thm/img/ ----
+(!) WARNING: Directory IS LISTABLE. No need to scan it.
+    (Use mode '-w' if you want to scan it anyway)
+
+---- Entering directory: https://thomaswreath.thm/js/ ----
+(!) WARNING: Directory IS LISTABLE. No need to scan it.
+    (Use mode '-w' if you want to scan it anyway)
+
+---- Entering directory: https://thomaswreath.thm/noindex/ ----
+==> DIRECTORY: https://thomaswreath.thm/noindex/common/
++ https://thomaswreath.thm/noindex/index (CODE:200|SIZE:4006)
++ https://thomaswreath.thm/noindex/index.html (CODE:200|SIZE:4006)
+
+---- Entering directory: https://thomaswreath.thm/noindex/common/ ----
+==> DIRECTORY: https://thomaswreath.thm/noindex/common/css/
+==> DIRECTORY: https://thomaswreath.thm/noindex/common/fonts/
+==> DIRECTORY: https://thomaswreath.thm/noindex/common/images/
+
+---- Entering directory: https://thomaswreath.thm/noindex/common/css/ ----
++ https://thomaswreath.thm/noindex/common/css/styles (CODE:200|SIZE:71634)
+
+---- Entering directory: https://thomaswreath.thm/noindex/common/fonts/ ----
+
+---- Entering directory: https://thomaswreath.thm/noindex/common/images/ ----
+
+-----------------
+END_TIME: Tue Sep  5 18:08:12 2023
+DOWNLOADED: 27672 - FOUND: 5

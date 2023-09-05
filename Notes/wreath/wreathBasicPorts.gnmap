@@ -1,0 +1,4 @@
+# Nmap 7.94 scan initiated Tue Sep  5 17:30:43 2023 as: nmap -p- -Pn -sS -oA wreathBasicPorts 10.200.105.200
+Host: 10.200.105.200 ()	Status: Up
+Host: 10.200.105.200 ()	Ports: 22/open/tcp//ssh///, 80/open/tcp//http///, 443/open/tcp//https///, 9090/closed/tcp//zeus-admin///, 10000/open/tcp//snet-sensor-mgmt///	Ignored State: filtered (65530)
+# Nmap done at Tue Sep  5 17:33:08 2023 -- 1 IP address (1 host up) scanned in 144.97 seconds
