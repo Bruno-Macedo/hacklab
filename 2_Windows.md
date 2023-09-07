@@ -487,6 +487,7 @@
 # RDP
 - Basic login
   - xfreerdp /f /u:USERNAME /p:PASSWORD /v:HOST[:PORT]
+  - xfreerdp /v:IP /u:USERNAME /p:123456 +clipboard /dynamic-resolution /drive:/usr/share/windows-resources,share
 
 - Mount local folder:
   - xfreerdp /u:admin /p:password /cert:ignore /v:10.10.134.246 /workarea /drive:/home/bruno/git/tomnt +drives 

