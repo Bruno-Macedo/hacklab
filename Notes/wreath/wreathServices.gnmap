@@ -1,4 +1,0 @@
-# Nmap 7.94 scan initiated Tue Sep  5 17:35:11 2023 as: nmap -p22,80,443,9090,10000 -A -Pn -sS -oA wreathServices 10.200.105.200
-Host: 10.200.105.200 ()	Status: Up
-Host: 10.200.105.200 ()	Ports: 22/open/tcp//ssh//OpenSSH 8.0 (protocol 2.0)/, 80/open/tcp//http//Apache httpd 2.4.37 ((centos) OpenSSL|1.1.1c)/, 443/open/tcp//ssl|http//Apache httpd 2.4.37 ((centos) OpenSSL|1.1.1c)/, 9090/closed/tcp//zeus-admin///, 10000/open/tcp//http//MiniServ 1.890 (Webmin httpd)/	Seq Index: 259	IP ID Seq: All zeros
-# Nmap done at Tue Sep  5 17:35:59 2023 -- 1 IP address (1 host up) scanned in 48.58 seconds

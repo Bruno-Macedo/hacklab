@@ -23,15 +23,13 @@ CMD [ "tail", "-f", "/dev/null" ]
 # docker compose up
 
 # md ==> tex
-# docker exec b800e7fb2474 pandoc --from=markdown --output=my.tex aus.md --to=latex --standalone
+# docker exec e9448ec1f35f pandoc --from=markdown --output=my.tex aus.md --to=latex --standalone
 
 # mx == > odt 
-# docker exec b800e7fb2474 pandoc aus.md -f markdown -t odt -s -o MyFile.odt 
+# docker exec e9448ec1f35f pandoc OSCP_Wreath_THM.md -f markdown -t odt -s -o OSCP_Wreath_THM.odt
+# docker exec e9448ec1f35f pandoc OSCP_Wreath_THM.md -f markdown -t odt -s -o OSCP_Wreath_THM.odt
 
 # mx == > docx 
-# docker exec b800e7fb2474 pandoc -o output.docx -f markdown -t docx aus.md
+# docker exec e9448ec1f35f pandoc -o OSCP_Wreath_THM.docx -f markdown -t docx OSCP_Wreath_THM.md
 
-
-#  docker exec -it [ID]  /bin/bash
-
-
+#sudo docker run -it e9448ec1f35f  /bin/bash

@@ -2,8 +2,10 @@ version: "3.7"
 
 services:
   latex:
+    image: "ghcr.io/peaceiris/latex:v1.1.0-full"
     build: 
-      dockerfile: ./Dockerfile
+      context: .
+      dockerfile: Dockerfile
     volumes:
       - ./Notes:/app
     security_opt:
