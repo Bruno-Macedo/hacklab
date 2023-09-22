@@ -1,0 +1,4 @@
+# Nmap 7.94 scan initiated Fri Sep 22 20:44:09 2023 as: nmap -p- -Pn -sS -oA blaster/AllPorts 10.10.154.254
+Host: 10.10.154.254 ()	Status: Up
+Host: 10.10.154.254 ()	Ports: 80/open/tcp//http///, 3389/open/tcp//ms-wbt-server///	Ignored State: filtered (65533)
+# Nmap done at Fri Sep 22 20:45:54 2023 -- 1 IP address (1 host up) scanned in 105.04 seconds

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE nmaprun>
+<?xml-stylesheet href="file:///usr/bin/../share/nmap/nmap.xsl" type="text/xsl"?>
+<!-- Nmap 7.94 scan initiated Fri Sep 22 20:48:48 2023 as: nmap -p80,3389 -Pn -A -oA blaster/Ascan 10.10.154.254 -->
+<nmaprun scanner="nmap" args="nmap -p80,3389 -Pn -A -oA blaster/Ascan 10.10.154.254" start="1695408528" startstr="Fri Sep 22 20:48:48 2023" version="7.94" xmloutputversion="1.05">
+<scaninfo type="connect" protocol="tcp" numservices="2" services="80,3389"/>
+<verbose level="0"/>
+<debugging level="0"/>
+<host starttime="1695408528" endtime="1695408540"><status state="up" reason="user-set" reason_ttl="0"/>
+<address addr="10.10.154.254" addrtype="ipv4"/>
+<hostnames>
+</hostnames>
+<ports><port protocol="tcp" portid="80"><state state="open" reason="syn-ack" reason_ttl="0"/><service name="http" product="Microsoft IIS httpd" version="10.0" ostype="Windows" method="probed" conf="10"><cpe>cpe:/a:microsoft:internet_information_services:10.0</cpe><cpe>cpe:/o:microsoft:windows</cpe></service><script id="http-title" output="IIS Windows Server"><elem key="title">IIS Windows Server</elem>
+</script><script id="http-server-header" output="Microsoft-IIS/10.0"><elem>Microsoft-IIS/10.0</elem>
+</script><script id="http-methods" output="&#xa;  Potentially risky methods: TRACE"><table key="Potentially risky methods">
+<elem>TRACE</elem>
+</table>
+</script></port>
+<port protocol="tcp" portid="3389"><state state="open" reason="syn-ack" reason_ttl="0"/><service name="ms-wbt-server" product="Microsoft Terminal Services" ostype="Windows" method="probed" conf="10"><cpe>cpe:/o:microsoft:windows</cpe></service><script id="ssl-cert" output="Subject: commonName=RetroWeb&#xa;Not valid before: 2023-09-21T18:40:32&#xa;Not valid after:  2024-03-22T18:40:32"><table key="subject">
+<elem key="commonName">RetroWeb</elem>
+</table>
+<table key="issuer">
+<elem key="commonName">RetroWeb</elem>
+</table>
+<table key="pubkey">
+<elem key="type">rsa</elem>
+<elem key="bits">2048</elem>
+<elem key="modulus">BA903835B704AB43A968D26AE65E1C296BE4244EDC48EDA7F9D0A58EBEE67CAB0563356556283BAF89BCB01237C9ECF665B25440B49CD9009FCA86CDA69BA3F9EA951C510DB7B73FD25BAC43F4673A3A95C00525CB6D198420992F4D8068E7C3E696B1A8205571A9C4EE533913289ABB2A1B83EA1A7398364A5836C878582A95AC26D657ECA0EEA24E014984807147DFAFCA9E9126CD8ED8CB023D77737B3B0B06F87C93C7C8C42F6931638E0F68EB3653F3DE83452A1EA89143A1642069F006E5092238BC151BF6FA3205F14AFBB8C305DADD66850588D2D6E993F35998CE0C7EC320758C5555360EF9A2E7F57FE8CFB587E3BF3F982E3D0BDACC630E1037E5</elem>
+<elem key="exponent">65537</elem>
+</table>
+<table key="extensions">
+<table>
+<elem key="name">X509v3 Extended Key Usage</elem>
+<elem key="value">TLS Web Server Authentication</elem>
+</table>
+<table>
+<elem key="name">X509v3 Key Usage</elem>
+<elem key="value">Key Encipherment, Data Encipherment</elem>
+</table>
+</table>
+<elem key="sig_algo">sha256WithRSAEncryption</elem>
+<table key="validity">
+<elem key="notBefore">2023-09-21T18:40:32</elem>
+<elem key="notAfter">2024-03-22T18:40:32</elem>
+</table>
+<elem key="md5">4980bfacee44f5d71371c4810b15cf98</elem>
+<elem key="sha1">9694bfa70f737e872903861e1cf993804f6e2162</elem>
+<elem key="pem">-&#45;&#45;&#45;&#45;BEGIN CERTIFICATE-&#45;&#45;&#45;&#45;&#xa;MIIC1DCCAbygAwIBAgIQUF7KJo/FhqRMZnuIfHHeeTANBgkqhkiG9w0BAQsFADAT&#xa;MREwDwYDVQQDEwhSZXRyb1dlYjAeFw0yMzA5MjExODQwMzJaFw0yNDAzMjIxODQw&#xa;MzJaMBMxETAPBgNVBAMTCFJldHJvV2ViMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8A&#xa;MIIBCgKCAQEAupA4NbcEq0OpaNJq5l4cKWvkJE7cSO2n+dCljr7mfKsFYzVlVig7&#xa;r4m8sBI3yez2ZbJUQLSc2QCfyobNppuj+eqVHFENt7c/0lusQ/RnOjqVwAUly20Z&#xa;hCCZL02AaOfD5paxqCBVcanE7lM5Eyiauyobg+oac5g2Slg2yHhYKpWsJtZX7KDu&#xa;ok4BSYSAcUffr8qekSbNjtjLAj13c3s7Cwb4fJPHyMQvaTFjjg9o6zZT896DRSoe&#xa;qJFDoWQgafAG5QkiOLwVG/b6MgXxSvu4wwXa3WaFBYjS1umT81mYzgx+wyB1jFVV&#xa;Ng75ouf1f+jPtYfjvz+YLj0L2sxjDhA35QIDAQABoyQwIjATBgNVHSUEDDAKBggr&#xa;BgEFBQcDATALBgNVHQ8EBAMCBDAwDQYJKoZIhvcNAQELBQADggEBABkjzndD0zBP&#xa;O0C1aUigqto1ae3ze5uMpbXJTGgWYvYig8Ishi4tn9FHFq/Yh8Ek5lspiu5GKJ2d&#xa;U7u3MDnBGzEnLq4z/wSpJ7D8ui4eclYaAO2kmOEt1r5rqbWNcRBMhTkleOKdRjO8&#xa;NkF9owJJqLBlXj8A6oAgDeTakf4sZdTDu+Ds/7wa+1V658fvAFY9T9+mJt/M1HaC&#xa;B+bdF7/pNaVylezyxzUMz/nxUQ2ul2FrRIaRiMC/31FZHgWt4vbIzkNVrePDned5&#xa;CFIOeNFESts+PU2BGhFMa8NCbklTaA5x5Doymo3Vz+auJ3GF3JE0upxKA0kGeLmV&#xa;Gs+ze4epopI=&#xa;-&#45;&#45;&#45;&#45;END CERTIFICATE-&#45;&#45;&#45;&#45;&#xa;</elem>
+</script><script id="ssl-date" output="2023-09-22T18:48:59+00:00; -1s from scanner time."><elem key="delta">-1.0</elem>
+<elem key="date">2023-09-22T18:48:59+00:00</elem>
+</script><script id="rdp-ntlm-info" output="&#xa;  Target_Name: RETROWEB&#xa;  NetBIOS_Domain_Name: RETROWEB&#xa;  NetBIOS_Computer_Name: RETROWEB&#xa;  DNS_Domain_Name: RetroWeb&#xa;  DNS_Computer_Name: RetroWeb&#xa;  Product_Version: 10.0.14393&#xa;  System_Time: 2023-09-22T18:48:54+00:00"><elem key="Target_Name">RETROWEB</elem>
+<elem key="NetBIOS_Domain_Name">RETROWEB</elem>
+<elem key="NetBIOS_Computer_Name">RETROWEB</elem>
+<elem key="DNS_Domain_Name">RetroWeb</elem>
+<elem key="DNS_Computer_Name">RetroWeb</elem>
+<elem key="Product_Version">10.0.14393</elem>
+<elem key="System_Time">2023-09-22T18:48:54+00:00</elem>
+</script></port>
+</ports>
+<hostscript><script id="clock-skew" output="mean: -1s, deviation: 0s, median: -1s"><elem key="stddev">0</elem>
+<elem key="mean">-1</elem>
+<elem key="count">2</elem>
+<elem key="median">-1</elem>
+</script></hostscript><times srtt="32093" rttvar="24081" to="128417"/>
+</host>
+<runstats><finished time="1695408540" timestr="Fri Sep 22 20:49:00 2023" summary="Nmap done at Fri Sep 22 20:49:00 2023; 1 IP address (1 host up) scanned in 11.92 seconds" elapsed="11.92" exit="success"/><hosts up="1" down="0" total="1"/>
+</runstats>
+</nmaprun>

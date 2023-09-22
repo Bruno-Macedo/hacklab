@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE nmaprun>
+<?xml-stylesheet href="file:///usr/bin/../share/nmap/nmap.xsl" type="text/xsl"?>
+<!-- Nmap 7.94 scan initiated Fri Sep 22 20:44:09 2023 as: nmap -p- -Pn -sS -oA blaster/AllPorts 10.10.154.254 -->
+<nmaprun scanner="nmap" args="nmap -p- -Pn -sS -oA blaster/AllPorts 10.10.154.254" start="1695408249" startstr="Fri Sep 22 20:44:09 2023" version="7.94" xmloutputversion="1.05">
+<scaninfo type="syn" protocol="tcp" numservices="65535" services="1-65535"/>
+<verbose level="0"/>
+<debugging level="0"/>
+<host starttime="1695408249" endtime="1695408354"><status state="up" reason="user-set" reason_ttl="0"/>
+<address addr="10.10.154.254" addrtype="ipv4"/>
+<hostnames>
+</hostnames>
+<ports><extraports state="filtered" count="65533">
+<extrareasons reason="no-response" count="65533" proto="tcp" ports="1-79,81-3388,3390-65535"/>
+</extraports>
+<port protocol="tcp" portid="80"><state state="open" reason="syn-ack" reason_ttl="127"/><service name="http" method="table" conf="3"/></port>
+<port protocol="tcp" portid="3389"><state state="open" reason="syn-ack" reason_ttl="127"/><service name="ms-wbt-server" method="table" conf="3"/></port>
+</ports>
+<times srtt="32823" rttvar="486" to="100000"/>
+</host>
+<runstats><finished time="1695408354" timestr="Fri Sep 22 20:45:54 2023" summary="Nmap done at Fri Sep 22 20:45:54 2023; 1 IP address (1 host up) scanned in 105.04 seconds" elapsed="105.04" exit="success"/><hosts up="1" down="0" total="1"/>
+</runstats>
+</nmaprun>

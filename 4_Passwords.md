@@ -3,6 +3,7 @@
 - [Hashcat](#hashcat)
 - [John](#john)
 - [Hydra](#hydra)
+- [Brutespray](#brutespray)
 - [Creating Wordlists](#creating-wordlists)
 - [Mozillas files](#mozillas-files)
 
@@ -68,6 +69,10 @@
 
 - SSH
   - -L [USER_LIST] -P [PASS_LIST] ssh://IP -v
+
+# Brutespray
+- Toll that uses result from nmap scan .xml
+- [Information here](https://github.com/x90skysn3k/brutespray)
 
 # Creating Wordlists
 - cewl URL

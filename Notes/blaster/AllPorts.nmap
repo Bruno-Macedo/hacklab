@@ -1,0 +1,9 @@
+# Nmap 7.94 scan initiated Fri Sep 22 20:44:09 2023 as: nmap -p- -Pn -sS -oA blaster/AllPorts 10.10.154.254
+Nmap scan report for 10.10.154.254
+Host is up (0.033s latency).
+Not shown: 65533 filtered tcp ports (no-response)
+PORT     STATE SERVICE
+80/tcp   open  http
+3389/tcp open  ms-wbt-server
+
+# Nmap done at Fri Sep 22 20:45:54 2023 -- 1 IP address (1 host up) scanned in 105.04 seconds
