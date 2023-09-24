@@ -28,8 +28,7 @@ CMD [ "tail", "-f", "/dev/null" ]
 # docker exec e9448ec1f35f pandoc --from=markdown --output=my.tex aus.md --to=latex --standalone
 
 # mx == > odt 
-# docker exec a2298eec75b0 pandoc /home/bruno/git/hacklab/Notes/OSCP_Report_Blaster_THM.md -f markdown -t odt -s -o OSCP_Wreath_THM.odt
-# docker exec a2298eec75b0 pandoc OSCP_Report_Blaster_THM.md -f markdown -t odt -s -o OSCP_Wreath_THM.odt
+# docker exec 7b4294cce723 pandoc OSCP_Report_Blaster_THM.md -f markdown -t odt -s -o OSCP_Report_Blaster_THM.odt
 
 # mx == > docx 
 # docker exec a2298eec75b0 pandoc -o OSCP_Wreath_THM.docx -f markdown -t docx OSCP_Wreath_THM.md
@@ -39,16 +38,16 @@ CMD [ "tail", "-f", "/dev/null" ]
 
 # docker cp /home/bruno/git/hacklab/Notes/Eisvogel/eisvogel.latex hacklab_latex_1:/usr/share/pandoc/data/templates/
 
-# docker exec 7b4294cce723 pandoc OSCP_Report_Blaster_THM.md \
-# -o OSCP_Report_Blaster_THM.pdf \
+# docker exec 7b4294cce723 pandoc FOLDER/OSCP_Report_REPORT_THM.md \
+# -o OSCP_Report_REPORT_THM.pdf \
 # --from markdown+yaml_metadata_block+raw_html \
 # --template eisvogel \
 # --table-of-contents \
 # --toc-depth 6 \
 # --number-sections \
 # --top-level-division=chapter \
-# --highlight-style monochrome \
-# --resource-path=.:src \
+# --highlight-style pygments \
+# --resource-path=.:src
 
 # STYLE
 # - pygments

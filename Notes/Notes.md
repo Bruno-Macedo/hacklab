@@ -45,8 +45,8 @@
 
 
 ```
-docker exec 7b4294cce723 pandoc template.md \
--o template.pdf \
+docker exec 7b4294cce723 pandoc FOLDER/OSCP_Report_REPORT_THM.md \
+-o OSCP_Report_REPORT_THM.pdf \
 --from markdown+yaml_metadata_block+raw_html \
 --template eisvogel \
 --table-of-contents \
@@ -54,7 +54,8 @@ docker exec 7b4294cce723 pandoc template.md \
 --number-sections \
 --top-level-division=chapter \
 --highlight-style pygments \
---resource-path=.:src 
+--resource-path=.:src
+
 
 
 - Docker remove all images
