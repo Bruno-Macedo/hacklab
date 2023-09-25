@@ -10,8 +10,18 @@
 ## Basic network
 - nmap (all ports)
   - script: locate -r nse$ | grep NAME
+  - sudo nmap -p- -Pn -sS TARGET -oA AllPort
+  - sudo nmap -p -Pn -A10.10.43.161 -oA Services
+
 - nmap Scrips
   - locate -r nse$ | grep mysql = nmap script
+
+## Pictures
+- strings
+- exiftool
+
+## Convert python
+dos2unix file
 
 ## Linux
 - sudo -l

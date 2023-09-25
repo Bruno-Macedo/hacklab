@@ -22,6 +22,8 @@
   - hashid
   - hashidentifier
 
+- wordlist
+  - hashcat target /path/to/word/list
 - hashcat
   - a 0 = dictionary attack
     - dictionary = list | brute-force = guessing

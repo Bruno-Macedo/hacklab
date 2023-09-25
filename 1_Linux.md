@@ -151,6 +151,9 @@
     - find / -perm -u=s -type f 2>/dev/null
     - find / -writable 2>/dev/null ==> find writable folders
 
+- sudo -l
+- [for SUID files](https://gtfobins.github.io/gtfobins/find/)
+
 ## shared libraries 
 - sudo -l ==> LD_PRELOAD ==>   
 - https://rafalcieslak.wordpress.com/2013/04/02/dynamic-linker-tricks-using-ld_preload-to-cheat-inject-features-and-investigate-programs/
