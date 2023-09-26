@@ -53,13 +53,16 @@ The scope os this test is to perform attacks to the room [Blaster](https://tryha
 
 
 # Narrative
-In this chapter we will describe in details the steps of our penetration tests. The chapter will be devided in sections, where each of them will focus in a different phase of this engagement. 
+In this chapter we will describe in details the steps of our penetration tests. The chapter will be divided in sections, where each of them will focus in a different phase of this engagement.
+
+- Information Gathering: obtaining open source information based on website and google
+- Network and Service Enumeration: with specific tools, we enumerate the target to find open ports and their running services
+- Exploitation: this section describe the exploitation on the targe. It may be divided in several subsections, according to the number of exploited services, targets and other servers hidden behind the target, if they are not out of scope
+- House Cleaning: removal of installed tools or modified configuration
+- Conclusion: Everything that was learned during this engagement.
 
 ## Information Gathering
 
-**Exam Scope**
-
-172.16.203.133, 172.16.203.134, 172.16.203.135, 172.16.203.136
 
 ## Service Enumeration
 

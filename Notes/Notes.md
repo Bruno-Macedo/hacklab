@@ -52,6 +52,10 @@ dos2unix file
 - Check loggings
   - sysmon enable / powershell loggging enabled ?
 - echo %VARIABLE%
+- Unquoted services:
+  - wmic service get name,displayname,pathname,startmode | findstr /v /i "C:\Windows
+- Permissions:
+  - icalcs
 
 
 ```
@@ -66,6 +70,17 @@ docker exec 7b4294cce723 pandoc FOLDER/OSCP_Report_REPORT_THM.md \
 --highlight-style pygments \
 --resource-path=.:src
 
+
+docker exec 7b4294cce723 pandoc OSCP_Report_Steel_Mountail_THM.md \
+-o OSCP_Report_REPORT_THM.pdf \
+--from markdown+yaml_metadata_block+raw_html \
+--template eisvogel \
+--table-of-contents \
+--toc-depth 6 \
+--number-sections \
+--top-level-division=chapter \
+--highlight-style pygments \
+--resource-path=.:src
 
 
 - Docker remove all images
