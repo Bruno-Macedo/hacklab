@@ -26,7 +26,7 @@ dos2unix file
 ## Linux
 - sudo -l
 - find / -perm -u=s -type f 2>/dev/null
-- find / -type f -perm -04000 -ls 2>/dev/null 
+- find / -type f -perm -04000 -ls 2>/dev/null : SUID
 - psexec.py
 - lscpu
 - lsblk -a
@@ -46,6 +46,9 @@ dos2unix file
 - /priv
 - systeminfo
 - smb read/write
+  - --script=smb-enum-shares.nse,smb-enum-users.nse
+- mount:
+  - --script=nfs-ls,nfs-statfs,nfs-showmount
 - browser cache
 - scheduled task
 - UAC
