@@ -1,0 +1,36 @@
+
+[0;33mRunning a Port scan on [0m10.10.15.27
+[0m
+[0;33mNo ping detected.. Will not use ping scans!
+[0m
+[0m
+[0;32mHost is likely running Unknown OS!
+
+
+[0;32m---------------------Starting Port Scan-----------------------
+[0m
+In progress: No Scan (0:00:00 elapsed - 0:00:00 remaining)   
+[#>                                                  ] 0% done   
+[2AIn progress: No Scan (0:00:00 elapsed - 0:00:00 remaining)   
+[#>                                                  ] 0% done   
+[2AIn progress: Connect Scan (0:00:02 elapsed - 0:03:18 remaining)   
+[#>                                                  ] 0% done   
+[2AIn progress: Connect Scan (0:00:03 elapsed - 0:00:16 remaining)   
+[#######>                                           ] 15% done   
+[2AIn progress: Connect Scan (0:00:04 elapsed - 0:00:06 remaining)   
+[####################>                              ] 41% done   
+[2AIn progress: Connect Scan (0:00:05 elapsed - 0:00:02 remaining)   
+[####################################>              ] 73% done   
+[2A[0K
+[0K
+PORT     STATE SERVICE
+80/tcp   open  http
+3389/tcp open  ms-wbt-server
+
+
+
+[0;32m---------------------Finished all scans------------------------
+[0m
+
+[0;33mCompleted in 7 seconds
+[0m

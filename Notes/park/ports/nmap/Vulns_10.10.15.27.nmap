@@ -1,0 +1,71 @@
+# Nmap 7.94 scan initiated Wed Sep 27 17:19:36 2023 as: /usr/bin/nmap -Pn -sV --script vuln -p80,3389 --open -oN nmap/Vulns_10.10.15.27.nmap --system-dns --stats-every 3s 10.10.15.27
+Nmap scan report for 10.10.15.27
+Host is up (0.034s latency).
+
+PORT     STATE SERVICE            VERSION
+80/tcp   open  http               Microsoft IIS httpd 8.5
+| http-fileupload-exploiter: 
+|   
+|_    Couldn't find a file-type field.
+| http-csrf: 
+| Spidering limited to: maxdepth=3; maxpagecount=20; withinhost=10.10.15.27
+|   Found the following possible CSRF vulnerabilities: 
+|     
+|     Path: http://10.10.15.27:80/
+|     Form id: aspnetform
+|     Form action: /
+|     
+|     Path: http://10.10.15.27:80/Account/login.aspx?ReturnURL=/admin/
+|     Form id: form1
+|     Form action: login.aspx?ReturnURL=%2fadmin%2f
+|     
+|     Path: http://10.10.15.27:80/post/welcome-to-hack-park
+|     Form id: aspnetform
+|     Form action: /post/welcome-to-hack-park
+|     
+|     Path: http://10.10.15.27:80/author/Admin
+|     Form id: aspnetform
+|     Form action: /author/Admin
+|     
+|     Path: http://10.10.15.27:80/category/BlogEngineNET
+|     Form id: aspnetform
+|_    Form action: /category/BlogEngineNET
+|_http-stored-xss: Couldn't find any stored XSS vulnerabilities.
+|_http-dombased-xss: Couldn't find any DOM based XSS.
+| vulners: 
+|   cpe:/a:microsoft:internet_information_services:8.5: 
+|_    	CVE-2014-4078	5.1	https://vulners.com/cve/CVE-2014-4078
+|_http-server-header: Microsoft-IIS/8.5
+| http-enum: 
+|   /calendar/cal_search.php: ExtCalendar
+|   /robots.txt: Robots file
+|   /calendar/cal_cat.php: Calendarix
+|   /archive/: Potentially interesting folder
+|   /archives/: Potentially interesting folder
+|   /author/: Potentially interesting folder
+|   /contact/: Potentially interesting folder
+|   /contacts/: Potentially interesting folder
+|   /search/: Potentially interesting folder
+|_  /search-ui/: Potentially interesting folder
+3389/tcp open  ssl/ms-wbt-server?
+| ssl-dh-params: 
+|   VULNERABLE:
+|   Diffie-Hellman Key Exchange Insufficient Group Strength
+|     State: VULNERABLE
+|       Transport Layer Security (TLS) services that use Diffie-Hellman groups
+|       of insufficient strength, especially those using one of a few commonly
+|       shared groups, may be susceptible to passive eavesdropping attacks.
+|     Check results:
+|       WEAK DH GROUP 1
+|             Cipher Suite: TLS_DHE_RSA_WITH_AES_256_GCM_SHA384
+|             Modulus Type: Safe prime
+|             Modulus Source: RFC2409/Oakley Group 2
+|             Modulus Length: 1024
+|             Generator Length: 1024
+|             Public Key Length: 1024
+|     References:
+|_      https://weakdh.org
+Service Info: OS: Windows; CPE: cpe:/o:microsoft:windows
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+# Nmap done at Wed Sep 27 17:23:39 2023 -- 1 IP address (1 host up) scanned in 243.31 seconds
