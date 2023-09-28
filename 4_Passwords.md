@@ -51,20 +51,22 @@
 - -t = number threadlos
 
 - web
-  - hydra -l USERNAME -P wordlist.xt server *request* **"/[inside_request]:username=^USER^&password=^PASS^:F=incorrect"** -v
-  - hydra -l USERNAME -P wordlist.xt server *request* **"/[request]:[body_request]"** -vV -f
-  - hydra -l USERNAME -P wordlist.xt server *request* **"/[request]:username=^USER^&password=^PASS^:F=incorrect"** -v
-    - Request: HTTP-FORM-GET, HTTP-FORM-POST, HTTP-GET, HTTP-HEAD, HTTP-POST, HTTP-PROXY, HTTPS-FORM-GET, HTTPS-FORM-POST, HTTPS-GET, HTTPS-HEAD, HTTPS-POST, HTTP-Proxy
+  - hydra -l USERNAME -P WORDLIST_FILEserver *request-method* **"/[PATH_TO_LOGIN]:[body_request]:[ERROR_MESSAGE]"** -vV -f
+  - hydra -l USERNAME -P WORDLIST_FILE server *request-method* **"/[request]:username=^USER^&password=^PASS^:F=incorrect"** -v
+  
+  - hydra -l USERNAME -P WORDLIST_FILE server *request-method* '/login.aspx:BODY_PARAMETER_WITH_PASSWORD:S=logout.php' -f
+  
+    - Request: *HTTP-FORM-GET, HTTP-FORM-POST, HTTP-GET, HTTP-HEAD, HTTP-POST, HTTP-PROXY, HTTPS-FORM-GET, HTTPS-FORM-POST, HTTPS-GET, HTTPS-HEAD, HTTPS-POST, HTTP-Proxy*
     - IP/URL http-get-form | http-post-form "/login-get/index.php:[BODY_CONTENT]&username=^USER^&PASSWORD=^PASS:S=logout.php" -f
     - for post: whole POST BODY
       - S= [message_for_success]
       - F= [message_for_failed]
       - -V Verbose
       - -f = stop attack after finding
+      - -L = List of usernames
 
 - FTP
   - hydra -l [USERNAME] -P password.lst ftp://IP
-    - -L = list of usernames
 
 - SMPT
   - -l email@address.com -P [Password_List] smtp://IP -v

