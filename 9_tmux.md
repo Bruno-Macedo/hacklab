@@ -18,3 +18,7 @@
   - %: vertical
   - ": horizontal
   - x: kill pane
+
+- set Mouse
+  - ctr + b + :
+    - setw -g mouse on

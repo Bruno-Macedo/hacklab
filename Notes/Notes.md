@@ -20,6 +20,11 @@
 - strings
 - exiftool
 
+## Login
+- brute force: hydra
+- sqlmap
+
+
 ## Convert python
 dos2unix file
 
@@ -28,11 +33,13 @@ dos2unix file
 - find / -perm -u=s -type f 2>/dev/null
 - find / -type f -perm -04000 -ls 2>/dev/null : SUID
 - psexec.py
+- LinEnum.sh + LinPeas
 - lscpu
 - lsblk -a
 - lsusb -v
 - lspci -t -v
 - fidlist -l
+- Groups: LXD????
   
 - Shell stabilize
   -  python3 -c 'import pty;pty.spawn("/bin/bash")'

