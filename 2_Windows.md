@@ -475,6 +475,7 @@
   - smbclient \\\\IP\\SHARENAME = open share
     - smbclient -U username \\\\IP\\SHARENAME =
   - get ==> download file
+  
 - Scripts
   - smb-enum*
   - smb-vuln*
@@ -500,10 +501,24 @@ net use \\ATTACKER_IP\share /del
 ```
 
 ## SMBMAP
+- Default
+  - smbmap -H $target
+  
 - Enumerate
-  - smbmap -u USER -H $target -r /ShareNAME/Folder
+  - -u USERNAME
+  - -r DiskName
+    - smbmap -H $target -r DiskName
+  - -u USER -H $target -r /ShareNAME/Folder
+  - -u "" -p "" = Null section
+  - -x COMMANDS
 - Download
-  - smbmap -u USER -H $target -r /ShareNAME/Folder -A File to download
+
+  - smbmap -u USER -H $target -r /ShareNAME/Folder ---download /Path/to/file
+- Options
+  - -H: host
+  - -r: path
+  - -u: User
+  - -p: password
 
 # RDP
 - Basic login
