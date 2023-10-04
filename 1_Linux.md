@@ -111,7 +111,6 @@
   - nc -nlvp PORT ==> TCP listener
   - nc -ulvnp PORT ==> UDP listener
 
-
 ## PWNCAT-CS
 - nc with steroids
 - python version => stabilized
@@ -167,6 +166,7 @@
 - find script with root privilege
 - /etc/crontab
 - check if file has no fullpath + create own script with reverse shell
+- 
 
 ## PATH
 - echo $PATH
@@ -211,7 +211,6 @@
 - https: Create certificate + spawn https server
   - openssl req -new -x509 -keyout localhost.pem -out localhost.pem -days 365 -nodes
   - python3 -c "import http.server, ssl;server_address=('0.0.0.0',443);httpd=http.server.HTTPServer(server_address,http.server.SimpleHTTPRequestHandler);httpd.socket=ssl.wrap_socket(httpd.socket,server_side=True,certfile='localhost.pem',ssl_version=ssl.PROTOCOL_TLSv1_2);httpd.serve_forever()"
-- 
 
 - Option 2 - copy source
   1. Copy code from source and past in the target + save .sh

@@ -89,6 +89,8 @@ Insecure Direct Object Request
 - double extension
 - exiftools -Comment=PAYLOAD picture.jgp.php ==> Comments!!!
 
+ 
+
 ## SSRF
 - Server-Side Request Forgery
 - Where? 

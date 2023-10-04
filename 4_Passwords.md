@@ -51,7 +51,9 @@
 - -t = number threadlos
 
 - web
-  - hydra -l USERNAME -P WORDLIST_FILEserver *request-method* **"/[PATH_TO_LOGIN]:[body_request]:[ERROR_MESSAGE]"** -vV -f
+  - hydra -l USERNAME -P WORDLIST_FILEserver *request-method* **"/[PATH_TO_LOGIN]:[body_request]:[F|S]=[ERROR_MESSAGE]"** -vV -f
+    - F:failing strings
+    - S:sucessfull strings
   - hydra -l USERNAME -P WORDLIST_FILE server *request-method* **"/[request]:username=^USER^&password=^PASS^:F=incorrect"** -v
   
   - hydra -l USERNAME -P WORDLIST_FILE server *request-method* '/login.aspx:BODY_PARAMETER_WITH_PASSWORD:S=logout.php' -f

