@@ -1,0 +1,4 @@
+# Nmap 7.94 scan initiated Wed Oct  4 16:06:02 2023 as: nmap -p- -Pn -sS -oA Ports 10.10.99.79
+Host: 10.10.99.79 ()	Status: Up
+Host: 10.10.99.79 ()	Ports: 22/open/tcp//ssh///, 80/open/tcp//http///, 110/open/tcp//pop3///, 139/open/tcp//netbios-ssn///, 143/open/tcp//imap///, 445/open/tcp//microsoft-ds///	Ignored State: closed (65529)
+# Nmap done at Wed Oct  4 16:06:19 2023 -- 1 IP address (1 host up) scanned in 16.68 seconds

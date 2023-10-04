@@ -1,0 +1,35 @@
+
+-----------------
+DIRB v2.22    
+By The Dark Raver
+-----------------
+
+OUTPUT_FILE: dirbt
+START_TIME: Wed Oct  4 16:16:19 2023
+URL_BASE: http://10.10.99.79/
+WORDLIST_FILES: /usr/share/dirb/wordlists/common.txt
+
+-----------------
+
+GENERATED WORDS: 4612
+
+---- Scanning URL: http://10.10.99.79/ ----
+==> DIRECTORY: http://10.10.99.79/admin/
+==> DIRECTORY: http://10.10.99.79/config/
+==> DIRECTORY: http://10.10.99.79/css/
++ http://10.10.99.79/index.html (CODE:200|SIZE:523)
+==> DIRECTORY: http://10.10.99.79/js/
++ http://10.10.99.79/server-status (CODE:403|SIZE:276)
+==> DIRECTORY: http://10.10.99.79/squirrelmail/
+
+---- Entering directory: http://10.10.99.79/admin/ ----
+
+---- Entering directory: http://10.10.99.79/config/ ----
+
+---- Entering directory: http://10.10.99.79/css/ ----
+
+---- Entering directory: http://10.10.99.79/js/ ----
+
+---- Entering directory: http://10.10.99.79/squirrelmail/ ----
++ http://10.10.99.79/squirrelmail/class (CODE:403|SIZE:276)
+==> DIRECTORY: http://10.10.99.79/squirrelmail/config/
