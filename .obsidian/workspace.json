@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "2.1_Active_Directory.md",
+                "file": "1_Linux.md",
                 "mode": "source",
                 "source": false
               }
@@ -86,7 +86,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "2.1_Active_Directory.md",
+                "file": "1_Linux.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -103,7 +103,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "2.1_Active_Directory.md",
+                "file": "1_Linux.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -126,7 +126,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "2.1_Active_Directory.md"
+                "file": "1_Linux.md"
               }
             }
           },
@@ -143,7 +143,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300
+    "width": 200
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -156,8 +156,11 @@
       "random-note:Open random note": false
     }
   },
-  "active": "93608f12afc94630",
+  "active": "03a4c3c531ac6549",
   "lastOpenFiles": [
+    "Notes/OSCP_Notes.md",
+    "Notes/OSCP_THM.txt",
+    "2.1_Active_Directory.md",
     "6_Wireless.md",
     "7_Kubernetes.md",
     "1_Linux.md",
@@ -175,7 +178,6 @@
     "SQL injection cheat sheet .pdf",
     "9_tmux_Docker.md",
     "2023-10-07.md",
-    "2.1_Active_Directory.md",
     "Untitled 1.canvas"
   ]
 }

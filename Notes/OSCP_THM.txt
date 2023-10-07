@@ -5,7 +5,7 @@ Steel Mountain          - OK
 Gatekeeper              - OK
 BVlueprintDaily Bugle
 OSCP Buffer Overflow    - OK
-Vulnversity
+Vulnversity             - OK
 Blue                    - OK
 Kenobi                  - OK
 Alfred                  - OK

