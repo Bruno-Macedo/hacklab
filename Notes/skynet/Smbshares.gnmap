@@ -1,4 +1,0 @@
-# Nmap 7.94 scan initiated Wed Oct  4 16:12:02 2023 as: nmap -p143,445 -Pn --script smb-enum-shares.nse -oA Smbshares 10.10.99.79
-Host: 10.10.99.79 ()	Status: Up
-Host: 10.10.99.79 ()	Ports: 143/open/tcp//imap///, 445/open/tcp//microsoft-ds///
-# Nmap done at Wed Oct  4 16:12:10 2023 -- 1 IP address (1 host up) scanned in 7.90 seconds
