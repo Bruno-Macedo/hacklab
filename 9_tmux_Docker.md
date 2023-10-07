@@ -1,4 +1,8 @@
-# TMUX cheat sheet
+- [[#TMUX cheat sheet|TMUX cheat sheet]]
+- [[#Docker|Docker]]
+
+
+## TMUX cheat sheet
 - tmux
 - tmux new
   
@@ -28,7 +32,7 @@
   - ctr + b + :
     - setw -g mouse on
 
-# Docker
+## Docker
 - docker pandoc:
 ```
 docker exec 7b4294cce723 pandoc FOLDER/OSCP_Report_REPORT_THM.md \

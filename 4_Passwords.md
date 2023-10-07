@@ -1,13 +1,4 @@
-- [Passwords](#passwords)
-- [Basics](#basics)
-- [Hashcat](#hashcat)
-- [John](#john)
-- [Hydra](#hydra)
-- [Brutespray](#brutespray)
-- [Creating Wordlists](#creating-wordlists)
-- [Mozillas files](#mozillas-files)
 
-# Passwords
 
 # Basics
 - cracking: from hash

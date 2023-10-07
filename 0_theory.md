@@ -1,3 +1,20 @@
+- [[#Definitions|Definitions]]
+- [[#Defense in Depth|Defense in Depth]]
+- [[#Registers|Registers]]
+- [[#Operations|Operations]]
+	- [[#Operations#Flags|Flags]]
+	- [[#Operations#Calling COnvention|Calling COnvention]]
+	- [[#Operations#Memory Layout|Memory Layout]]
+- [[#Firewalls and AntiVirus Evasion|Firewalls and AntiVirus Evasion]]
+	- [[#Firewalls and AntiVirus Evasion#Creating Payload|Creating Payload]]
+	- [[#Firewalls and AntiVirus Evasion#Obfuscation|Obfuscation]]
+	- [[#Firewalls and AntiVirus Evasion#Signature Evasion|Signature Evasion]]
+	- [[#Firewalls and AntiVirus Evasion#Firewalls|Firewalls]]
+- [[#Network Security Evasion|Network Security Evasion]]
+	- [[#Network Security Evasion#IDS x IPS|IDS x IPS]]
+
+
+
 # Theory
 
 ## Definitions
@@ -95,7 +112,7 @@
   - JBE/JNA = jump if below or equal | not above
   - JA/JNBE = jump if above | not below or equal
 
-## Flags
+### Flags
 - Result of previous operation/comparison
 - Register: EFLAGS / RFLAGS
 - Status
@@ -107,7 +124,7 @@
   - Parity Flag = 1 if last 8 bits = even
   - Trap Flag = single stepping
 
-## Calling COnvention
+### Calling COnvention
 - Several
 - How parameters arge passed to functions
 - Caller = making the call
@@ -135,7 +152,7 @@
   - return via EAX
   - caller: cleans stack
 
-## Memory Layout
+### Memory Layout
 - Segment
   - Stack = non-static local variable
   - Heap = dynamically allocated
@@ -157,7 +174,7 @@
   - big endian: most significant byte far left
   - little endien: most significant byte far right
 
-# Firewalls and AntiVirus Evasion
+## Firewalls and AntiVirus Evasion
 - Tools
   - Compressor
   - Emulator
@@ -174,7 +191,7 @@
   - [AntiscanMe](https://antiscan.me/)
   - [Scan Jotti](https://virusscan.jotti.org/)
 
-## Creating Payload
+### Creating Payload
 - Assembly
 - Write in a section of the PE
 - Extract hex value from compiled code
@@ -200,18 +217,51 @@
   - sudo date -s "$(curl http://s3.amazonaws.com -v 2>&1 | \
   grep "Date: " | awk '{ print $3 " " $5 " " $4 " " $7 " " $6 " GMT"}')"
 
-## Obfuscation
+### Obfuscation
 - [Very good explained](https://cybersecurity.springeropen.com/articles/10.1186/s42400-020-00049-3)
 - Prevent software analysis
 - Bypass AV - signature base
 - Layers of obfuscation: code, layout, etc.
   - How: merge, splitting, encoding, replacing, no traceble name
 
-## Signature Evasion
+### Signature Evasion
 - Split file until kilobyte range
 - [Find-AVSignature](https://github.com/PowerShellMafia/PowerSploit/blob/master/AntivirusBypass/Find-AVSignature.ps1)
 - Other tools: DefenderCheck, ThreatCheck, AMSITrigger
 
-## Firewalls
+### Firewalls
 - Statefull: stablished tcp session, detect/block packet outside session
 - Stateless: individual packeges, no analysis of session
+
+
+## Network Security Evasion
+
+### IDS x IPS
+- Intrusion Detecting System
+- Intrusion Prevention System ==> inline
+- host-base AND network-based
+- Evade
+  - protocol manipulation
+  - payload manipulation
+  - route manipulation
+  - tactical denial of service
+
+- Obfuscation
+  - base64 
+  - urlencode
+  - [Cyberchef](https://icyberchef.com/)
+- DoS
+  - legitim traffic = overload capacitiy
+  - not-malicious traffic, that goes to log
+- C2: change settings
+  - User-Agent
+  - sleep-time
+  - jitter = randomness to sleep time
+  - ssl certificate 
+  - DNS beacon
+  - [Cobalt Guideline](https://github.com/bigb0sss/RedTeam-OffensiveSecurity/blob/master/01-CobaltStrike/malleable_C2_profile/CS4.0_guideline.profile)
+- NGNIPS
+  - context awareness
+  - application layer
+  - content awareness
+  - agile engine

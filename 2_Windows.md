@@ -1,33 +1,25 @@
-- [Sysinternals](#sysinternals)
-  - [Tools](#tools)
-  - [Abusing Internals](#abusing-internals)
-- [Commands](#commands)
-  - [Stabilize / Post Exploit / Persistance windows](#stabilize--post-exploit--persistance-windows)
-    - [Tampering with low users](#tampering-with-low-users)
-    - [Backdoor](#backdoor)
-    - [Create/Modfiy Services](#createmodfiy-services)
-    - [Schedule Tasks](#schedule-tasks)
-    - [Logon as Trigger](#logon-as-trigger)
-    - [Login Screen](#login-screen)
-    - [Web shell | mssql](#web-shell--mssql)
-  - [Powershell](#powershell)
-    - [Enumeration](#enumeration)
-- [SMB - 445](#smb---445)
-  - [SMBMAP](#smbmap)
-- [RDP](#rdp)
-- [Bypass User Account Control (UAC)](#bypass-user-account-control-uac)
-  - [GUI bypass](#gui-bypass)
-  - [Auto Elevating](#auto-elevating)
-  - [Enviroment Variable](#enviroment-variable)
-- [Runtime Detection](#runtime-detection)
-- [Evade Logging](#evade-logging)
-- [Living Off the Land](#living-off-the-land)
-  - [File Operation](#file-operation)
-    - [Certutil](#certutil)
-    - [BITSAdmin](#bitsadmin)
-    - [FindStr](#findstr)
-    - [Execution](#execution)
-- [Bypass Applocker](#bypass-applocker)
+- [[#Tools|Tools]]
+- [[#Abusing Internals|Abusing Internals]]
+- [[#Stabilize / Post Exploit / Persistance windows|Stabilize / Post Exploit / Persistance windows]]
+	- [[#Stabilize / Post Exploit / Persistance windows#Tampering with low users|Tampering with low users]]
+	- [[#Stabilize / Post Exploit / Persistance windows#Backdoor|Backdoor]]
+	- [[#Stabilize / Post Exploit / Persistance windows#Create/Modfiy Services|Create/Modfiy Services]]
+	- [[#Stabilize / Post Exploit / Persistance windows#Schedule Tasks|Schedule Tasks]]
+	- [[#Stabilize / Post Exploit / Persistance windows#Logon as Trigger|Logon as Trigger]]
+	- [[#Stabilize / Post Exploit / Persistance windows#Login Screen|Login Screen]]
+	- [[#Stabilize / Post Exploit / Persistance windows#Web shell | mssql|Web shell | mssql]]
+- [[#Powershell|Powershell]]
+	- [[#Powershell#Enumeration|Enumeration]]
+- [[#SMBMAP|SMBMAP]]
+- [[#GUI bypass|GUI bypass]]
+- [[#Auto Elevating|Auto Elevating]]
+- [[#Enviroment Variable|Enviroment Variable]]
+- [[#File Operation|File Operation]]
+	- [[#File Operation#Certutil|Certutil]]
+	- [[#File Operation#BITSAdmin|BITSAdmin]]
+	- [[#File Operation#FindStr|FindStr]]
+	- [[#File Operation#Execution|Execution]]
+
 
 # Sysinternals
 - [LOLBAS](https://lolbas-project.github.io/#)

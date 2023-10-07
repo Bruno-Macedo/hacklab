@@ -1,14 +1,24 @@
-# Buffer Overflow
+
+- [[#Buffer Overflow|Buffer Overflow]]
+	- [[#Buffer Overflow#Requeriments|Requeriments]]
+	- [[#Buffer Overflow#Methods|Methods]]
+	- [[#Buffer Overflow#GDB|GDB]]
+	- [[#Buffer Overflow#PWN Tools|PWN Tools]]
+	- [[#Buffer Overflow#Fuzzers|Fuzzers]]
+	- [[#Buffer Overflow#Script_Strings|Script_Strings]]
+	- [[#Buffer Overflow#Script to find EIP|Script to find EIP]]
+
+## Buffer Overflow
  Write more than the capacity of the memory
 - Generating cyclic patterns
   - /usr/share/metasploit-framework/tools/exploit/pattern_create.rb -l 600
 
 - [Buffer overflow Cheat Sheet](https://github.com/Tib3rius/Pentest-Cheatsheets/blob/master/exploits/buffer-overflows.rst)
 
-## Requeriments
+### Requeriments
 If .exe windows machine
 
-## Methods
+### Methods
 1. Connect to target: **nc TARGET PORT**
 2. Define local folder for mona: 
   
@@ -100,7 +110,7 @@ io.close()
 
 ```
 
-## GDB
+### GDB
 ```
 from pwn import *
 
@@ -140,7 +150,7 @@ print(payload)
   - no operation instruction = does nothing = \x90
   - python -c "print 'NOP'*no_of_nops + 'shellcode' + 'random_data'*no_of_random_data + 'memory address'"
 
-## PWN Tools
+### PWN Tools
 - Debug exploit
 - Commands
   - Stack canaries: detection of stack overflow
@@ -195,7 +205,7 @@ proc.send(payload)
 proc.interactive()
 ```
 
-## Fuzzers
+### Fuzzers
 1. Not working
 ```
 #!/usr/bin/env python3
@@ -251,7 +261,7 @@ while True:
         sys.exit()
 ```
 
-## Script_Strings
+### Script_Strings
 ```
 #listRem = "\\x11".split("\\x")
 #
@@ -263,7 +273,7 @@ print()
 
 ```
 
-## Script to find EIP
+### Script to find EIP
 ```
 import socket
 

@@ -1,31 +1,30 @@
-- [Web hacking](#web-hacking)
-  - [Server Side Template Injection](#server-side-template-injection)
-  - [Subdomain](#subdomain)
-  - [Wildcards](#wildcards)
-  - [User enumeration](#user-enumeration)
-  - [IDOR](#idor)
-  - [File inclusion](#file-inclusion)
-  - [SSRF](#ssrf)
-  - [XSS](#xss)
-  - [Websocket](#websocket)
-  - [Command injection](#command-injection)
-  - [Authentication](#authentication)
-  - [DATABASE](#database)
-    - [Steps](#steps)
-    - [UNION](#union)
-      - [Find data oracle](#find-data-oracle)
-    - [blind](#blind)
-      - [binary](#binary)
-        - [sqlmap](#sqlmap)
-        - [Provoking errors](#provoking-errors)
-      - [Time](#time)
-- [Burpsuite](#burpsuite)
-  - [Repeater](#repeater)
-  - [Intruder](#intruder)
-    - [Macros](#macros)
-  - [Decoder, Comparer, Sequencer](#decoder-comparer-sequencer)
-  - [Wordpres](#wordpres)
-- [API](#api)
+- [[#Server Side Template Injection|Server Side Template Injection]]
+- [[#Subdomain|Subdomain]]
+- [[#Wildcards|Wildcards]]
+- [[#User enumeration|User enumeration]]
+- [[#IDOR|IDOR]]
+- [[#File inclusion|File inclusion]]
+- [[#SSRF|SSRF]]
+- [[#XSS|XSS]]
+- [[#Websocket|Websocket]]
+- [[#Command injection|Command injection]]
+- [[#Authentication|Authentication]]
+- [[#DATABASE|DATABASE]]
+	- [[#DATABASE#Steps|Steps]]
+	- [[#DATABASE#UNION|UNION]]
+		- [[#UNION#Find data oracle|Find data oracle]]
+	- [[#DATABASE#blind|blind]]
+		- [[#blind#binary|binary]]
+			- [[#binary#sqlmap|sqlmap]]
+			- [[#binary#Provoking errors|Provoking errors]]
+		- [[#blind#Time|Time]]
+- [[#Repeater|Repeater]]
+- [[#Intruder|Intruder]]
+	- [[#Intruder#Macros|Macros]]
+- [[#Decoder, Comparer, Sequencer|Decoder, Comparer, Sequencer]]
+- [[#Wordpres|Wordpres]]
+- [[#Git Enumeration|Git Enumeration]]
+
 
 # Web hacking
 
@@ -355,3 +354,22 @@ admin123' UNION SELECT SLEEP(5),2;--
 - **Logging & Monitoring**
   - activities, request and all should be logged: endpoint, visitor's IP, input
   - solution: SIEM + alerts + see denied access/failed authentication/input validations/
+
+## Git Enumeration
+- nmap -sn ip.1-255 -oN output
+- check error message in the http server
+- explore folders
+- find exploit
+- dos2unix exploit.py OR sed -i 's/\r//' python.py
+- correct the information on the exploit
+- execute shell there
+- execute with burp or curl
+- curl -POST localhost:8000 ==> here we go to the computer we dont have access
+  
+- Extract .git folder
+- Gittools
+  - dumper: downlaod exposed .git directory from site
+  - extractor: take local .git and recreate repository
+  - finder: search for exposed g.t
+  - Read files: 
+    - separator="======================================="; for i in $(ls); do printf "\n\n$separator\n\033[4;1m$i\033[0m\n$(cat $i/commit-meta.txt)\n"; done; printf "\n\n$separator\n\n\n"
