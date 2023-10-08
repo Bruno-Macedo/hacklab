@@ -1,7 +1,6 @@
 - [[#TMUX cheat sheet|TMUX cheat sheet]]
 - [[#Docker|Docker]]
 
-
 ## TMUX cheat sheet
 - tmux
 - tmux new
@@ -20,6 +19,9 @@
 
 - ctrb +b $: new window
 
+- Variables
+	- tmux setenv VARIABLE value
+	- export Fariable=value
 - show all
   - tmux a
 
