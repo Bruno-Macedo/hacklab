@@ -22,6 +22,9 @@
 - Variables
 	- tmux setenv VARIABLE value
 	- export Fariable=value
+	- export Variable=value
+	- tmux showenv = display variables
+	-  tmux show-environment VARIABLE
 - show all
   - tmux a
 
