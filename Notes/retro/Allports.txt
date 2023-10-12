@@ -1,0 +1,9 @@
+# Nmap 7.94 scan initiated Thu Oct 12 16:00:28 2023 as: nmap -sS -p- -Pn -oN Allports.txt 10.10.11.141
+Nmap scan report for 10.10.11.141
+Host is up (0.033s latency).
+Not shown: 65533 filtered tcp ports (no-response)
+PORT     STATE SERVICE
+80/tcp   open  http
+3389/tcp open  ms-wbt-server
+
+# Nmap done at Thu Oct 12 16:02:28 2023 -- 1 IP address (1 host up) scanned in 120.32 seconds
