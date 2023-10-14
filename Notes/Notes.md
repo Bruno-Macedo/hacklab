@@ -41,6 +41,7 @@
 - Permissions:
   - icalcs
 - eventvwr
+  
 ## Linux
 - sudo -l
 - find / -perm -u=s -type f 2>/dev/null
@@ -56,8 +57,9 @@
 - crontab
   
 - Shell stabilize
-  -  python3 -c 'import pty;pty.spawn("/bin/bash")'
+  - python3 -c 'import pty;pty.spawn("/bin/bash")'
   - python3 -c  import pty;pty.spawn('/bin/bash') 
+  - python -c 'import pty; pty.spawn("/bin/bash")'
   - export TERM=xterm
 
 ## Upload files

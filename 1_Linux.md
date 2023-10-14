@@ -110,6 +110,7 @@
 ## Stabilizing
 -  python3 -c 'import pty;pty.spawn("/bin/bash")' = better view
 -  python3 -c "import pty;pty.spawn('/bin/bash')"
+-  python -c 'import pty; pty.spawn("/bin/bash")'
 -  export TERM=xterm = commands like clear
 -  ctr + z = back to our shel
 -  stty raw -echo; fg = back to reverse shell

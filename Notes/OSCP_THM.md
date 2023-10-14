@@ -14,11 +14,11 @@
 |HackPark               |- OK|
 |Game Zone              |- OK|
 |Skynet                 |- OK|
-|Daily Bugle            |    |
+|Daily Bugle            |- OK|
 |Brainstorm             |- OK|
 |Brainpan 1             |    |
 |Hacking with Powershell|- OK|
 |Corp                   |- OK|
 |Mr Robot CTF           |- OK|
-|Retro|                 ||
+|Retro|                 |- OK|
 
