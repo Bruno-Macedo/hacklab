@@ -71,21 +71,32 @@
 - Upload file on Immunity Debugger (windows)
   
 ```
+# Define working folder
 !mona config -set workingfolder c:\Users\admin\Desktop\patota
-python -c 'print"A" * TOTAL'
-!mona findmsp -distance TOTAL 
+
+# Fuzzing
+python3 -c 'print("A" * 5000)'
+
+# Generate payload after fuzzing
 /usr/share/metasploit-framework/tools/exploit/pattern_create.rb -l TOTAL
+
+# send created pattern through script
+python script.py
+
+# Find Offset with mona
 !mona findmsp -distance TOTAL
+
+# Finf offset with metasploit
+/usr/share/metasploit-framework/tools/exploit/pattern_offset.rb -q EIP
 ```
 
-- EIP offset
-- Remove "A" from script + write BBB on "retn"
+- Write BBBB on "retn"
 
 ```
 while bad_chars
-  !mona bytearray -b "\x00" = remove bad chars
+  !mona bytearray -b "\x00" = remove bad chars | !mona bytearray -cpb "\x00" = remove bad chars
   strings.py = without bad chars
-  !mona compare -f c:\Users\admin\Desktop\patota\bytearray.bin  -a ESP-Address
+  !mona compare -f c:\Users\admin\Desktop\patota\bytearray.bin -a ESP-Address
 
 !mona jmp -r esp -cpb "Badchars"
 ```

@@ -1,11 +1,11 @@
 | Room | Done|
 |-------|--------|
-|Blaster                | OK |
+|Blaster                |- OK|
 |Attacktive DIrectory   |    |
 |Tony th Tiger          |- OK|
 |Steel Mountain         |- OK|
 |Gatekeeper             |- OK|
-|BVlueprintDaily Bugle  |    |
+|Blueprint              |    |
 |OSCP Buffer Overflow   |- OK|
 |Vulnversity            |- OK|
 |Blue                   |- OK|
@@ -16,7 +16,7 @@
 |Skynet                 |- OK|
 |Daily Bugle            |- OK|
 |Brainstorm             |- OK|
-|Brainpan 1             |    |
+|Brainpan 1             |- OK|
 |Hacking with Powershell|- OK|
 |Corp                   |- OK|
 |Mr Robot CTF           |- OK|

