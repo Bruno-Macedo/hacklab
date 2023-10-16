@@ -1,0 +1,12 @@
+version: "3.7"
+
+services:
+  firepwd:
+    #image: "ghcr.io/peaceiris/latex:v1.1.0-full"
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/app
+    security_opt:
+      - no-new-privileges:true

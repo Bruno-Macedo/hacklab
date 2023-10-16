@@ -5,7 +5,7 @@
 |Tony th Tiger          |- OK|
 |Steel Mountain         |- OK|
 |Gatekeeper             |- OK|
-|Blueprint              |    |
+|Blueprint              |- OK|
 |OSCP Buffer Overflow   |- OK|
 |Vulnversity            |- OK|
 |Blue                   |- OK|
