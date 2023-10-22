@@ -1,5 +1,6 @@
-- [[#TMUX cheat sheet|TMUX cheat sheet]]
-- [[#Docker|Docker]]
+- [TMUX cheat sheet](#tmux-cheat-sheet)
+- [Docker](#docker)
+
 
 ## TMUX cheat sheet
 - tmux

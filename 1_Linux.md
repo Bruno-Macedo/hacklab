@@ -1,23 +1,34 @@
-- [[#Ping and Port Scanning|Ping and Port Scanning]]
-- [[#PWNCAT-CS|PWNCAT-CS]]
-- [[#Stabilizing|Stabilizing]]
-- [[#shared libraries|shared libraries]]
-- [[#capabilities|capabilities]]
-- [[#Cronjobs|Cronjobs]]
-- [[#PATH|PATH]]
-- [[#NFS|NFS]]
-- [[#Executables|Executables]]
-	- [[#Executables#Finding Important Files|Finding Important Files]]
-- [[#DNS, SMB, SNMP|DNS, SMB, SNMP]]
-- [[#msfvenom|msfvenom]]
-	- [[#msfvenom#Meterpreter|Meterpreter]]
-	- [[#msfvenom#Metasploit with database|Metasploit with database]]
-- [[#Firewal Evasion|Firewal Evasion]]
-	- [[#Firewal Evasion#Routes|Routes]]
-	- [[#Firewal Evasion#Fragmentation/MTU/Size|Fragmentation/MTU/Size]]
-- [[#Port Forwarding|Port Forwarding]]
-- [[#Summary|Summary]]
-- [[#Sandbox Evasion|Sandbox Evasion]]
+- [BASIC ENUM](#basic-enum)
+- [Existing Tools](#existing-tools)
+  - [Ping and Port Scanning](#ping-and-port-scanning)
+- [Shells](#shells)
+  - [PWNCAT-CS](#pwncat-cs)
+  - [Stabilizing](#stabilizing)
+- [Privilege Escalation](#privilege-escalation)
+  - [shared libraries](#shared-libraries)
+  - [capabilities](#capabilities)
+  - [Cronjobs](#cronjobs)
+  - [PATH](#path)
+  - [NFS](#nfs)
+  - [Executables](#executables)
+    - [Finding Important Files](#finding-important-files)
+- [Uploading Files](#uploading-files)
+  - [DNS, SMB, SNMP](#dns-smb-snmp)
+- [Searchexploit](#searchexploit)
+- [Code Analyse](#code-analyse)
+- [METASPLOIT](#metasploit)
+  - [msfvenom](#msfvenom)
+    - [Meterpreter](#meterpreter)
+    - [Metasploit with database](#metasploit-with-database)
+- [Port Scanning (NMAP - DB\_NMAP - Socat)](#port-scanning-nmap---db_nmap---socat)
+  - [Firewal Evasion](#firewal-evasion)
+    - [Routes](#routes)
+    - [Fragmentation/MTU/Size](#fragmentationmtusize)
+  - [Port Forwarding](#port-forwarding)
+  - [Summary](#summary)
+  - [Sandbox Evasion](#sandbox-evasion)
+- [Memory Dump (more learn)](#memory-dump-more-learn)
+
 
 
 # BASIC ENUM

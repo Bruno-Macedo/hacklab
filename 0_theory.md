@@ -1,21 +1,19 @@
-- [[#Definitions|Definitions]]
-- [[#Defense in Depth|Defense in Depth]]
-- [[#Registers|Registers]]
-- [[#Operations|Operations]]
-	- [[#Operations#Flags|Flags]]
-	- [[#Operations#Calling COnvention|Calling COnvention]]
-	- [[#Operations#Memory Layout|Memory Layout]]
-- [[#Firewalls and AntiVirus Evasion|Firewalls and AntiVirus Evasion]]
-	- [[#Firewalls and AntiVirus Evasion#Creating Payload|Creating Payload]]
-	- [[#Firewalls and AntiVirus Evasion#Obfuscation|Obfuscation]]
-	- [[#Firewalls and AntiVirus Evasion#Signature Evasion|Signature Evasion]]
-	- [[#Firewalls and AntiVirus Evasion#Firewalls|Firewalls]]
-- [[#Network Security Evasion|Network Security Evasion]]
-	- [[#Network Security Evasion#IDS x IPS|IDS x IPS]]
+- [Assembly in Windows](#assembly-in-windows)
+  - [Registers](#registers)
+  - [Operations](#operations)
+    - [Flags](#flags)
+    - [Calling COnvention](#calling-convention)
+    - [Memory Layout](#memory-layout)
+  - [Firewalls and AntiVirus Evasion](#firewalls-and-antivirus-evasion)
+    - [Creating Payload](#creating-payload)
+    - [Obfuscation](#obfuscation)
+    - [Signature Evasion](#signature-evasion)
+    - [Firewalls](#firewalls)
+  - [Network Security Evasion](#network-security-evasion)
+    - [IDS x IPS](#ids-x-ips)
 
 
 
-# Theory
 
 ## Definitions
 - **Attack Vector**: tool, technique method USED to attack

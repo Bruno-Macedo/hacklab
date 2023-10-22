@@ -1,8 +1,9 @@
-- [[#aircrack-ng tools|aircrack-ng tools]]
-	- [[#aircrack-ng tools#steps|steps]]
-			- [[#getting packages|getting packages]]
-		- [[#steps#weak IV traffic|weak IV traffic]]
-	- [[#aircrack-ng tools#evil twin|evil twin]]
+- [aircrack-ng tools](#aircrack-ng-tools)
+  - [steps](#steps)
+      - [getting packages](#getting-packages)
+    - [weak IV traffic](#weak-iv-traffic)
+  - [evil twin](#evil-twin)
+
 
 
 ## aircrack-ng tools

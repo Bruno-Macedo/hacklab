@@ -1,19 +1,20 @@
-- [[#Basic Steps|Basic Steps]]
-	- [[#Basic Steps#Active|Active]]
-- [[#External Tools|External Tools]]
-- [[#Phishing|Phishing]]
-- [[#Passive|Passive]]
-	- [[#Passive#recon-ng|recon-ng]]
-	- [[#Passive#Weaponization|Weaponization]]
-- [[#PIVOTING|PIVOTING]]
-	- [[#PIVOTING#SSH|SSH]]
-	- [[#PIVOTING#SS|SS]]
-	- [[#PIVOTING#PLINK.EXE|PLINK.EXE]]
-	- [[#PIVOTING#CHISEL|CHISEL]]
-	- [[#PIVOTING#SSHUTTLE|SSHUTTLE]]
-	- [[#PIVOTING#PROXY|PROXY]]
-	- [[#PIVOTING#SOCAT|SOCAT]]
-- [[#Wireshark|Wireshark]]
+- [Basic Steps](#basic-steps)
+  - [Active](#active)
+- [External Tools](#external-tools)
+- [Phishing](#phishing)
+- [Passive](#passive)
+  - [recon-ng](#recon-ng)
+  - [Weaponization](#weaponization)
+- [PIVOTING](#pivoting)
+  - [SSH](#ssh)
+  - [SS](#ss)
+  - [PLINK.EXE](#plinkexe)
+  - [CHISEL](#chisel)
+  - [SSHUTTLE](#sshuttle)
+  - [PROXY](#proxy)
+  - [SOCAT](#socat)
+- [Wireshark](#wireshark)
+
 
 ## Basic Steps
 - Enumerate

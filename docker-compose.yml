@@ -7,6 +7,6 @@ services:
       context: .
       dockerfile: Dockerfile
     volumes:
-      - ./Notes:/app
+      - /home/bruno/git/hacklab/Notes/AD:/app
     security_opt:
       - no-new-privileges:true

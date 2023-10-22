@@ -1,4 +1,5 @@
-- [[#Kubernetes|Kubernetes]]
+- [Kubernetes](#kubernetes)
+
 
 ## Kubernetes
 
