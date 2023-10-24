@@ -13,6 +13,9 @@
   - script: locate -r nse$ | grep NAME
   - sudo nmap -p- -Pn -sS TARGET -oA AllPort
   - sudo nmap -p -Pn -A 10.10.43.161 -oA Services
+  - sudo nmap -Pn -sV -sS -p --script vuln $target -oN Vuln.txt
+  - **smb**
+    - sudo nmap -p445 --script=smb-enum-shares.nse,smb-enum-users.nse $target
   - -v Version
   - -A os, in-build scripts
   - -sC default scripts
