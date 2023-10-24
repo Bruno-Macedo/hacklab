@@ -3,8 +3,8 @@
 ## HTB
 
 ### Linux
-| Room Linux    | Done| 
-|---------------|-----|
+| Room Linux    |Done| 
+|---------------|----|
 |Backdoor(n)    || 
 |Pandora(n)     || 
 |Meta(n)        || 
@@ -12,7 +12,7 @@
 |Talkative(n)   || 
 |Seventeen(n)   || 
 |Scrambled(n)   || 
-|Lame           ||  
+|Lame           |- OK|  
 |brainfuck*     ||
 |shocker        ||
 |bashed         ||
