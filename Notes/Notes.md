@@ -19,6 +19,7 @@
   - -v Version
   - -A os, in-build scripts
   - -sC default scripts
+  - extract ports:  egrep "^[0-9]{2,5}*" adnotes.md | sed -E "s#/.*##g" 
 
 - nmap Scrips
   - locate -r nse$ | grep mysql = nmap script

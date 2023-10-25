@@ -2,6 +2,10 @@
 
 ## HTB
 
+[Top Machine for Rodriguez](https://ismaelr.medium.com/my-top-10-oscp-like-hackthebox-machines-list-6d298edf8921)
+
+[Another Blog](https://medium.com/@tufail03)
+
 ### Linux
 | Room Linux    |Done| 
 |---------------|----|
@@ -78,7 +82,7 @@
 |Acute(n)      ||
 |Timelapse(n)  ||
 |StreamIO(n)   ||
-|legacy        ||      
+|legacy        |- OK|      
 |Blue*         ||
 |Devel         ||
 |Optimum       ||
