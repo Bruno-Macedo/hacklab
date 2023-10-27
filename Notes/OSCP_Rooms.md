@@ -16,7 +16,7 @@
 |Talkative(n)   || 
 |Seventeen(n)   || 
 |Scrambled(n)   || 
-|Lame           |- OK|  
+|Lame           |24-10-2023|  
 |brainfuck*     ||
 |shocker        ||
 |bashed         ||
@@ -82,9 +82,9 @@
 |Acute(n)      ||
 |Timelapse(n)  ||
 |StreamIO(n)   ||
-|legacy        |- OK|      
+|legacy        |25-10-2023|      
 |Blue*         ||
-|Devel         ||
+|Devel         |27-10-2023|
 |Optimum       ||
 |Bastard       ||
 |granny        ||
@@ -164,22 +164,22 @@
 |-------|--------|
 |Blaster                |- OK|
 |Attacktive DIrectory   |- OK|
-|Tony th Tiger          |- OK|
-|Steel Mountain         |- OK|
-|Gatekeeper             |- OK|
+|Tony th Tiger          |25-09-2023|
+|Steel Mountain         |26-09-2023|
+|Gatekeeper             |03-10-2023|
 |Blueprint              |- OK|
 |OSCP Buffer Overflow   |- OK|
 |Vulnversity            |- OK|
 |Blue                   |- OK|
-|Kenobi                 |- OK|
-|Alfred                 |- OK|
-|HackPark               |- OK|
-|Game Zone              |- OK|
+|Kenobi                 |26-09-2023|
+|Alfred                 |6/7-10-2023|
+|HackPark               |26-09-2023|
+|Game Zone              |30-09-2023|
 |Skynet                 |- OK|
-|Daily Bugle            |- OK|
-|Brainstorm             |- OK|
-|Brainpan 1             |- OK|
+|Daily Bugle            |14-10-2023|
+|Brainstorm             |12-10-2023|
+|Brainpan 1             |12-10-2023|
 |Hacking with Powershell|- OK|
 |Corp                   |- OK|
-|Mr Robot CTF           |- OK|
-|Retro|                 |- OK|
+|Mr Robot CTF           |08-10-2023|
+|Retro                  |- OK|

