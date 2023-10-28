@@ -18,7 +18,7 @@
 |Scrambled(n)   || 
 |Lame           |24-10-2023|  
 |brainfuck*     ||
-|shocker        ||
+|shocker        |28-10-2023|
 |bashed         ||
 |nibbles        ||
 |beep           ||

