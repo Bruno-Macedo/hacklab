@@ -1,0 +1,10 @@
+# Nmap 7.94 scan initiated Sun Oct 29 19:25:41 2023 as: nmap -Pn -sS -oN all.txt 10.129.96.84
+Nmap scan report for 10.129.96.84
+Host is up (0.034s latency).
+Not shown: 997 closed tcp ports (reset)
+PORT   STATE    SERVICE
+22/tcp open     ssh
+53/tcp filtered domain
+80/tcp open     http
+
+# Nmap done at Sun Oct 29 19:25:53 2023 -- 1 IP address (1 host up) scanned in 11.89 seconds

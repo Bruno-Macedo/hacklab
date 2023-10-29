@@ -1,0 +1,162 @@
+
+-----------------
+DIRB v2.22    
+By The Dark Raver
+-----------------
+
+OUTPUT_FILE: dirb.txt
+START_TIME: Sun Oct 29 19:21:09 2023
+URL_BASE: http://10.10.14.127/
+WORDLIST_FILES: /usr/share/dirb/wordlists/common.txt
+
+-----------------
+
+GENERATED WORDS: 4612
+
+---- Scanning URL: http://10.10.14.127/ ----
+
+(!) FATAL: Too many errors connecting to host
+    (Possible cause: COULDNT CONNECT)
+
+-----------------
+END_TIME: Sun Oct 29 19:21:09 2023
+DOWNLOADED: 0 - FOUND: 0
+
+-----------------
+DIRB v2.22    
+By The Dark Raver
+-----------------
+
+OUTPUT_FILE: dirb.txt
+START_TIME: Sun Oct 29 19:21:15 2023
+URL_BASE: http://10.10.14.127/
+WORDLIST_FILES: /usr/share/dirb/wordlists/common.txt
+
+-----------------
+
+GENERATED WORDS: 4612
+
+---- Scanning URL: http://10.10.14.127/ ----
+
+(!) FATAL: Too many errors connecting to host
+    (Possible cause: COULDNT CONNECT)
+
+-----------------
+END_TIME: Sun Oct 29 19:21:16 2023
+DOWNLOADED: 0 - FOUND: 0
+
+-----------------
+DIRB v2.22    
+By The Dark Raver
+-----------------
+
+OUTPUT_FILE: dirb.txt
+START_TIME: Sun Oct 29 19:21:19 2023
+URL_BASE: https://10.10.14.127/
+WORDLIST_FILES: /usr/share/dirb/wordlists/common.txt
+
+-----------------
+
+GENERATED WORDS: 4612
+
+---- Scanning URL: https://10.10.14.127/ ----
+
+(!) FATAL: Too many errors connecting to host
+    (Possible cause: COULDNT CONNECT)
+
+-----------------
+END_TIME: Sun Oct 29 19:21:19 2023
+DOWNLOADED: 0 - FOUND: 0
+
+-----------------
+DIRB v2.22    
+By The Dark Raver
+-----------------
+
+OUTPUT_FILE: dirb.txt
+START_TIME: Sun Oct 29 19:21:53 2023
+URL_BASE: http://10.10.14.127/
+WORDLIST_FILES: /usr/share/dirb/wordlists/common.txt
+
+-----------------
+
+GENERATED WORDS: 4612
+
+---- Scanning URL: http://10.10.14.127/ ----
+
+(!) FATAL: Too many errors connecting to host
+    (Possible cause: COULDNT CONNECT)
+
+-----------------
+END_TIME: Sun Oct 29 19:21:53 2023
+DOWNLOADED: 0 - FOUND: 0
+
+-----------------
+DIRB v2.22    
+By The Dark Raver
+-----------------
+
+OUTPUT_FILE: dirb.txt
+START_TIME: Sun Oct 29 19:26:55 2023
+URL_BASE: http://10.129.71.223/
+WORDLIST_FILES: /usr/share/dirb/wordlists/common.txt
+
+-----------------
+
+GENERATED WORDS: 4612
+
+---- Scanning URL: http://10.129.71.223/ ----
++ http://10.129.71.223/index.html (CODE:200|SIZE:93)
++ http://10.129.71.223/server-status (CODE:403|SIZE:300)
+
+-----------------
+END_TIME: Sun Oct 29 19:29:52 2023
+DOWNLOADED: 4612 - FOUND: 2
+
+-----------------
+DIRB v2.22    
+By The Dark Raver
+-----------------
+
+OUTPUT_FILE: dirb.txt
+START_TIME: Sun Oct 29 19:42:24 2023
+URL_BASE: http://10.129.71.223/nibbleblog/
+WORDLIST_FILES: /usr/share/dirb/wordlists/common.txt
+
+-----------------
+
+GENERATED WORDS: 4612
+
+---- Scanning URL: http://10.129.71.223/nibbleblog/ ----
+==> DIRECTORY: http://10.129.71.223/nibbleblog/admin/
++ http://10.129.71.223/nibbleblog/admin.php (CODE:200|SIZE:1401)
+==> DIRECTORY: http://10.129.71.223/nibbleblog/content/
++ http://10.129.71.223/nibbleblog/index.php (CODE:200|SIZE:2987)
+==> DIRECTORY: http://10.129.71.223/nibbleblog/languages/
+==> DIRECTORY: http://10.129.71.223/nibbleblog/plugins/
++ http://10.129.71.223/nibbleblog/README (CODE:200|SIZE:4628)
+==> DIRECTORY: http://10.129.71.223/nibbleblog/themes/
+
+---- Entering directory: http://10.129.71.223/nibbleblog/admin/ ----
+(!) WARNING: Directory IS LISTABLE. No need to scan it.
+    (Use mode '-w' if you want to scan it anyway)
+
+---- Entering directory: http://10.129.71.223/nibbleblog/content/ ----
+(!) WARNING: Directory IS LISTABLE. No need to scan it.
+    (Use mode '-w' if you want to scan it anyway)
+
+---- Entering directory: http://10.129.71.223/nibbleblog/languages/ ----
+(!) WARNING: Directory IS LISTABLE. No need to scan it.
+    (Use mode '-w' if you want to scan it anyway)
+
+---- Entering directory: http://10.129.71.223/nibbleblog/plugins/ ----
+(!) WARNING: Directory IS LISTABLE. No need to scan it.
+    (Use mode '-w' if you want to scan it anyway)
+
+---- Entering directory: http://10.129.71.223/nibbleblog/themes/ ----
+(!) WARNING: Directory IS LISTABLE. No need to scan it.
+    (Use mode '-w' if you want to scan it anyway)
+
+-----------------
+END_TIME: Sun Oct 29 19:45:14 2023
+DOWNLOADED: 4612 - FOUND: 3

