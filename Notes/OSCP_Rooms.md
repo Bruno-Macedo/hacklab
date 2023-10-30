@@ -21,7 +21,7 @@
 |shocker        |28-10-2023|
 |bashed         ||
 |nibbles        ||
-|beep           ||
+|beep           |29/30-10-2023|
 |cronos         ||
 |nineveh        ||
 |sense          ||

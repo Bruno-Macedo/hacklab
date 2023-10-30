@@ -148,6 +148,7 @@
     - find / -type f -perm -04000 -ls 2>/dev/null ==> *SUID or SGID* files
     - find / -perm -u=s -type f 2>/dev/null
     - find / -writable 2>/dev/null ==> find writable folders
+      - sudo -u OWNER file
 
 - sudo -l
 - [for SUID files](https://gtfobins.github.io/gtfobins/find/)
