@@ -32,7 +32,7 @@
 |sunday         ||
 |tartarsauce    ||
 |Irked          ||
-|Friendzone     ||
+|Friendzone     |interrupted|
 |Swagshop       ||
 |Networked      ||
 |jarvis*        ||
