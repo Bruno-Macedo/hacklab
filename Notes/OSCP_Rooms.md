@@ -20,8 +20,8 @@
 |brainfuck*     ||
 |shocker        |28-10-2023|
 |bashed         ||
-|nibbles        ||
-|beep           |29/30-10-2023|
+|nibbles        |29/30-10-2023|
+|beep           ||
 |cronos         ||
 |nineveh        ||
 |sense          ||

