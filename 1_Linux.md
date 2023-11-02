@@ -244,7 +244,14 @@
 # METASPLOIT
 - msfconsole
 - use exploit/multi/handler
-- search [keyword]
+  - post/multi = post exploitation (generic)
+  - 
+- search
+  - platform:
+  - type:
+  - author:
+  - app:
+  - name
 - show options
 - setg => set global valules
 - unsetg => unset global values
