@@ -7,115 +7,115 @@
 [Another Blog](https://medium.com/@tufail03)
 
 ### Linux
-| Room Linux    |Done| 
-|---------------|----|
-|Backdoor(n)    || 
-|Pandora(n)     || 
-|Meta(n)        || 
-|Paper(n)       || 
-|Talkative(n)   || 
-|Seventeen(n)   || 
-|Scrambled(n)   || 
-|Lame           |24-10-2023|  
-|brainfuck*     ||
-|shocker        |28-10-2023|
-|bashed         ||
-|nibbles        |29/30-10-2023|
-|beep           ||
-|cronos         ||
-|nineveh        ||
-|sense          ||
-|solidstate*    ||
-|node           ||
-|valentine      ||
-|poison         ||
-|sunday         ||
-|tartarsauce    ||
-|Irked          ||
-|Friendzone     |interrupted|
-|Swagshop       ||
-|Networked      ||
-|jarvis*        ||
-|Mirai          ||
-|Popcorn        ||
-|Haircut        ||
-|Blocky         ||
-|Frolic         ||
-|Postman        ||
-|Mango          ||
-|Traverxec      ||
-|OpenAdmin      ||
-|Magic          ||
-|Admirer        ||
-|Blunder        ||
-|Tabby          ||
-|Doctor         ||
-|SneakyMailer   ||
-|Passage        ||
-|Luanne         ||
-|Time           ||
-|Ready          ||
-|Delivery       ||
-|Ophiuchi       ||
-|ScriptKiddie   ||
-|Armageddon     ||
-|Knife          ||
-|Pit            ||
-|Seal           ||
-|Previse        ||
-|Forge          ||
-|Horizontall    ||
-|Shibboleth     ||
-|Writer         ||
-|Precise        ||
-|Pandora        ||
-|Meta           ||
-|Paper          ||
-|Talkative      ||
-|Seventeen      ||
-
+| Room Linux    |Done|Note    | 
+|---------------|----|--------|
+|Backdoor(n)    || |
+|Pandora(n)     || |
+|Meta(n)        || |
+|Paper(n)       || |
+|Talkative(n)   || |
+|Seventeen(n)   || |
+|Scrambled(n)   || |
+|Lame           |24-10-2023|  |
+|brainfuck*     |||
+|shocker        |28-10-2023||
+|bashed         |||
+|nibbles        |29/30-10-2023||
+|beep           |||
+|cronos         |||
+|nineveh        |||
+|sense          |||
+|solidstate*    |||
+|node           |||
+|valentine      |||
+|poison         |||
+|sunday         |||
+|tartarsauce    |||
+|Irked          |||
+|Friendzone|interrupted|Bad - Dig connection failed|
+|Swagshop       |||
+|Networked      |||
+|jarvis*        |||
+|Mirai          |||
+|Popcorn        |||
+|Haircut        |||
+|Blocky         |||
+|Frolic         |||
+|Postman        |||
+|Mango          |||
+|Traverxec      |||
+|OpenAdmin      |||
+|Magic          |||
+|Admirer        |||
+|Blunder        |||
+|Tabby          |||
+|Doctor         |||
+|SneakyMailer   |||
+|Passage        |||
+|Luanne         |||
+|Time           |||
+|Ready          |||
+|Delivery       |||
+|Ophiuchi       |||
+|ScriptKiddie   |||
+|Armageddon     |||
+|Knife          |||
+|Pit            |||
+|Seal           |||
+|Previse        |||
+|Forge          |||
+|Horizontall    |||
+|Shibboleth     |||
+|Writer         |||
+|Precise        |||
+|Pandora        |||
+|Meta           |||
+|Paper          |||
+|Talkative      |||
+|Seventeen      |||
+|
 ### Windows
 
-| Room Linux   | Done| 
-|--------------|-----|
-|Search(n)     || 
-|Acute(n)      ||
-|Timelapse(n)  ||
-|StreamIO(n)   ||
-|legacy        |25-10-2023|      
-|Blue*         ||
-|Devel         |27-10-2023|
-|Optimum       ||
-|Bastard       ||
-|granny        ||
-|Arctic        ||
-|grandpa       ||
-|silo*         ||
-|bounty        ||
-|jerry         ||
-|conceal*      ||
-|chatterbox    ||
-|Forest*       ||
-|BankRobber*   ||
-|secnotes      ||
-|Bastion       ||
-|Buff          ||
-|Servmon       ||
-|Active*       ||
-|Remote        ||
-|Fuse          ||
-|Omni          ||
-|Worker        ||
-|Love          ||
-|Intelligence  ||
-|APT           ||
-|Object        ||
-|Support       ||
-|Acute         ||
-|Timelapse     ||
-|StreamIO      ||
-|Scrambled     ||
-
+| Room Linux   | Done|Note    | 
+|--------------|-----|--------|
+|Search(n)     || |
+|Acute(n)      |||
+|Timelapse(n)  |||
+|StreamIO(n)   |||
+|legacy        |25-10-2023|      |
+|Blue*         |||
+|Devel         |27-10-2023||
+|Optimum (bad) |03/04-10-2023|More pantience by searching exploits + reading exploit + go to metasploit|
+|Bastard       |||
+|granny        |||
+|Arctic        |||
+|grandpa       |||
+|silo*         |||
+|bounty        |||
+|jerry         |||
+|conceal*      |||
+|chatterbox    |||
+|Forest*       |||
+|BankRobber*   |||
+|secnotes      |||
+|Bastion       |||
+|Buff          |||
+|Servmon       |||
+|Active*       |||
+|Remote        |||
+|Fuse          |||
+|Omni          |||
+|Worker        |||
+|Love          |||
+|Intelligence  |||
+|APT           |||
+|Object        |||
+|Support       |||
+|Acute         |||
+|Timelapse     |||
+|StreamIO      |||
+|Scrambled     |||
+|
 ### More difficult
 | Room Linux               | Done| 
 |--------------------------|-----|

