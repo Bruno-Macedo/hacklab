@@ -6,6 +6,8 @@
 
 [Another Blog](https://medium.com/@tufail03)
 
+[Another blog](https://hackersinterview.com/oscp/oscp-like-machines-in-htb-vulnhub-tryhackme/)
+
 ### Linux
 | Room Linux    |Done|Note    | 
 |---------------|----|--------|

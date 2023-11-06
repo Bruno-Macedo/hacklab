@@ -1,6 +1,6 @@
 
 
-# Basics
+## Basics
 - cracking: from hash
 - guessing: from dictionary (loud)
 - dump = leaks of passwords/hash
@@ -8,7 +8,7 @@
   - cat file1 file2 > file3
   - sort fil3 | uniq u > cleaned
 
-# Hashcat
+## Hashcat
 - Identify hash
   - hashid
   - hashidentifier
@@ -25,14 +25,14 @@
 
 - [Crackstation](https://crackstation.net/)
   
-# John
+## John
 - Using rules
   - john --wordlist=existing_list --rules=pick_one --stdout
   - --format=ENCRYPTION
   - adding rule
     - conf file: [rule_name] Az"[0-9]" ^[!@#$]
 
-# Hydra
+## Hydra
 - hydra -l username -P wordlist.txt server service
 - hydra -l username -P wordlist.txt service://server (hydra -l -u $target smb -V -f)
 - -d = debug
@@ -79,11 +79,11 @@ hydra -l milesdyson -P log1.txt $target http-post-form '/squirrelmail/src/login.
 - SSH
   - -L [USER_LIST] -P [PASS_LIST] ssh://IP -v
 
-# Brutespray
+## Brutespray
 - Toll that uses result from nmap scan .xml
 - [Information here](https://github.com/x90skysn3k/brutespray)
 
-# Creating Wordlists
+## Creating Wordlists
 - cewl URL
   - -w = output
   - -d 5 = depth
@@ -104,7 +104,13 @@ hydra -l milesdyson -P log1.txt $target http-post-form '/squirrelmail/src/login.
   - based on information of the target, birthdate, pet, etc
   - https://github.com/Mebus/cupp.git
 
-# Mozillas files
+## Zip files
+- John
+- fcrackzip
+  - -D = dictionary
+  - -u = only correct password
+
+## Mozillas files
 - Files
   - .db
   - logins.json
