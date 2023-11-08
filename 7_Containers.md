@@ -1,4 +1,5 @@
 - [Kubernetes](#kubernetes)
+- [AWS](#aws)
 
 
 ## Kubernetes
@@ -45,5 +46,15 @@
 - Jobs
 - Enviroment variables:
   - env: search for tcp
-- 
 
+## AWS
+**awscli**
+- aws configure
+- aws s3 ls s3://path/to/container
+  - --endpoint-url=http://path/to/container s3://path/to/container
+- Copy
+  - aws s3 cp/mv file s3://path/to/container
+  - aws s3 cp FILE_TO_COPY  --endpoint-url=http://path/to/container s3://path/to/container
+- owner
+  - aws s3api get-bucket-acl --bucket bucket-name
+  - 

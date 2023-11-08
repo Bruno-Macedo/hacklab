@@ -22,6 +22,9 @@ https://book.hacktricks.xyz/pentesting-web/ssti-server-side-template-injection
 - Google search engine: site:*.domain.com
 - dnsrecon
 - dnsdumpster => online
+- wfuzz
+- ffuf
+  - -u "$target" -H "Host: FUZZ.$target"
 
 ## Wildcards 
 - A lot of false positive

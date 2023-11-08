@@ -40,11 +40,14 @@
   - dig axfr domain @ATTACKING
 - host $target
   - host -t ns $target
+  
+#### Find domains
 - dnsenum
 - nmap
   -  nmap -T4 -p53 --script dns* $target
 - fierce --domain domain
 - dnsrecon -d DOMAIN -std
+- wfuzz -c -w WORDLIST -u "http://$target/" -H "Host: FUZZ.$target" -f output.txt --hw (hide word/line/etc)
 
 
 ## Login

