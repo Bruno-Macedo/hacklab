@@ -71,8 +71,6 @@ Insecure Direct Object Request
 - double extension
 - exiftools -Comment=PAYLOAD picture.jgp.php ==> Comments!!!
 
- 
-
 ## SSRF
 - Server-Side Request Forgery
 - Where? 
@@ -96,7 +94,6 @@ Insecure Direct Object Request
 - Change "X-Forwarded-For" header
 - Cross-site WebSockets
   - cross domain connection
-  - 
   
 ## Command injection
 - blind: no output, test with ping/sleep/timeout(win) || force output > etwas
@@ -116,6 +113,9 @@ Insecure Direct Object Request
 ## DATABASE
 
 ### Steps
+- Crash? = Vulnerable
+  - parameter=value' 
+  - parameter=value' ORDER BY [#_columns] = try/error
 - find vulnerability: ', "
 - find total columns: UNION SELECT NULL,NULL,NULL
 - find name of db: UNION SELECT NULL,NULL,database()

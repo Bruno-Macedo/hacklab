@@ -1,8 +1,8 @@
 # Basic Steps
 
 [Tyler's Notebook](https://southeasttech-my.sharepoint.com/:o:/g/personal/tyler_ramsbey_southeasttech_edu/EmrNEjx_FjRKjYRotc9TikMB7DtzCwhKWOAEovdtZADBgg?rtime=bQkHVxRr20g)
-
-[https://book.hacktricks.xyz/](a lot of good stuff)
+[a lot of good stuff](https://book.hacktricks.xyz/)
+[Cheat sheets](https://pentestmonkey.net/)
 
 ## Automatic web enum
 - dirb | dirsearch
@@ -49,7 +49,6 @@
 - dnsrecon -d DOMAIN -std
 - wfuzz -c -w WORDLIST -u "http://$target/" -H "Host: FUZZ.$target" -f output.txt --hw (hide word/line/etc)
 
-
 ## Login
 - brute force: hydra
 - sqlmap
@@ -84,15 +83,13 @@
   - [suggester](https://github.com/AonCyberLabs/Windows-Exploit-Suggester)
   - Empire modules:  /usr/share/powershell-empire/empire/server/modules/
 
-  
-### Registry
+  ### Registry
 - Passwords:
   - REG QUERY HKLM /F "password" /t REG_SZ /S /K
   - REG QUERY HKCU /F "password" /t REG_SZ /S /K
   - REG QUERY HKLM /F "password" /t REG_SZ /S /d
   - REG QUERY HKCU /F "password" /t REG_SZ /S /d
   - REG QUERY "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\WinLogon" /v DefaultPassword /reg:64
-
 
 ### SMB
 - smbmap -H $target = Check Privileges 
@@ -139,6 +136,16 @@
   - Apache!!!!
 - ffuf -u https://example.com/cgi-bin/FUZZ.cgi -w wordlist.txt
 - dirb http://$target -x Extensions (.pl .cgi .sh .ps1)
+- SQL endpoints
+  - Find if crash
+  - ORDER BY [Total_Columns]--
+  - UNION SELECT c1,c2,c3...cn--
+  - UNION SELECT c1,c2,@@version,...cn--
+  - UNION SELECT c1,c2,@@version,...cn--
+  - parameters?
+  - group_concat() = all values from != rows into one string
+  -s
+  - 
 
 ## Upload files
 ### Windows
