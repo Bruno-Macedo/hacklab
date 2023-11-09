@@ -132,6 +132,7 @@
   - export TERM=xterm
 
 ## Web
+- Input fields / parameter
 - cgi-bin = content
   - Apache!!!!
 - ffuf -u https://example.com/cgi-bin/FUZZ.cgi -w wordlist.txt
@@ -144,8 +145,7 @@
   - UNION SELECT c1,c2,@@version,...cn--
   - parameters?
   - group_concat() = all values from != rows into one string
-  -s
-  - 
+
 
 ## Upload files
 ### Windows
