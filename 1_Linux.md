@@ -64,12 +64,19 @@
 - netstat
   - -a = all listening/non-listening
   - -l = listening
-  - -n = numero, 
+  - -n = numero
   - -t = tcp
   - -u = udp
   - -x = unix
   - -p = process id
   - find open ports
+  - tulpn
+  - putan
+- ss
+  - -l = listening
+  - -t = tcp
+  - -u = udp
+  - -n = not resolve
   
 - arp -a = find neighbors
 - lsof = List Open Files

