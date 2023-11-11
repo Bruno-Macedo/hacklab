@@ -77,6 +77,13 @@ hydra -l milesdyson -P log1.txt $target http-post-form '/squirrelmail/src/login.
 - SSH
   - -L [USER_LIST] -P [PASS_LIST] ssh://IP -v
 
+
+- Default Usernames:
+```
+root
+admin
+```
+
 ## User enumeration
 -  fuff -w [wordlist] -X [Method] -d " username=FUZZ& data to be sent" -H "additional header request" -u "url" -mr "we are looking for this answer / match regex"
    -  the *FUZZ* will be replaced by the items in the wordlist

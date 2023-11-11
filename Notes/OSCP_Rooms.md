@@ -37,7 +37,7 @@
 |Friendzone|interrupted|Bad - Dig connection failed|
 |Swagshop       |||
 |Networked      |||
-|jarvis*        |||
+|jarvis*        |6/11-11-2023||
 |Mirai          |||
 |Popcorn        |||
 |Haircut        |||

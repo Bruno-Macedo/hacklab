@@ -59,7 +59,10 @@
     - [Environment]::Is64BitProcess
     - [Environment]::Is32itProcess
 - Impackt
-  - /opt/impacket/e
+  - /opt/impacket/
+    - smb: psexec.py
+    - MSQL
+    - 
 - browser cache
 - Enumerate register
 - scheduled task
@@ -97,6 +100,7 @@
 - smbmap -H $target = Check Privileges 
 - smbmap -H $target -R --depth 5
 - smbclient -L //$target/ = List Shares
+- smbclient -L //$target -U admin/administrator
 - smbclient //$target/Users = Interactive shell to a share 
 - smbclient  \\\\$target\\share$ = Open a Null Session
 - smbclient //friendzone.htb/general -U "" = see files inside
@@ -109,12 +113,15 @@
   - smb-protocols
   - smb-enum-shares
   - smb-vuln*
+- psexec.py user:pass@$target COMMAND
 
 ## Linux
 - sudo -l
-- find / -perm -u=s -type f 2>/dev/null
-- find / -type f -perm -04000 -ls 2>/dev/null : SUID
-
+- SUID
+  - find / -perm -u=s -type f 2>/dev/null
+  - find / -type f -perm -04000 -ls 2>/dev/null 
+  - find / -type f -perm -4000 -user root -ls 2>/dev/null
+  - find / -type f -perm -u=s -user root -ls 2>/dev/null
 - lscpu
 - lsblk -a
 - lsusb -v

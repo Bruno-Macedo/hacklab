@@ -508,6 +508,7 @@ cat /tmp/cme_spider_plus/<target-ip>.json
 - Commands
   - smbmap -H $target = Check Privileges 
   - smbmap -H $target -R --depth 5
+  - smbclient -L //$target -U admin/administrator
   - smbclient -L //$target/ = List Shares
   - smbclient //$target/Users = Interactive shell to a share 
   - smbclient  \\\\$target\\share$ = Open a Null Session
