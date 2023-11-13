@@ -8,6 +8,8 @@
 
 [Another blog](https://hackersinterview.com/oscp/oscp-like-machines-in-htb-vulnhub-tryhackme/)
 
+[Another list](https://g10s.io/my-cybersecurity-journey-2021/)
+
 ### Linux
 | Room Linux    |Done|Note    | 
 |---------------|----|--------|
@@ -21,7 +23,7 @@
 |Lame           |24-10-2023|  |
 |brainfuck*     |||
 |shocker        |28-10-2023||
-|bashed         |||
+|bashed         |4-11-2023||
 |nibbles        |29/30-10-2023||
 |beep           |||
 |cronos         |||
