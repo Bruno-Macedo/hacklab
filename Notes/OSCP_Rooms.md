@@ -10,6 +10,8 @@
 
 [Another list](https://g10s.io/my-cybersecurity-journey-2021/)
 
+[More one list](https://rana-khalil.gitbook.io/hack-the-box-oscp-preparation/windows-boxes)
+
 ### Linux
 | Room Linux    |Done|Note    | 
 |---------------|----|--------|
