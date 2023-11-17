@@ -165,6 +165,7 @@
 
 ## Web
 - dirb | dirsearch | gobuster | ffuz | wfuzz
+  - wfuzz -c -u 'https:/target' -H "Host: FUZZ.target" -w WORDLIST--hh (hide/show)
 - Input fields / parameter
   - c:/windows/win.ini
   - /etc/passwd
