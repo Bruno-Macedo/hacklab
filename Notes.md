@@ -181,6 +181,7 @@
   - UNION SELECT c1,c2,c3...cn--
   - UNION SELECT c1,c2,@@version,...cn--
   - UNION SELECT c1,c2,@@version,...cn--
+    - UNION SELECT c1,ce,(UNION SELECT column_flag FROM table_flag)--
   - parameters?
   - group_concat() = all values from != rows into one string
   - Where are files written? / DocumentRoot
