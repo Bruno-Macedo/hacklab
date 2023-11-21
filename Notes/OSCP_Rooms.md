@@ -87,7 +87,7 @@
 |Timelapse(n)  |||
 |StreamIO(n)   |||
 |legacy        |25-10-2023|      |
-|Blue*         |||
+|Blue*         |21-11-2023||
 |Devel         |27-10-2023||
 |Optimum (bad) |03/04-10-2023|More pantience by searching exploits + reading exploit + go to metasploit|
 |Bastard       |||
