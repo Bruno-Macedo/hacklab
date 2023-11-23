@@ -28,7 +28,7 @@
 |beep           |||
 |cronos         |||
 |nineveh        |||
-|sense          |||
+|sense          |23/24-11-2023||
 |solidstate*    |||
 |node           |||
 |valentine      |||
