@@ -18,12 +18,14 @@
 ## Basic network
 - nmap (all ports)
   - script: locate -r nse$ | grep NAME
-  - sudo nmap -p- -Pn -sS TARGET -oA AllPort
-  - sudo nmap -p -Pn -A 10.10.43.161 -oA Services
+  - sudo nmap -p- -Pn -sS -sV -PA -v -F --version-all $target -oA AllPort
+  - sudo nmap -p -Pn -A $target -oA Services
   - sudo nmap -Pn -sV -sS -p --script vuln $target -oN Vuln.txt
     - -v Version
     - -A os, in-build scripts
     - -sC default scripts
+  - SSL scan
+    - --script ssl*
 
   - scripts
     - --script=nfs-ls,nfs-statfs,nfs-showmount
@@ -132,6 +134,8 @@
 
 ## Linux
 - sudo -l
+- history
+- ps aux
 - SUID
   - find / -perm -u=s -type f 2>/dev/null
   - find / -type f -perm -04000 -ls 2>/dev/null 

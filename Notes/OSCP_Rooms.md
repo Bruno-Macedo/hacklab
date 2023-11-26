@@ -31,7 +31,7 @@
 |sense          |23/24-11-2023||
 |solidstate*    |||
 |node           |||
-|valentine      |||
+|valentine      |26-11-2023||
 |poison         |||
 |sunday         |||
 |tartarsauce    |||
