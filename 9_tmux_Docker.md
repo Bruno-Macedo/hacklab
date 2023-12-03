@@ -71,5 +71,6 @@ docker exec 7b4294cce723 pandoc OSCP_Report_Steel_Mountail_THM.md \
   - docker rmi $(docker images -q) -f
   - docker rm $(docker ps -a -q)
   - docker system prune
+    - docker system prune --all --force --volumes
 
 

