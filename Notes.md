@@ -97,6 +97,7 @@
 - RCE admin: change user
 - Check files on user:
   -  cmd /c dir /s /b /a:-d-h \Users\chase | findstr /i /v appdata
+  
 - **Automatic scans**
   - winpeas
   - [privesc_check](https://github.com/pentestmonkey/windows-privesc-check)
@@ -151,12 +152,11 @@
   - grep --color=auto -rnw '/etc' -ie "Password" --color=always 2>/dev/null
   - find /etc -type f -exec grep -i -I "pass" {} /dev/null \;
 
-
+- Virtual hosts?
 - lscpu
 - lsblk -a
 - lsusb -v
 - lspci -t -v
-- fidlist -l
 - Groups: LXD????
 - crontab
 - Automatic tools

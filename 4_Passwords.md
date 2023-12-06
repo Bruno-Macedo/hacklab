@@ -131,3 +131,29 @@ admin
 - https://github.com/unode/firefox_decrypt.git
 - msfconsole:
   -  use post/multi/gather/firefox_creds = extract files
+
+## SSL
+- Create certificates, pub.keys, priv.keys
+- Verify priv.key to certificate
+  - openssl pkey -in INPUT.key -pubout
+
+- Verify pub.key from certificate
+  - openssl x509 -in ca.crt -pubkey -noout
+  
+  - Compare
+    - openssl x509 -in ca.crt -pubkey -noout | md5sum; \
+openssl pkey -in ca.key -pubout | md5sum
+
+- Generate certificate
+  - openssl genrsa -out client.key 4096
+  - openssl req -new -key client.key -out client.src
+  
+- Sign certificate with key
+  - openssl x509 -req -in client.src -CA ca.crt -CAkey ca.key -set_serial 9001 -extensions client -days 1001 -outform PEM -out my.cer
+  - pkcs12 = combination(.key,.cer)
+    - openssl pkcs12 -export -inkey client.key -inclient.cert -out client.p12
+  - check pkcs12
+    - openssl pkcs12 -info -in client.p12
+
+- Verify certificates
+  - openssl verify -verbose -CAfile ca.crt client.cer

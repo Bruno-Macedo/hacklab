@@ -47,8 +47,8 @@
 |Frolic         |||
 |Postman        |||
 |Mango          |||
-|Traverxec      |||
-|OpenAdmin      |||
+|Traverxec      |06-12-2023||
+|OpenAdmin      |05-12-2023|See .db files, search vhost|
 |Magic          |||
 |Admirer        |||
 |Blunder        |||
@@ -121,47 +121,47 @@
 |Scrambled     |||
 |
 ### More difficult
-| Room Linux               | Done| 
-|--------------------------|-----|
-|Jeeves [Windows]          ||
-|Bart*   [Windows]         ||
-|Tally* [Windows]          ||
-|Kotarak [Linux]           ||
-|falafel [Linux]           ||
-|Devops [Linux]            ||
-|Hawk [Linux]              ||
-|Netmon [Windows]          |17-11-2023|
-|Lightweight [Linux]       ||
-|La Casa De Papel [Linux]  ||
-|Jail [Linux]              ||
-|Safe [Linux]              ||
-|Bitlab [Linux]            ||
-|Sizzle [Windows]          ||
-|Sniper* [Windows]         ||
-|Control [Windows]         ||
-|October [Linux]           ||
-|Mango* [Linux]            ||
-|Nest [Windows]            ||
-|Book [Linux]              ||
-|Sauna [Windows]           ||
-|Cascade [Windows]         ||
-|Querier [Windows]         ||
-|Quick [Linux]             ||
-|BlackField [Windows]      ||
-|APT [Windows]             ||
-|Atom [Windows]            ||
-|BreadCrumbs [Windows]     ||
-|Monitors [Linux]          ||
-|Dynstr [Linux]            ||
-|PivotAPI [Windows]        ||
-|Pikaboo [Linux]           ||
-|Monteverde* [Windows]     ||
-|Writer [Linux]            ||
-|Forge [Linux]             ||
-|Stacked [Linux]           ||
-|Backdoor[Linux]           ||
-|Search[Windows]           ||
-|Undetected[Linux] (More like an IR box)                       ||
+| Room                     | Done|Note| 
+|--------------------------|-----|----|
+|Jeeves [Windows]          |||
+|Bart*   [Windows]         |||
+|Tally* [Windows]          |||
+|Kotarak [Linux]           |||
+|falafel [Linux]           |||
+|Devops [Linux]            |||
+|Hawk [Linux]              |||
+|Netmon [Windows]          |17-11-2023||
+|Lightweight [Linux]       |||
+|La Casa De Papel [Linux]  ||Need to learn more about ssl|
+|Jail [Linux]              |||
+|Safe [Linux]              |||
+|Bitlab [Linux]            |||
+|Sizzle [Windows]          |||
+|Sniper* [Windows]         |||
+|Control [Windows]         |||
+|October [Linux]           |||
+|Mango* [Linux]            |||
+|Nest [Windows]            |||
+|Book [Linux]              |||
+|Sauna [Windows]           |||
+|Cascade [Windows]         |||
+|Querier [Windows]         |||
+|Quick [Linux]             |||
+|BlackField [Windows]      |||
+|APT [Windows]             |||
+|Atom [Windows]            |||
+|BreadCrumbs [Windows]     |||
+|Monitors [Linux]          |||
+|Dynstr [Linux]            |||
+|PivotAPI [Windows]        |||
+|Pikaboo [Linux]           |||
+|Monteverde* [Windows]     |||
+|Writer [Linux]            |||
+|Forge [Linux]             |||
+|Stacked [Linux]           |||
+|Backdoor[Linux]           |||
+|Search[Windows]           |||
+|Undetected[Linux] (More like an IR box)                       |||
 
 ## THM
 | Room | Done|
