@@ -1,6 +1,6 @@
 - [TMUX cheat sheet](#tmux-cheat-sheet)
 - [Docker](#docker)
-
+- [Python venv](#python-venv)
 
 ## TMUX cheat sheet
 - tmux
@@ -64,7 +64,6 @@ docker exec 7b4294cce723 pandoc OSCP_Report_Steel_Mountail_THM.md \
 --resource-path=.:src
 ```
 
-
 - docker remove
 - Docker remove all images
   - docker rmi $(docker images --filter "dangling=true" -q --no-trunc)
@@ -74,3 +73,8 @@ docker exec 7b4294cce723 pandoc OSCP_Report_Steel_Mountail_THM.md \
     - docker system prune --all --force --volumes
 
 
+## Python venv
+- python -m venv /path
+- source bin/activate
+- deactivate
+- 

@@ -234,7 +234,6 @@
     - copy \\IP\\share\file.ext 
 - [Other methods](https://www.hackingarticles.in/file-transfer-cheatsheet-windows-and-linux/)
 
-
 - Impackt
   - /opt/impacket/
     - smb: psexec.py
