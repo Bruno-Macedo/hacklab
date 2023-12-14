@@ -94,7 +94,7 @@
 |granny        |12/18-11-2023||
 |Arctic        |||
 |grandpa       |||
-|silo*         |||
+|silo*         |14-12-2023|Try again|
 |bounty        |||
 |jerry         |16-11-2023||
 |conceal*      |||

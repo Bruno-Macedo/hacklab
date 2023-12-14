@@ -1,0 +1,10 @@
+# Nmap 7.94SVN scan initiated Thu Dec 14 19:08:39 2023 as: nmap -Pn -T5 -p- -oN ports.txt 10.129.43.28
+Warning: 10.129.43.28 giving up on port because retransmission cap hit (2).
+Nmap scan report for 10.129.43.28
+Host is up (0.18s latency).
+Not shown: 65431 closed tcp ports (reset), 102 filtered tcp ports (no-response)
+PORT   STATE SERVICE
+22/tcp open  ssh
+80/tcp open  http
+
+# Nmap done at Thu Dec 14 19:17:38 2023 -- 1 IP address (1 host up) scanned in 539.69 seconds
