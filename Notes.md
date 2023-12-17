@@ -76,6 +76,7 @@
     - [Environment]::Is64BitProcess
     - [Environment]::Is32itProcess
 - icalcs file = permission
+- dir / attrib / get-childitem -Forcet
 
 - browser cache
   - procdump (process)
@@ -185,6 +186,9 @@
 - dirb | dirsearch | gobuster | ffuz | wfuzz
   - wfuzz -c -u 'https:/target' -H "Host: FUZZ.target" -w WORDLIST--hh (hide/show)
   - gobuster -k (no tls validation) -w wordlist -x ext,ext,ext
+```
+png,jpg,config,html,asp,aspx,php,php5,xml,htm,exe
+```
 - Input fields / parameter
   - c:/windows/win.ini
   - /etc/passwd
@@ -242,6 +246,7 @@
     - MSQL
   - [More Info](https://www.hackingarticles.in/impacket-guide-smb-msrpc/)
   - [Other info](https://www.coresecurity.com/core-labs/open-source-tools/impacket)
+  - [Nishang_Collection](https://github.com/samratashok/nishang/tree/master)
   
 ### Linux
 - python3 -m http.server 8000

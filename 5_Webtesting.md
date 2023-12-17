@@ -59,6 +59,8 @@ Insecure Direct Object Request
 
 - null byte = %00, injection (terminate string)
 - curl -X METHOD -d [data]
+  - -k ignore secure connection
+  - -vvv
 - magic numbers
 - double extension
 - exiftools -Comment=PAYLOAD picture.jgp.php ==> Comments!!!
@@ -339,6 +341,7 @@ admin123' UNION SELECT SLEEP(5),2;--
 - execute shell there
 - execute with burp or curl
 - curl -POST localhost:8000 ==> here we go to the computer we dont have access
+- 
   
 - Extract .git folder
 - Gittools

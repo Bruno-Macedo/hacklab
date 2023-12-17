@@ -27,7 +27,8 @@
   - [Port Forwarding](#port-forwarding)
   - [Summary](#summary)
   - [Sandbox Evasion](#sandbox-evasion)
-- [Memory Dump (more learn)](#memory-dump-more-learn)
+  - [Memory Dump (more learn)](#memory-dump-more-learn)
+  - [Recover files](#recover-files)
 
 
 
@@ -447,7 +448,7 @@
 **Learn more about it**
 
 
-# Memory Dump (more learn)
+## Memory Dump (more learn)
 - volatility
   - -f = memory dump file
   - -v = verbosity
@@ -460,3 +461,21 @@
   - imageinfo = find OP
     - python3 vol.py -f file.vmem  windows.info
     - many other pluggins
+
+## Recover files
+- lsblk = show all disk
+- interact with disk
+  - grep 
+    - -a binary
+    - -P patters
+    - -o match
+  - strings
+- dd = convert/copy file
+  - dcfldd: forensict tool to extract file
+- df -h = mounted 
+- testdisk
+- mount
+- du: file space
+- binwalk: search binary images
+  - -M: recursively
+  - -e: extract

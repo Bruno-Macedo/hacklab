@@ -40,7 +40,7 @@
 |Swagshop       |||
 |Networked      |||
 |jarvis*        |6/11-11-2023||
-|Mirai          |||
+|Mirai          |17-12-2023||
 |Popcorn        |||
 |Haircut        |||
 |Blocky         |||
@@ -95,7 +95,7 @@
 |Arctic        |||
 |grandpa       |||
 |silo*         |14-12-2023|Try again|
-|bounty        |||
+|bounty        |16-12-2023|Check file formats|
 |jerry         |16-11-2023||
 |conceal*      |||
 |chatterbox    |||
