@@ -25,7 +25,7 @@
 |shocker        |28-10-2023||
 |bashed         |4-11-2023||
 |nibbles        |29/30-10-2023||
-|beep           |||
+|beep           |15-11-2023||
 |cronos         |||
 |nineveh        |||
 |sense          |23/24-11-2023||
@@ -33,7 +33,7 @@
 |node           |||
 |valentine      |26-11-2023||
 |poison         |||
-|sunday         |||
+|sunday         |23-12-2023|Check weird services online + reuse passwords|
 |tartarsauce    |||
 |Irked          |||
 |Friendzone|interrupted|Bad - Dig connection failed|
@@ -99,13 +99,13 @@
 |jerry         |16-11-2023||
 |conceal*      |||
 |chatterbox    |||
-|Forest*       |||
+|Forest*       |24-12-2023|AD, need to be redone|
 |BankRobber*   |||
 |secnotes      |||
 |Bastion       |||
 |Buff          |||
 |Servmon       |||
-|Active*       |||
+|Active*       |27/28-12-2023|Very good!|
 |Remote        |||
 |Fuse          |||
 |Omni          |||

