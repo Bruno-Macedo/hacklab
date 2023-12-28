@@ -300,6 +300,10 @@ admin123' UNION SELECT SLEEP(5),2;--
 -
 
 # API
+- Identify response to different methods
+- Fuzzing hidden endpoints
+- 
+- Identify swagger
 - **BOLA - Broken Object Level Authorisation**
   - Deserialisation
   - endpoind/user/NUMBER
