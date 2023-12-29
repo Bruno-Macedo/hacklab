@@ -37,6 +37,13 @@
   - ctr + b + :
     - setw -g mouse on
 
+- New window
+  - ctr+b +c
+  - ctr+b +n = move to window
+  - ctr*b 1,n = to window number
+  - ctr+b +w = list windows
+  
+- 
 ## Docker
 - docker pandoc:
 ```

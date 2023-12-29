@@ -17,7 +17,10 @@
 
 ## Basic network
 - nmap (all ports)
-  - script: locate -r nse$ | grep NAME
+  - script: 
+    - locate -r nse$ | grep NAME
+    - locate -r nse$ | xargs grep categories
+    - locate -r nse$ | xargs grep categories | grep 'default\|version\|discovery|' | grep sNAME
   - sudo nmap -p- -Pn -sS -sV -v --version-all $target -oA AllPort
   - sudo nmap -p -Pn -A $target -oA Services
   - sudo nmap -Pn -sV -sS -p --script vuln $target -oN Vuln.txt
@@ -60,6 +63,7 @@
   -  nmap -T4 -p53 --script dns* $target
 - fierce --domain domain
 - dnsrecon -d DOMAIN -std
+  - dnsrecon -d $target -r networl
 - wfuzz -c -w WORDLIST -u "http://$target/" -H "Host: FUZZ.$target" -f output.txt --hw (hide word/line/etc)
 
 ## Login
@@ -123,14 +127,22 @@
 ### Active Directory
 - [GTfobins for Active Directory](https://wadcoms.github.io/#)
 - domain name
+  - nslookup 
+    - $target
+    - 127.0.0.1
+    - $target
   - ldapsearch -h IP
   - -x -h "DC=,DC="
   - '(objectClass=Person)' sAMAccountName
-- find users: rpcclient -U "" -N $target
+- find users: 
+  - rpcclient -U "" -N $target
+  - getADUsers.py -all domain/user -dc-ip $target
   
 - kerberos pre authentication disabled? - Kerbrute
   - kerbrute: identify users
   - getPNusers.py: fetch hash
+    -  GetNPUsers.py -dc-ip $target -outputfile kerberos_hashes.txt -request -debug $Domain/User -no-pass
+
   
 - Kerberoasting? getUserspn
   - Service Principals associated with user
@@ -142,7 +154,8 @@
     - Upload sharphound + execute
     - Upload .json/.zip into bloodhound
     - find connections + bloodhound has attacking detais
-    - OR bloodhound-python + ip + user + password
+    - OR bloodhound-python + ip + user + password 
+      - [Download](https://github.com/dirkjanm/BloodHound.py)
 - Privilege *writeDACL*
   - create user: net user NAME /add /domain
   - add user to group with writeDACT: net group "groupName" /add | net localgroup "groupName" /add
@@ -162,7 +175,10 @@ Add-ObjectACL -PrincipalIdentity john -Credential $credt -Rights DCSync
 - smbclient -L //$target/ = List Shares
 - smbclient -L //$target -U admin/administrator
 - smbclient //$target/Users = Interactive shell to a share 
-- smbclient  \\\\$target\\share$ = Open a Null Session
+  - mget *
+  - recurse ON
+  - prompt off
+-  smbclient  \\\\$target\\share$ = Open a Null Session
 - smbclient //friendzone.htb/general -U "" = see files inside
 - smbclient -N -L //$target/ = List Shares as Null User
 - smbmap -u Administrator -p 'Password@1' -H $target

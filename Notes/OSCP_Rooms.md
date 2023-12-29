@@ -143,7 +143,7 @@
 |Mango* [Linux]            |||
 |Nest [Windows]            |||
 |Book [Linux]              |||
-|Sauna [Windows]           |||
+|Sauna [Windows]           |29-12-2023|Not too bad in AD|
 |Cascade [Windows]         |||
 |Querier [Windows]         |||
 |Quick [Linux]             |||
