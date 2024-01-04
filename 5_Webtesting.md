@@ -188,7 +188,10 @@ Find content: '+UNION+SELECT+colum1,+column2,+FROM+discovered_table--
   - --risk 5
   - --dbms=type of db
   - --technique=???
-  - --dumb = output_database
+  - --dumb = output all databases
+  - --dbs = dhow databases
+  - -D DATABASE
+  - --tables
   - --dbms=DATA_BASE_TYPE
   - -r /path/to/file
 

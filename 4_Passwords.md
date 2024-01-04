@@ -10,11 +10,12 @@
 
 ## Hashcat
 - Identify hash
-  - hashid
+  - hashid -m HASH
   - hashidentifier
 
 - wordlist
   - hashcat target /path/to/word/list
+  - hashcat --example-hash
 - hashcat
   - a 0 = dictionary attack
     - dictionary = list | brute-force = guessing

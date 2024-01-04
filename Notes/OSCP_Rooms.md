@@ -14,7 +14,7 @@
 | Room Linux    |Done|Note    | 
 |---------------|----|--------|
 |Backdoor(n)    || |
-|Pandora(n)     || |
+|Pandora(n)     |02/04-01-2023|Always scan UPD + take time to read executables|
 |Meta(n)        || |
 |Paper(n)       || |
 |Talkative(n)   || |
