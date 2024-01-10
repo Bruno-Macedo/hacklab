@@ -74,6 +74,7 @@
 - [Good advices](https://nored0x.github.io/red-teaming/windows-enumeration/)
 - [Good Advices 2](https://infosecwriteups.com/privilege-escalation-in-windows-380bee3a2842)
 - [Windows enumeration](https://fuzzysecurity.com/tutorials/16.html?ref=172.16.77.130)
+
 - whoami /priv
 - systeminfo
   - architecture 
@@ -113,6 +114,8 @@
   - [Peas Family](https://github.com/carlospolop/PEASS-ng/tree/master)
   - Empire modules:  /usr/share/powershell-empire/empire/server/modules/
   - /usr/share/webshell
+  - winpeas
+  - jaws-enum
 
 ### Kerberos
 - Enumerate
@@ -194,7 +197,9 @@ Add-ObjectACL -PrincipalIdentity john -Credential $credt -Rights DCSync
 - Online tips:
   - [smb enum](https://github.com/byt3bl33d3r/CrackMapExec/wiki/SMB-Command-Reference)
 - psexec.py user:pass@$target COMMAND
-- 
+
+- Mount windows smb in windows
+  - mount -t cifs //$target/share /mnt/name
 
 ## Linux
 - sudo -l
