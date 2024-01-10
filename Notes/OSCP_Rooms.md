@@ -92,7 +92,7 @@
 |Optimum (bad) |03/04-10-2023|More pantience by searching exploits + reading exploit + go to metasploit|
 |Bastard       |||
 |granny        |12/18-11-2023||
-|Arctic        |||
+|Arctic        |xx-11-2023||
 |grandpa       |||
 |silo*         |14-12-2023|Try again|
 |bounty        |16-12-2023|Check file formats|
@@ -102,7 +102,7 @@
 |Forest*       |24-12-2023|AD, need to be redone|
 |BankRobber*   |||
 |secnotes      |||
-|Bastion       |||
+|Bastion       |10-01-2024|Backup + search creds SAM/SYSTEM|
 |Buff          |||
 |Servmon       |||
 |Active*       |27/28-12-2023|Very good!|
