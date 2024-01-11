@@ -16,7 +16,7 @@
 |Backdoor(n)    || |
 |Pandora(n)     |02/04-01-2023|Always scan UPD + take time to read executables|
 |Meta(n)        || |
-|Paper(n)       || |
+|Paper(n)       |11-01-2024|Check normal folders for uncommon applications |
 |Talkative(n)   || |
 |Seventeen(n)   || |
 |Scrambled(n)   || |
@@ -35,7 +35,7 @@
 |poison         |||
 |sunday         |23-12-2023|Check weird services online + reuse passwords|
 |tartarsauce    |||
-|Irked          |||
+|Irked          |05-01-2024|Check pictures - try to read everything from other users|
 |Friendzone|interrupted|Bad - Dig connection failed|
 |Swagshop       |||
 |Networked      |||

