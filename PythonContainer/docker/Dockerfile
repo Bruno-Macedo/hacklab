@@ -28,6 +28,7 @@ RUN useradd --create-home myuser && echo "myuser:myuser" | chpasswd && adduser m
 #COPY --from=builder-image /home/myuser/venv /home/myuser/venv
 
 USER myuser
+#RUN pip install requests
 WORKDIR /home/myuser/app
 
 # make sure all messages always reach console

@@ -1,0 +1,10 @@
+# Nmap 7.94SVN scan initiated Sat Jan 13 14:09:01 2024 as: nmap -T5 -Pn -sU -oN portSU.txt -v 10.129.16.173
+Warning: 10.129.16.173 giving up on port because retransmission cap hit (2).
+Increasing send delay for 10.129.16.173 from 0 to 50 due to 11 out of 19 dropped probes since last increase.
+Nmap scan report for 10.129.16.173
+Host is up (0.084s latency).
+All 1000 scanned ports on 10.129.16.173 are in ignored states.
+Not shown: 941 open|filtered udp ports (no-response), 59 filtered udp ports (host-prohibited)
+
+Read data files from: /usr/bin/../share/nmap
+# Nmap done at Sat Jan 13 14:09:59 2024 -- 1 IP address (1 host up) scanned in 57.48 seconds

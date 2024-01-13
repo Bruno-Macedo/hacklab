@@ -1,0 +1,2 @@
+/uploads             [36m (Status: 301)[0m [Size: 237][34m [--> http://10.129.16.173/uploads/][0m
+/backup              [36m (Status: 301)[0m [Size: 236][34m [--> http://10.129.16.173/backup/][0m

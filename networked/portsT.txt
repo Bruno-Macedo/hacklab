@@ -1,0 +1,10 @@
+# Nmap 7.94SVN scan initiated Sat Jan 13 13:56:41 2024 as: nmap -Pn -p- -T4 -oN portsT.txt 10.129.16.173
+Nmap scan report for 10.129.16.173
+Host is up (0.027s latency).
+Not shown: 65375 filtered tcp ports (no-response), 157 filtered tcp ports (host-prohibited)
+PORT    STATE  SERVICE
+22/tcp  open   ssh
+80/tcp  open   http
+443/tcp closed https
+
+# Nmap done at Sat Jan 13 13:59:13 2024 -- 1 IP address (1 host up) scanned in 151.80 seconds
