@@ -45,6 +45,11 @@
   
 - 
 ## Docker
+- Create and run
+  - docker compose build
+  - docker compose up -d
+  - docker exec -it PythonLearn bash
+
 - docker pandoc:
 ```
 docker exec 7b4294cce723 pandoc FOLDER/OSCP_Report_REPORT_THM.md \
@@ -57,7 +62,6 @@ docker exec 7b4294cce723 pandoc FOLDER/OSCP_Report_REPORT_THM.md \
 --top-level-division=chapter \
 --highlight-style pygments \
 --resource-path=.:src
-
 
 docker exec 7b4294cce723 pandoc OSCP_Report_Steel_Mountail_THM.md \
 -o OSCP_Report_REPORT_THM.pdf \

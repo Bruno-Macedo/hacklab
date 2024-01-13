@@ -9,13 +9,12 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 # installing texlive and utils
 RUN apt-get -y update && apt-get upgrade -y && apt-get install -y apt-transport-https
+RUN apt-get update && apt-get install -y python3.9 python3.9-dev
 
 # Original
-RUN apt-get install -y texlive-latex-recommended texlive-fonts-extra texlive-latex-extra pandoc p7zip
+#RUN apt-get install -y texlive-latex-recommended texlive-fonts-extra texlive-latex-extra pandoc p7zip
 
-RUN groupadd -g 1000 pandoc
-RUN useradd -u 1000 -g 1000 -s /bin/bash -m pandoc
-USER pandoc
+
 
 WORKDIR /app
 CMD [ "tail", "-f", "/dev/null" ]

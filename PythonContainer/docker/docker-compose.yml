@@ -1,0 +1,11 @@
+services:
+  python_test:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: PythonLearn
+    restart: always
+    volumes:
+      - ../myapps:/home/myuser/app
+    security_opt:
+      - no-new-privileges:true
