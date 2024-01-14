@@ -14,7 +14,7 @@ sudo nmap -Pn -p$Uports -sS -sV -sC -sU $target -oN Userv.txt
 -PA: TCP ACK ping
 
 - Basic directory fuzzy
-gobuster dir -u http://$target -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt -x ext,ext,ext -k -o gobuster.txt
+gobuster dir -u http://$target -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt -x eXt,eXt,eXt -k -o gobuster.txt
 png,jpg,config,html,asp,aspx,php,php5,xml,htm,exe
 
 - etc/hosts

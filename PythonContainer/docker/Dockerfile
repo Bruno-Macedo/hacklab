@@ -31,6 +31,9 @@ USER myuser
 #RUN pip install requests
 WORKDIR /home/myuser/app
 
+# python script to convert nmal result to markdonw
+RUN git clone git@github.com:vdjagilev/nmap2md.git
+
 # make sure all messages always reach console
 ENV PYTHONUNBUFFERED=1
 
