@@ -205,7 +205,7 @@ Add-ObjectACL -PrincipalIdentity john -Credential $credt -Rights DCSync
 - sudo -l
 - history
 - ps aux
-- SUID - Privileges
+- SUID - Privileges Escalation
   - find / -perm -u=s -type f 2>/dev/null
   - find / -type f -perm -04000 -ls 2>/dev/null 
   - find / -type f -perm -4000 -user root -ls 2>/dev/null

@@ -38,7 +38,7 @@
 |Irked          |05-01-2024|Check pictures - try to read everything from other users|
 |Friendzone|interrupted|Bad - Dig connection failed|
 |Swagshop       |||
-|Networked      |X|Could not download the file|
+|Networked      |15-01-2024|Scan more extensions, base64 for commands|
 |jarvis*        |6/11-11-2023||
 |Mirai          |17-12-2023||
 |Popcorn        |||

