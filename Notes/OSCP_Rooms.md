@@ -37,7 +37,7 @@
 |tartarsauce    |||
 |Irked          |05-01-2024|Check pictures - try to read everything from other users|
 |Friendzone|interrupted|Bad - Dig connection failed|
-|Swagshop       |||
+|Swagshop       |16-01-2023|Good to learn how to modify exploits|
 |Networked      |15-01-2024|Scan more extensions, base64 for commands|
 |jarvis*        |6/11-11-2023||
 |Mirai          |17-12-2023||

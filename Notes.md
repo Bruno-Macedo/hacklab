@@ -3,6 +3,7 @@
 [Tyler's Notebook](https://southeasttech-my.sharepoint.com/:o:/g/personal/tyler_ramsbey_southeasttech_edu/EmrNEjx_FjRKjYRotc9TikMB7DtzCwhKWOAEovdtZADBgg?rtime=bQkHVxRr20g)
 [a lot of good stuff](https://book.hacktricks.xyz/)
 [Cheat sheets](https://pentestmonkey.net/)
+[pyenv for python2](https://www.kali.org/docs/general-use/using-eol-python-versions/)
 
 # Check list
 [] Process running
