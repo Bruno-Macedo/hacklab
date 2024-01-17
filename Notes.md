@@ -202,6 +202,17 @@ Add-ObjectACL -PrincipalIdentity john -Credential $credt -Rights DCSync
 - Mount windows smb in windows
   - mount -t cifs //$target/share /mnt/name
 
+### FTP
+- Banner grabbing
+  - nc -vn $TARGET 21
+  - openssl s_client -connect $TARGET:21 -starttls ftp #Get certificate if any
+- ftp $TARGET
+  - anoynmous:anonymous
+  - binary # extract binary
+  - ascii # extract ascii
+  - --no-passive
+- nmap --script ftp-*
+
 ## Linux
 - sudo -l
 - history

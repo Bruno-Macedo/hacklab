@@ -104,7 +104,7 @@
 |secnotes      |||
 |Bastion       |10-01-2024|Backup + search creds SAM/SYSTEM|
 |Buff          |||
-|Servmon       |||
+|Servmon       |17-01-2024|Not so happy with privesc|
 |Active*       |27/28-12-2023|Very good!|
 |Remote        |||
 |Fuse          |||

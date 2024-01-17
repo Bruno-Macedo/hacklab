@@ -502,6 +502,8 @@ cat /tmp/cme_spider_plus/<target-ip>.json
   - Get-NetTCPConnection 
   - Test-NetConnection
   - Invoke-WebRequest
+    - curl in powershell
+    - Remove-Item alias:curl = to use curl and not invoke
 - Patches
   - Get-HotFix
 - Scheduled-Task
