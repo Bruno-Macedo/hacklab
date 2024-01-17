@@ -124,11 +124,11 @@
 - (windows) netsh advfirewall firewall add rule name="NAME" dir=in action=allow protocol=tcp localport=PORT
 
 ### SSH
-
 - -o PubkeyAcceptedKeyTypes=ssh-rsa
   - declares SSH key type that client uses
 - -o PasswordAuthentication=no
   - no password
+- In the command: ~C = to execute ssh commands
 [Port Forwarding](https://notes.benheater.com/books/network-pivoting)
 
 ```
