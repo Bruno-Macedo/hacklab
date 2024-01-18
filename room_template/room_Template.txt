@@ -32,7 +32,7 @@ echo "$TARGET      domain" | sudo tee -a /etc/hosts
 [] cron jobs
 [] SQL injection
 [] Windows suggestor
-[] Upload
+[] Upload to target
     [] linpeas
     [] pspy
 
