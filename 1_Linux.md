@@ -154,6 +154,7 @@
   - cat /etc/passwd | cut -d ":" -f 1 // grep home
   - ifconfig
   - netstat -a | -at [tcp] -au [upd] | -l [listening] | -s [statistic] | -tp [pid] | -i [interface_data]
+    - ss = see sockets
   - find 2>/dev/null = redirect errors
     - -name, -perm a=x, -mtime
     - find / = directory config

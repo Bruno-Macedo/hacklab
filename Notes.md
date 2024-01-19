@@ -71,7 +71,7 @@
 - brute force: hydra
 - sqlmap
 
-## Windows
+## Windows - Priv
 - [Good advices](https://nored0x.github.io/red-teaming/windows-enumeration/)
 - [Good Advices 2](https://infosecwriteups.com/privilege-escalation-in-windows-380bee3a2842)
 - [Windows enumeration](https://fuzzysecurity.com/tutorials/16.html?ref=172.16.77.130)
@@ -83,7 +83,9 @@
     - [Environment]::Is32itProcess
 - icalcs file = permission
 - dir / attrib / get-childitem -Forcet
-
+- nestat -ano = network process
+  - tasklist
+  
 - browser cache
   - procdump (process)
 - RPC - 132
