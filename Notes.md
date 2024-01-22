@@ -257,9 +257,10 @@ Add-ObjectACL -PrincipalIdentity john -Credential $credt -Rights DCSync
   - stty raw -echo; fg
   - reset
   
-- Automatic
+- Automatic scan
   - linpeas
   - linenum
+  - pspy - for process
 
 - export PATH=/tmp:$PATH = possible?
 

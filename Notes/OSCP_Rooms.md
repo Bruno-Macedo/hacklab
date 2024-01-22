@@ -36,7 +36,7 @@
 |sunday         |23-12-2023|Check weird services online + reuse passwords|
 |tartarsauce    |||
 |Irked          |05-01-2024|Check pictures - try to read everything from other users|
-|Friendzone|interrupted|Bad - Dig connection failed|
+|Friendzone|22-01-2024|DNS enum ok + better enum process in linux|
 |Swagshop       |16-01-2023|Good to learn how to modify exploits|
 |Networked      |15-01-2024|Scan more extensions, base64 for commands|
 |jarvis*        |6/11-11-2023||

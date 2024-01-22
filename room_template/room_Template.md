@@ -1,25 +1,30 @@
+## Basic commands
+
+```
+# Extract VPN IP - $attack
+attack=$(ip a show dev tun1 | egrep -o '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}')
+
+# Config TMUX
 tmux setenv TARGET $TARGET && export TARGET=$TARGET
 tmux setenv attack $attack && export attack=$attack
 
-- tun1
-attack=$(ip a show dev tun1 | egrep -o '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}')
-
-- PORTS
+# Scan open ports
 TCPports=$(sudo nmap -Pn -p- -T4 $TARGET -oA nmap/TCPports -v | egrep "^[0-9]{2,5}" | sed -E "s#/.*##g" | tr "\n" "," | sed 's/.$//') && echo $TCPports
 UDPports=$(sudo nmap -T5 -Pn -sU $TARGET -oA nmap/UDPports -v | egrep "^[0-9]{2,5}" | sed -E "s#/.*##g" | tr "\n" "," | sed 's/.$//') && echo $UDPports
 
-- Basic Services
+# Scan services of open ports
 sudo nmap -Pn -p$TCPports -sS -sV -sC -PA $TARGET -oA nmap/Tserv
 sudo nmap -Pn -p$UDPports -sS -sV -sC -sU $TARGET -oA nmap/Userv
 -PA: TCP ACK ping
 
-- Basic directory fuzzy
+# Basic directory fuzzyng
 gobuster dir -u http://$TARGET -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt -x eXt,eXt,eXt -k -o gobuster.txt
 png,jpg,config,html,asp,aspx,php,php5,xml,htm,exe
 
-- etc/hosts
+# Modify hosts file
 sudo sed -i "/$TARGET      domain/d" /etc/hosts
 echo "$TARGET      domain" | sudo tee -a /etc/hosts
+```
 
 [] Mount points
 [] SMB
@@ -55,4 +60,3 @@ Versions?
 Paths of URL?
 
 Known CVE
-
