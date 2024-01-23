@@ -178,18 +178,23 @@ Add-ObjectACL -PrincipalIdentity john -Credential $credt -Rights DCSync
 - run *secretsdump* (impackt) with new user to retrieve hashes
 
 ### SMB
-- smbmap -H $target = Check Privileges 
-- smbmap -H $target -R --depth 5
+- SMBMAP
+  - smbmap -H $target = Check Privileges 
+  - smbmap -H $target -R --depth 5
+  - smbmap -u Administrator -p 'Password@1' -H $target
+- SMB-CLIENT
 - smbclient -L //$target/ = List Shares
 - smbclient -L //$target -U admin/administrator
 - smbclient //$target/Users = Interactive shell to a share 
   - mget *
   - recurse ON
   - prompt off
+  - allinfo = alternate stream
+    - get/more File.ext:ADS
 -  smbclient  \\\\$target\\share$ = Open a Null Session
-- smbclient //friendzone.htb/general -U "" = see files inside
+'- smbclient //friendzone.htb/general -U "" = see files inside'
 - smbclient -N -L //$target/ = List Shares as Null User
-- smbmap -u Administrator -p 'Password@1' -H $target
+- 
 - smbclient -U 'administrator%Password@1' \\\\\$target\\c$
 - Nmap scripts
   - smb-enum-users.nse
