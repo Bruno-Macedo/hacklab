@@ -141,7 +141,7 @@
 |Control [Windows]         |||
 |October [Linux]           |||
 |Mango* [Linux]            |||
-|Nest [Windows]            |||
+|Nest [Windows]            |24-01-2024|Bad, a lot of decompiling. Need windows machine|
 |Book [Linux]              |||
 |Sauna [Windows]           |29-12-2023|Not too bad in AD|
 |Cascade [Windows]         |||

