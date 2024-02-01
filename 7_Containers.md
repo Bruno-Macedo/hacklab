@@ -3,7 +3,7 @@
 
 
 ## Kubernetes
-
+[Kube Pentest](https://blog.appsecco.com/a-pentesters-approach-to-kubernetes-security-part-1-2b328252954a)
 - binary:
   - https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/#install-kubectl-binary-with-curl-on-linux
 

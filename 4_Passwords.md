@@ -150,9 +150,11 @@ openssl pkey -in ca.key -pubout | md5sum
   - openssl req -new -key client.key -out client.src
   
 - Sign certificate with key
-  - openssl x509 -req -in client.src -CA ca.crt -CAkey ca.key -set_serial 9001 -extensions client -days 1001 -outform PEM -out my.cer
+    - openssl req -x509 -new -nodes -key ca.key -sha256 -days 1024 -out my.pem
+    - openssl req -x509 -new -nodes -key KEY.key -sha256 -days 1024 -out MyCert.pem
   - pkcs12 = combination(.key,.cer)
-    - openssl pkcs12 -export -inkey client.key -inclient.cert -out client.p12
+    - openssl pkcs12 -export -inkey client.key -in client.cert -out client.p12
+    - openssl pkcs12 -export -in 0xdf.pem -inkey ca.key -out client.p12
   - check pkcs12
     - openssl pkcs12 -info -in client.p12
 
