@@ -114,7 +114,7 @@
 |Intelligence  |||
 |APT           |||
 |Object        |||
-|Support       |||
+|Support       |2.2.2024|AD, do again, other attack|
 |Acute         |||
 |Timelapse     |||
 |StreamIO      |||

@@ -9,19 +9,36 @@ ENV TZ="Europe/Berlin" \
 # Set timezone
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
-RUN apt-get update && apt-get install --no-install-recommends -y python3.9  
-#RUN apt-get update && apt-get install --no-install-recommends -y python3.9-dev 
-RUN apt-get update && apt-get install --no-install-recommends -y python3-pip 
-RUN apt-get update && apt-get install --no-install-recommends -y python3-wheel 
-RUN apt-get update && apt-get install --no-install-recommends -y build-essential
-#RUN apt-get install -y python3 python3-pip sudo wget curl 
-#RUN pip install virtualenv
+RUN apt-get update && apt-get install --no-install-recommends -y python3.9 \  
+python3-pip \
+make \
+    python3-wheel \
+    build-essential \
+    libssl-dev \
+    zlib1g-dev \
+    libbz2-dev \
+    libreadline-dev \
+    libsqlite3-dev \
+    wget \
+    curl \
+    llvm \
+    libncurses5-dev \
+    libncursesw5-dev \
+    xz-utils \
+    tk-dev \
+    libffi-dev \
+    liblzma-dev \
+    python3-openssl \
+    git \\
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-RUN apt-get clean && rm -rf /var/lib/apt/lists/*
-# create and activate virtual environment
-# using final folder name to avoid path issues with packages
-#RUN python3 -m venv /home/myuser/venv
-#ENV PATH="/home/myuser/venv/bin:$PATH"
+#RUN curl https://pyenv.run | bash
+#RUN echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.zshrc
+#RUN echo 'export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.zshrc
+#RUN echo -e 'if command -v pyenv 1>/dev/null 2>&1; then\n  eval "$(pyenv init --path)"\nfi' >> ~/.zshrc
+
+#RUN pyenv install 2.7.18 
+#RUN pyenv global 2.7.18
 
 #RUN useradd --create-home myuser
 RUN useradd --create-home myuser && echo "myuser:myuser" | chpasswd && adduser myuser sudo
@@ -31,8 +48,10 @@ USER myuser
 #RUN pip install requests
 WORKDIR /home/myuser/app
 
+
+
 # python script to convert nmal result to markdonw
-RUN git clone git@github.com:vdjagilev/nmap2md.git
+#RUN git clone git@github.com:vdjagilev/nmap2md.git
 
 # make sure all messages always reach console
 ENV PYTHONUNBUFFERED=1
