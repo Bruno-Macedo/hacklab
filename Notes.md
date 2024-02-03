@@ -141,11 +141,13 @@
 - domain name
   - nslookup $target 127.0.0.1
   
+**w**
 - ldapsearch -h $target
-  - ldapsearch -x -H ldap://<IP> -D '<DOMAIN>\<username>' -w '<password>' -b "CN=Users,DC=domain,DC=com"
+  - ldapsearch -h domain.com -D 'ldap@support.htb' -w 'PASS' -b "DC=domain,DC=htb"| less"CN=Users,DC=domain,DC=com"
+  - ldapsearch -h domain.htb -D "
   - ldapsearch -x -b "dc=domain,dc=com -H ldap://$target
   - ldapsearch -h domain.com -x -s name name
-  - ldapsearch -h domain.com -D 'ldap@support.htb' -w 'PASS' -b "DC=domain,DC=htb"| less
+  -
   
 - Extract meta info
   - ldapdomaindump -u 'USERNAME\ldap' -p 'PASS' dc.domain.htb
@@ -166,7 +168,7 @@ done
   
   - Bloodhound:
     - Sharphound.exe --CollectionMethods <ALL/Default/Sessions> --Domain za.tryhackme.com --ExcludeDCs
-    - bloodhound-python -c ALL -d name.htb -ns $TARGET -u USERNAME -p 'PASS'
+    - bloodhound-python -c ALL --dns-tcp -d name.htb -ns $TARGET -u USERNAME -p 'PASS'
     - find connections + bloodhound has attacking detais
       - [Download](https://github.com/dirkjanm/BloodHound.py)
       - [Docker](https://github.com/belane/docker-bloodhound)
@@ -185,7 +187,6 @@ done
   - add user to group with writeDACT: net group "groupName" /add | net localgroup "groupName" /add
   - Upload powerview
   - Assign privilege
-
 
 - Create object credential  
 ```
@@ -213,6 +214,7 @@ Add-ObjectACL -PrincipalIdentity john -Credential $credt -Rights DCSync
 - smbclient  \\\\$target\\share$ = Open a Null Session
 - smbclient //friendzone.htb/general -U "" = see files inside'
 - smbclient -N -L //$target/ = List Shares as Null User
+  - -N = no password
 - smbclient -U 'administrator%Password@1' \\\\\$target\\C$
 - Nmap scripts
   - smb-enum-users.nse
@@ -229,6 +231,11 @@ Add-ObjectACL -PrincipalIdentity john -Credential $credt -Rights DCSync
 
 - Mount windows smb in windows
   - mount -t cifs //$target/share /mnt/name
+  
+- crakmapexec smb $TARGET
+  - --shares
+  - -u '' -p ''
+  - -u 'bla' -p ''
 
 ### FTP
 - Banner grabbing
@@ -366,8 +373,7 @@ cat file | iconv -t utf-16le | base64 -w 0 = result
 echo powershell -enc result
 
 ```
-
-- Binaries
+- Binary
   - dnSpy
   - [wine](https://wine.htmlvalidator.com/install-wine-on-debian-11.html)
   -  mono
