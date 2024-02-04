@@ -6,6 +6,7 @@ attack=$(ip a show dev tun1 | egrep -o '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9
 
 # Config TMUX
 tmux setenv TARGET $TARGET && export TARGET=$TARGET
+tmux setenv DOMAIN $DOMAIN && export DOMAIN=$DOMAIN
 tmux setenv attack $attack && export attack=$attack
 
 # Scan open ports
@@ -22,8 +23,8 @@ gobuster dir -u http://$TARGET -w /usr/share/wordlists/dirbuster/directory-list-
 png,jpg,config,html,asp,aspx,php,php5,xml,htm,exe
 
 # Modify hosts file
-sudo sed -i "/$TARGET      domain/d" /etc/hosts
-echo "$TARGET      domain" | sudo tee -a /etc/hosts
+sudo sed -i "/$TARGET      $DOMAIN/d" /etc/hosts
+echo "$TARGET      $DOMAIN" | sudo tee -a /etc/hosts
 ```
 
 [] Mount points
@@ -60,3 +61,22 @@ Versions?
 Paths of URL?
 
 Known CVE
+
+
+<!DOCTYPE html><html lang=""><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" href="/favicon.ico"><title>horizontall</title><link href="/css/app.0f40a091.css" rel="preload" as="style"><link href="/css/chunk-vendors.55204a1e.css" rel="preload" as="style"><link href="/js/app.c68eb462.js" rel="preload" as="script"><link href="/js/chunk-vendors.0e02b89e.js" rel="preload" as="script"><link href="/css/chunk-vendors.55204a1e.css" rel="stylesheet"><link href="/css/app.0f40a091.css" rel="stylesheet"></head><body><noscript><strong>We're sorry but horizontall doesn't work properly without JavaScript enabled. Please enable it to continue.</strong></noscript><div id="app"></div><script src="/js/chunk-vendors.0e02b89e.js"></script><script src="/js/app.c68eb462.js"></script></body></html>
+
+┌──(kalilearn㉿kalilearn)-[~/git/hacklab/hori/nmap]
+└─$
+
+
+
+
+
+
+
+
+
+
+
+
+
