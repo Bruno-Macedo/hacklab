@@ -43,7 +43,7 @@
 |Mirai          |17-12-2023||
 |Popcorn        |||
 |Haircut        |||
-|Blocky         |||
+|Blocky         |08-02-2024|Very easy, try to be more confident|
 |Frolic         |||
 |Postman        |10/11-12-2023|With metasploit. Try again without it|
 |Mango          |||

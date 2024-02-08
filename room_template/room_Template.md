@@ -1,5 +1,18 @@
 ## Basic commands
 
+- Disable iptable: 
+```
+sudo iptables -F
+sudo iptables -P INPUT ACCEPT
+sudo iptables -P FORWARD ACCEPT
+sudo iptables -P OUTPUT ACCEPT
+
+reverse:
+/DROP
+
+sudo systemctl restart networking.service
+```
+
 ```
 # Extract VPN IP - $attack
 attack=$(ip a show dev tun1 | egrep -o '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}')
@@ -61,22 +74,4 @@ Versions?
 Paths of URL?
 
 Known CVE
-
-
-<!DOCTYPE html><html lang=""><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" href="/favicon.ico"><title>horizontall</title><link href="/css/app.0f40a091.css" rel="preload" as="style"><link href="/css/chunk-vendors.55204a1e.css" rel="preload" as="style"><link href="/js/app.c68eb462.js" rel="preload" as="script"><link href="/js/chunk-vendors.0e02b89e.js" rel="preload" as="script"><link href="/css/chunk-vendors.55204a1e.css" rel="stylesheet"><link href="/css/app.0f40a091.css" rel="stylesheet"></head><body><noscript><strong>We're sorry but horizontall doesn't work properly without JavaScript enabled. Please enable it to continue.</strong></noscript><div id="app"></div><script src="/js/chunk-vendors.0e02b89e.js"></script><script src="/js/app.c68eb462.js"></script></body></html>
-
-┌──(kalilearn㉿kalilearn)-[~/git/hacklab/hori/nmap]
-└─$
-
-
-
-
-
-
-
-
-
-
-
-
 

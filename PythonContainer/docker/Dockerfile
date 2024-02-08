@@ -32,6 +32,8 @@ make \
     git \\
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
+RUN pip install requests
+
 #RUN curl https://pyenv.run | bash
 #RUN echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.zshrc
 #RUN echo 'export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.zshrc
