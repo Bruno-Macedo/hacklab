@@ -10,6 +10,9 @@
 
 [More one list](https://rana-khalil.gitbook.io/hack-the-box-oscp-preparation/windows-boxes)
 
+
+[Updated list TJ](https://docs.google.com/spreadsheets/u/1/d/1dwSMIAPIam0PuRBkCiDI88pU3yzrqqHkDtBngUHNCw8/htmlview)
+
 ### Linux
 | Room Linux    |Done|Note    | 
 |---------------|----|--------|
@@ -44,7 +47,7 @@
 |Popcorn        |||
 |Haircut        |||
 |Blocky         |08-02-2024|Very easy, try to be more confident|
-|Frolic         |||
+|Frolic         |9-02-2024|Buffer overflow with linux|
 |Postman        |10/11-12-2023|With metasploit. Try again without it|
 |Mango          |||
 |Traverxec      |06-12-2023||
