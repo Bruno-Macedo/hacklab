@@ -53,7 +53,7 @@
 |Traverxec      |06-12-2023||
 |OpenAdmin      |05-12-2023|See .db files, search vhost|
 |Magic          |||
-|Admirer        |||
+|Admirer        |12-02-2024|Better enumeration with other wordlists|
 |Blunder        |||
 |Tabby          |||
 |Doctor         |||

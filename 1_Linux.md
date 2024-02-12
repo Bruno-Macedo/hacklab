@@ -9,6 +9,7 @@
   - [capabilities](#capabilities)
   - [Cronjobs](#cronjobs)
   - [PATH](#path)
+    - [PYTHON PATH HIJACKING](#python-path-hijacking)
   - [NFS](#nfs)
   - [Executables](#executables)
     - [Finding Important Files](#finding-important-files)
@@ -189,6 +190,13 @@
 - find / -writable 2>/dev/null ==> find writable folders
   - find / -writable 2>/dev/null | grep usr | cut -d "/" -f 2,3 | sort -u
   - find / -writable 2>/dev/null | cut -d "/" -f 2,3 | grep -v proc | sort -u ==> exclude running process
+
+### PYTHON PATH HIJACKING
+- Check libraries of python script
+- Write "own" library with malicious code
+- SETENV enabled?
+- Execute script setting path
+  - sudo PYTHONPATH=/path/to/bad/library script
 
 ## NFS
 - find root key + connect
