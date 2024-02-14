@@ -117,7 +117,6 @@
   - [Peas Family](https://github.com/carlospolop/PEASS-ng/tree/master)
   - Empire modules:  /usr/share/powershell-empire/empire/server/modules/
   - /usr/share/webshell
-  - winpeas
   - jaws-enum
 
 ### Kerberos

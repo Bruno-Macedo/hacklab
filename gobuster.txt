@@ -1,0 +1,63 @@
+/.htaccess.txt       [33m (Status: 403)[0m [Size: 302]
+/.htaccess           [33m (Status: 403)[0m [Size: 302]
+/.htaccess.php       [33m (Status: 403)[0m [Size: 302]
+/.htpasswd           [33m (Status: 403)[0m [Size: 302]
+/.htpasswd.php       [33m (Status: 403)[0m [Size: 302]
+/.htpasswd.txt       [33m (Status: 403)[0m [Size: 302]
+/ADMIN               [36m (Status: 301)[0m [Size: 337][34m [--> http://10.129.82.97/ADMIN/][0m
+/Admin               [36m (Status: 301)[0m [Size: 337][34m [--> http://10.129.82.97/Admin/][0m
+/Images              [36m (Status: 301)[0m [Size: 338][34m [--> http://10.129.82.97/Images/][0m
+/Home.php            [36m (Status: 302)[0m [Size: 0][34m [--> index.php][0m
+/Login.php           [36m (Status: 302)[0m [Size: 0][34m [--> index.php][0m
+/Index.php           [32m (Status: 200)[0m [Size: 4388]
+/admin               [36m (Status: 301)[0m [Size: 337][34m [--> http://10.129.82.97/admin/][0m
+/aux                 [33m (Status: 403)[0m [Size: 302]
+/aux.php             [33m (Status: 403)[0m [Size: 302]
+/aux.txt             [33m (Status: 403)[0m [Size: 302]
+/cgi-bin/            [33m (Status: 403)[0m [Size: 302]
+/com1.txt            [33m (Status: 403)[0m [Size: 302]
+/com2                [33m (Status: 403)[0m [Size: 302]
+/com2.php            [33m (Status: 403)[0m [Size: 302]
+/com1                [33m (Status: 403)[0m [Size: 302]
+/com1.php            [33m (Status: 403)[0m [Size: 302]
+/com2.txt            [33m (Status: 403)[0m [Size: 302]
+/com3.txt            [33m (Status: 403)[0m [Size: 302]
+/com3.php            [33m (Status: 403)[0m [Size: 302]
+/com3                [33m (Status: 403)[0m [Size: 302]
+/com4.txt            [33m (Status: 403)[0m [Size: 302]
+/com4                [33m (Status: 403)[0m [Size: 302]
+/com4.php            [33m (Status: 403)[0m [Size: 302]
+/con.txt             [33m (Status: 403)[0m [Size: 302]
+/con                 [33m (Status: 403)[0m [Size: 302]
+/con.php             [33m (Status: 403)[0m [Size: 302]
+/dist                [36m (Status: 301)[0m [Size: 336][34m [--> http://10.129.82.97/dist/][0m
+/examples            [31m (Status: 503)[0m [Size: 402]
+/home.php            [36m (Status: 302)[0m [Size: 0][34m [--> index.php][0m
+/images              [36m (Status: 301)[0m [Size: 338][34m [--> http://10.129.82.97/images/][0m
+/includes            [36m (Status: 301)[0m [Size: 340][34m [--> http://10.129.82.97/includes/][0m
+/index.php           [32m (Status: 200)[0m [Size: 4388]
+/licenses            [33m (Status: 403)[0m [Size: 421]
+/login.php           [36m (Status: 302)[0m [Size: 0][34m [--> index.php][0m
+/logout.php          [36m (Status: 302)[0m [Size: 0][34m [--> index.php][0m
+/lpt1                [33m (Status: 403)[0m [Size: 302]
+/lpt1.php            [33m (Status: 403)[0m [Size: 302]
+/lpt1.txt            [33m (Status: 403)[0m [Size: 302]
+/lpt2                [33m (Status: 403)[0m [Size: 302]
+/lpt2.php            [33m (Status: 403)[0m [Size: 302]
+/lpt2.txt            [33m (Status: 403)[0m [Size: 302]
+/nul                 [33m (Status: 403)[0m [Size: 302]
+/nul.txt             [33m (Status: 403)[0m [Size: 302]
+/nul.php             [33m (Status: 403)[0m [Size: 302]
+/phpmyadmin          [33m (Status: 403)[0m [Size: 302]
+/plugins             [36m (Status: 301)[0m [Size: 339][34m [--> http://10.129.82.97/plugins/][0m
+/preview.php         [36m (Status: 302)[0m [Size: 0][34m [--> index.php][0m
+/prn.txt             [33m (Status: 403)[0m [Size: 302]
+/prn                 [33m (Status: 403)[0m [Size: 302]
+/prn.php             [33m (Status: 403)[0m [Size: 302]
+/secció              [33m (Status: 403)[0m [Size: 302]
+/secció.php          [33m (Status: 403)[0m [Size: 302]
+/secció.txt          [33m (Status: 403)[0m [Size: 302]
+/server-info         [33m (Status: 403)[0m [Size: 421]
+/server-status       [33m (Status: 403)[0m [Size: 421]
+/tcpdf               [36m (Status: 301)[0m [Size: 337][34m [--> http://10.129.82.97/tcpdf/][0m
+/webalizer           [33m (Status: 403)[0m [Size: 302]

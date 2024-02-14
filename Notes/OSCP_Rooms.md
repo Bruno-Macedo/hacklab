@@ -113,7 +113,7 @@
 |Fuse          |||
 |Omni          |||
 |Worker        |||
-|Love          |||
+|Love          |14-02-2024|Very good. More Attention to priv esc|
 |Intelligence  |||
 |APT           |||
 |Object        |||

