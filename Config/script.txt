@@ -1,29 +1,17 @@
 //TODOs:
-// - Blacklist of data not to sent to chatGPT: IPs, URLs, Names, DNSs, words that we set in a list
-// - Radio button for choose model, default gpt-3.5-turbo
+// - Blacklist of data not to sent to chatGPT: IPs, URLs, Names, DNSs, words that we set in a list => Done with IP/URLS
+// - Radio button for choose model, default gpt-3.5-turbo => Done with button, radio was not possible
 // - 
 
+var ui = DocumentApp.getUi();
+var doc = DocumentApp.getActiveDocument();
+
 function onOpen() {
-    var ui = DocumentApp.getUi();
+   // var ui = DocumentApp.getUi();
     var menu = ui.createMenu('docsGPT');
-
-    //menu.addItem('Tone', 'toggleOptions')
-    //menu.addSubMenu(ui.createMenu('Writing')
-    //    .addItem('Write Paragraph', 'writeEssay')
-    //    .addItem('Expand', 'expandText')
-    //    .addItem('Expand Thesis', 'thesisExpand')
-    //    .addItem('Summarize Text', 'summarizeText'));
-
-    //menu.addSubMenu(ui.createMenu('Research')
-    //    .addItem('Find Sources', 'findSources')
-    //    .addItem('Research Topic', 'researchTopic'));
-
-    menu.addItem('Answer Question', 'answerQuestion');
-    
-    menu.addItem('Correct Selection', 'correctText');
-    menu.addItem('Print Selection to Alert Box', 'testFunction');
+    menu.addItem('Answer Question', 'answerQuestionGPT3_5');
+    menu.addItem('Correct Selection', 'correctTextGPT3_5Turbo');
     menu.addItem('Show sidebar', 'showSidebar');
-
     menu.addToUi();
 }
 
@@ -39,57 +27,59 @@ var GPT_3_5_Turbo         = "gpt-3.5-turbo";
 var PromptCorrectText = "The selected text is part of a security assessment report and should be written correctly and in passive voice. It should be easy to understand for management and technical readers in an enterprise. Please, do not mention the question in the answer. Can you please correct and improve the following text: " + "\n";
 var PromptFreeQuestion = "Answer the following question in a clear manner, explaining it thoroughly: " + "\n";
 
-// Array for removed words
-var RemovedWords = [];
-
-var RemovedIPs = [];
-var RemovedURLs =[];
-
-var PlaceHolderIP = "#IP_Address#";
-var PlaceHolderURL = "#URLs#";
-
+// Variables to filter and Remove words
+var RemovedWords         = [];
+var RemovedIPs           = [];
+var RemovedURLs          =[];
+var PlaceHolderIP        = "#IP_Address#";
+var PlaceHolderURL       = "#URLs#";
+var regExpIP             = /\b(?:\d{1,3}\.){3}\d{1,3}\b/g;
+var urlRegex             = /(?![\d.]+)((?!-))(xn--)?[a-z0-9][a-z0-9-_]{0,61}[a-z0-9]{0,1}\.(xn--)?([a-z0-9\._-]{1,61}|[a-z0-9-]{1,30})?/g;
 
 function showSidebar() {
-  var widget = HtmlService.createHtmlOutputFromFile('Buttons')
-  .setTitle('AI Automation');
-  DocumentApp.getUi().showSidebar(widget);
+  //var ui = DocumentApp.getUi();
+ // var doc = DocumentApp.getActiveDocument();
+  var html = HtmlService.createTemplateFromFile('Buttons.html');
+  html.current_doc_url = doc.getUrl();            // Pass default URL for "this" document
+  var rendered = html.evaluate()
+    .setTitle('AI Automation')
+    .setWidth(300);
+
+  ui.showSidebar(rendered);
+
+  //var doc = DocumentApp.getActiveDocument();
+  //var widget = HtmlService.createHtmlOutputFromFile('Buttons')
+  //.setTitle('AI Automation');
+  //widget.current_doc_url = doc.getUrl();
+  //DocumentApp.getUi().showSidebar(widget);
 }
 
 function getSelectedText2() {
-    var selection = DocumentApp.getActiveDocument().getSelection();
-    var selectedText = "";
-    if (selection) {
-        var elements = selection.getRangeElements();
-        for (var i = 0; i < elements.length; i++) {
-            var element = elements[i];
-            // Only modify elements that can be edited as text; skip images and other non-text elements.
-            if (element.getElement().asText) {
-                // Get the selected part of the element, or the full element if it's completely selected.
-                var text = element.getElement().asText().getText();
-                if (element.isPartial()) {
-                    text = text.slice(element.getStartOffset(), element.getEndOffsetInclusive() + 1);             
-                }
-                selectedText = selectedText.concat(text, ' ');
-            }
+  var selection = DocumentApp.getActiveDocument().getSelection();
+  var selectedText = "";
+  if (selection) {
+    var elements = selection.getRangeElements();
+    for (var i = 0; i < elements.length; i++) {
+      var element = elements[i];
+      // Only modify elements that can be edited as text; skip images and other non-text elements.
+      if (element.getElement().asText) {
+      // Get the selected part of the element, or the full element if it's completely selected.
+        var text = element.getElement().asText().getText();
+        if (element.isPartial()) {
+          text = text.slice(element.getStartOffset(), element.getEndOffsetInclusive() + 1);             
         }
-    } else {
-        DocumentApp.getUi().alert('Nothing is selected.');
+        selectedText = selectedText.concat(text, ' ');
+      }
     }
-    return selectedText;
+  } else {
+      DocumentApp.getUi().alert('Nothing is selected.');
+  }
+  return selectedText;
 }
 
 function getSelectedText() {
   var selection = DocumentApp.getActiveDocument().getSelection();
   var selectedText = ""; 
-
-  //var regExpIP = /\b(?:\d{1,3}\.){3}\d{1,3}\b/g;
-  //var urlRegex = /(?:(?:https?:\/\/)?(?:www\.)?|(?:www\.))[\w-]+\.[\w-]+(?:\.[\w-]+)*(?:\/[\w~#:\.-]*)*(?:\?[\w\-%=&]*)?(?:#[\w-]*)?/g;
-
-  var regExpIP = /\b(?:\d{1,3}\.){3}\d{1,3}\b/g;
-  //var urlRegex = /(?:https?:\/\/)?(?:www\.)?[\w-]+(?:\.[\w-]+)+[\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-]/g;
-  //var urlRegex = /(?:(?:https?:\/\/)?(?:www\.)?|(?:www\.))[\w-]+(?:\.[\w-]+)*(?:\/[\w~#:\.-]*)*(?:\?[\w\-%=&]*)?(?:#[\w-]*)?/g;
-
-  var urlRegex = /(?![\d.]+)((?!-))(xn--)?[a-z0-9][a-z0-9-_]{0,61}[a-z0-9]{0,1}\.(xn--)?([a-z0-9\._-]{1,61}|[a-z0-9-]{1,30})?/g;
 
   if (selection) {
     var elements = selection.getRangeElements();
@@ -97,7 +87,6 @@ function getSelectedText() {
       var element = elements[i];
       if (element.getElement().asText) {
         var text = element.getElement().asText().getText();
-
 
         if (element.isPartial()) {
           text = text.slice(element.getStartOffset(), element.getEndOffsetInclusive() + 1);             
@@ -108,32 +97,17 @@ function getSelectedText() {
   } else {
     DocumentApp.getUi().alert('Nothing is selected.');
   }
+  return selectedText;
+}
 
- // Logger.log("foundWord_Array: " + foundWord);
-
+function maskIPURL(selectedText) {
   var newtext = selectedText.replace(regExpIP, PlaceHolderIP).replace(urlRegex, PlaceHolderURL);
-
   var ExtractedWords = selectedText.match(urlRegex);
-
-  //RemovedWords.push(selectedText.match(urlRegex));
- // RemovedWords.push(selectedText.match(regExpIP));
-
   RemovedIPs = selectedText.match(regExpIP);
   RemovedURLs = selectedText.match(urlRegex);
-
   Logger.log("RemovedIPs: " + RemovedIPs);
   Logger.log("RemovedURLs: " + RemovedURLs);
-
-  RemovedWords = ExtractedWords
-
-  //Logger.log("RemovedWords: " + RemovedWords);
-
-//  for (i = 0; i < RemovedWords.length; i++) {
-//    Logger.log("RemovedWords 119: " + RemovedWords[i]);
-//  }
-
-  //Logger.log("newtext: " + newtext);
-
+  RemovedWords = ExtractedWords;
   return newtext;
 }
 
@@ -146,62 +120,63 @@ function testFunction(value) {
 }
 
 function generateText(prompt) {
-    var Model_ID = model;
-    var maxTokens = 64;
-    var temperature = 0.5;
-    // Build the API payload
-    var payload = {
-        'messages': [{
-            'role': 'user',
-            'content': prompt
-        }],
-        'model': Model_ID, // ID of the model to use
-        'n': 1, // How many chat completion choices to generate for each input message. 
-        'temperature': temperature, // What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic.
-        'max_tokens': maxTokens, // The maximum number of tokens that can be generated in the chat completion.
-    };
-    var requestOptions = {
-        "method": "POST",
-        "headers": {
-            "Content-Type": "application/json",
-            "Authorization": "Bearer " + apiKey
-        },
-        "payload": JSON.stringify(payload)
-    };
-    var url = 'https://api.openai.com/v1/chat/completions';
-    // Make request to API and get response 
-    var response = UrlFetchApp.fetch(url, requestOptions);
-    var json = response.getContentText();
-    var reponseData = JSON.parse(json);
-    var generatedText = reponseData["choices"][0]["message"]["content"];
-    // Check if generatedText is defined before calling .trim()
-    if (generatedText) {
-        generatedText = generatedText.text.trim();
-    }
-    // Convert the generatedText to plain text
-    var plainText = Utilities.formatString("%s", generatedText);
-    return plainText;
+  var Model_ID = model;
+  var maxTokens = 64;
+  var temperature = 0.5;
+  // Build the API payload
+  var payload = {
+    'messages': [{
+    'role': 'user',
+    'content': prompt
+    }],
+    'model': Model_ID, // ID of the model to use
+    'n': 1, // How many chat completion choices to generate for each input message. 
+    'temperature': temperature, // What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic.
+    'max_tokens': maxTokens, // The maximum number of tokens that can be generated in the chat completion.
+  };
+  var requestOptions = {
+    "method": "POST",
+    "headers": {
+    "Content-Type": "application/json",
+    "Authorization": "Bearer " + apiKey
+  },
+  "payload": JSON.stringify(payload)
+  };
+
+  var url = 'https://api.openai.com/v1/chat/completions';
+  // Make request to API and get response 
+  var response = UrlFetchApp.fetch(url, requestOptions);
+  var json = response.getContentText();
+  var reponseData = JSON.parse(json);
+  var generatedText = reponseData["choices"][0]["message"]["content"];
+  // Check if generatedText is defined before calling .trim()
+  if (generatedText) {
+      generatedText = generatedText.text.trim();
+  }
+  // Convert the generatedText to plain text
+  var plainText = Utilities.formatString("%s", generatedText);
+  return plainText;
 }
 
 function FindInsertPoint () {
   var theDoc = DocumentApp.getActiveDocument();
   var selection = theDoc.getSelection();
 
-if (selection) {
-  var elements = selection.getRangeElements();
+  if (selection) {
+    var elements = selection.getRangeElements();
 
-  for (var i = 0; i < elements.length; i++) {
-    var element = elements[i];
-    //Logger.log('element: ' + element.getElement());  
-  }
+    for (var i = 0; i < elements.length; i++) {
+      var element = elements[i];
+      //Logger.log('element: ' + element.getElement());  
+    }
 
-  var theElmt = element;
-  var selectedElmt = theElmt.getElement();
-  //Logger.log('selectedElmt: ' + selectedElmt);
+    var theElmt = element;
+    var selectedElmt = theElmt.getElement();
+    //Logger.log('selectedElmt: ' + selectedElmt);
 
-  var parent = selectedElmt.getParent();
-  var insertPoint = parent.getChildIndex(selectedElmt);
-  //Logger.log('insertPoint 173: ' + insertPoint);  
+    var parent = selectedElmt.getParent();
+    var insertPoint = parent.getChildIndex(selectedElmt);
+    //Logger.log('insertPoint 173: ' + insertPoint);  
   return insertPoint;
   }
 }
@@ -209,25 +184,6 @@ if (selection) {
 // We can only select from top to bottom
 function insertTextAfterSelection(text) {
   var theDoc = DocumentApp.getActiveDocument();
-  //var selection = theDoc.getSelection();
-  //Logger.log('selection: ' + selection); 
-
- // if (selection) {
- //   var elements = selection.getRangeElements();
-
- //   for (var i = 0; i < elements.length; i++) {
- //     var element = elements[i];
- //     Logger.log('element: ' + element.getElement());  
-
- //   };
- //   var theElmt = element;
-  //  var selectedElmt = theElmt.getElement();
- //   Logger.log('selectedElmt: ' + selectedElmt);
-
-  //  var parent = selectedElmt.getParent();
-  //  var insertPoint = parent.getChildIndex(selectedElmt);
- //   Logger.log('insertPoint 147: ' + insertPoint);  
-
   var insertPoint = FindInsertPoint ();
   var body = theDoc.getBody();
   var newtext = body.insertParagraph(insertPoint + 2, text);
@@ -235,15 +191,18 @@ function insertTextAfterSelection(text) {
   newtext.
     editAsText().setBackgroundColor('#FFFF00');
     //setAlignment(DocumentApp.HorizontalAlignment.JUSTIFY);
-//  };
 };
 
 function ChatGPTprompt(question, choosenmodel) {
-  selectedText = getSelectedText();
+  var selectedText = getSelectedText();
+  var TextToSentToGPT = maskIPURL(selectedText);
+
+  Logger.log("TextToSentToGPT: " + TextToSentToGPT);
+ 
 // This was the biggest modification. To use our model and get the result we want, we had to change the the API endpoint to /v1/chat/completions AND write the prompt in a different format.
   var prompt = {
     "messages": [
-      {"role": "user", "content": question + selectedText }
+      {"role": "user", "content": question + TextToSentToGPT }
     ],
 
     "temperature": 0.5,
@@ -281,27 +240,27 @@ try {
 
 function correctTextGPT4() {
   generatedText = ChatGPTprompt(PromptCorrectText, GPT_4); 
-  Logger.log("generatedText: " + generatedText);
+  //Logger.log("generatedText: " + generatedText);
   var BacktoBack = restoreOriginalContent(generatedText);
   insertTextAfterSelection(BacktoBack)
-  Logger.log("Text corrected successfully.");
+  //Logger.log("Text corrected successfully.");
 }
 
 function correctTextGPT4_turbo_preview() {
   generatedText = ChatGPTprompt(PromptCorrectText, GPT_4_turbo_prieview); 
-  Logger.log("generatedText: " + generatedText);
+  //Logger.log("generatedText: " + generatedText);
   var BacktoBack = restoreOriginalContent(generatedText);
   insertTextAfterSelection(BacktoBack)
-  Logger.log("Text corrected successfully.");
+  //Logger.log("Text corrected successfully.");
 }
 
 function correctTextGPT3_5Turbo() {
   generatedText = ChatGPTprompt(PromptCorrectText, GPT_3_5_Turbo); 
-  Logger.log("generatedText: " + generatedText);
+  //Logger.log("generatedText: " + generatedText);
   var BacktoBack = restoreOriginalContent(generatedText);
-  Logger.log("BacktoBack: " + BacktoBack);
+  //Logger.log("BacktoBack: " + BacktoBack);
   insertTextAfterSelection(BacktoBack)
-  Logger.log("Text corrected successfully.");
+  //Logger.log("Text corrected successfully.");
 }
 
 function restoreOriginalContent(text) {
@@ -320,11 +279,10 @@ function restoreOriginalContent(text) {
   return text;
 }
 
-
 function answerQuestionGPT4() {
   var selectedText = getSelectedText();
   var generatedText = ChatGPTprompt(PromptFreeQuestion, GPT_4);
-  Logger.log("generatedText: " + generatedText);
+  //Logger.log("generatedText: " + generatedText);
   insertTextAfterSelection(generatedText)
   Logger.log("Text generated successfully.");
 }
@@ -332,7 +290,7 @@ function answerQuestionGPT4() {
 function answerQuestionGPT4_turbo_preview() {
   var selectedText = getSelectedText();
   var generatedText = ChatGPTprompt(PromptFreeQuestion, GPT_4_turbo_prieview);
-  Logger.log("generatedText: " + generatedText);
+  //Logger.log("generatedText: " + generatedText);
   insertTextAfterSelection(generatedText)
   Logger.log("Text generated successfully.");
 }
@@ -340,7 +298,7 @@ function answerQuestionGPT4_turbo_preview() {
 function answerQuestionGPT3_5() {
   var selectedText = getSelectedText();
   var generatedText = ChatGPTprompt(PromptFreeQuestion, GPT_3_5_Turbo);
-  Logger.log("generatedText: " + generatedText);
+  //Logger.log("generatedText: " + generatedText);
   insertTextAfterSelection(generatedText)
   Logger.log("Text generated successfully.");
 }
@@ -375,10 +333,25 @@ function CodeBlock() {
     var cell = row.appendTableCell();
 
     var newtext = cell.appendParagraph(selectedText);
-
     newtext.
       editAsText().setFontFamily("Courier").setFontSize(10); 
-  Logger.log("selectedText: " + newtext.asText());
+  //Logger.log("selectedText: " + newtext.asText());
+
+//  DeleteSelection (elements);
+  }
+}
+
+// For generating code, the function should remove the original now. It is not working yet.
+function DeleteSelection(elements) {
+  Logger.log("DeleteSelection - elements: " + elements);
+
+  for (var i = 0; i < elements.length; i++) {
+    var element = elements[i];
+    var text = element.getElement().editAsText();
+
+    if (element.isPartial()) {
+      text.deleteText(element.getStartOffset(), element.getEndOffsetInclusive());
+    }
   }
 }
 
@@ -398,16 +371,17 @@ function CodeBlockJIRA() {
     editAsText().setFontFamily("Courier").setFontSize(10);
 }
 
+function processSelectedOption(RadioOption) {
+  Logger.log("Selected option: " + RadioOption.RadioOption());
 
-function processSelectedOption(option) {
-    Logger.log("Option received: " + option);
-    // Process the selected option here
 }
+
+
 
 <!DOCTYPE html>
 <html>
   <style>
-   .container {
+    .container {
       display: block;
       justify-content: center;
       align-items: center;
@@ -447,96 +421,149 @@ function processSelectedOption(option) {
 
     .center {
       margin: auto;
-      width: 60%;
+      width: 80%;
       border: none;
       padding: 1px;
     }
 
     .button1 {
-        margin-bottom: 10px;
+      margin-bottom: 10px;
     }
 
     h4 {
-    margin-top: 0;
-}
+      margin-top: 0;
+    }
 
+    input[type="radio"] {
+      margin-right: 1px; /* Add some spacing between the radio button and its label */
+      margin-bottom: 1px;
+      font-size: smaller; /* Reduce font size */
+      display:  inline-block;; /* Display radio buttons inline */
+    }
+
+    label {
+      font-size: 14px; /* Smaller font size for labels */
+      display: block;
+    }
+
+    .radio-options label {
+      display: inline-block; /* Display labels inline */
+      margin-right: 15px; /* Add spacing between labels */
+    }
+    
+    .radio-options {
+      text-align: left; /* Align radio options to the left */
+      margin-top: 0p;
+    }
+    .close-button {
+      display: block;
+      margin-top: 20px;
+      text-align: center;
+    }
+
+    #closeBtn {
+      background-color: #f44336;
+      border: 1px solid #f44336;
+    }
+
+    #closeBtn:hover {
+      background-color: #da190b;
+    }
+    
   </style>
   <head>
     <base target="_top">
 
-<script>
-    function submitOption() {
-        var form = document.getElementById('myForm');
-        var formData = new FormData(form);
-        var selectedOption = formData.get('option');
-
-        console.log("Selected Option: " + selectedOption);
-
-        google.script.run.withSuccessHandler(function(response) {
-            console.log("Option selected: " + response);
-        }).processSelectedOption(selectedOption);
+   <script>
+    document.querySelector("#params#").addEventListener("submit",#04AA6D
+    function(e)
+    {
+      e.preventDefault();    //stop form from submitting
+      google.script.run.processSelectedOption(this);
+      google.script.host.close();//close this dialogbox
     }
+    );
 
 
-</script>
+    </script>
 
   </head>
   <body>
     <div class="center">
-      <h2>Walldomator<h2>
+      <h2>Walldomator</h2>
     </div>
+
     <div class="container">
-        <div class="btn-group">
-            <div class="center">
-                <b><small>Correct selection</small></b>
-                <div class="button1">
-                    <button onclick="google.script.run.correctTextGPT4();" title="A set of models that improve on GPT-3.5 and can understand as well as generate natural language or code.">Correct selection with model <b>GPT-4</b></button>
-                </div>
-                <div class="button1">
-                    <button onclick="google.script.run.correctTextGPT4_turbo_preview();" title="The latest GPT-4 model intended to reduce cases of “laziness” where the model doesn’t complete a task. Returns a maximum of 4,096 output tokens.">Correct selection with model <b>GPT-4-Turbo-Preview</b></button>
-                </div>
-                <div class="button1">
-                    <button onclick="google.script.run.correctTextGPT3_5Turbo();" title="A set of models that improve on GPT-3.5 and can understand as well as generate natural language or code">Correct selection with model <b>GTP-3.5-Turbo</b></button>
-                </div>
-            </div>
+      <!-- Group 1: Correct Selection Buttons -->
+      <div class="btn-group">
+        <div class="center">
+          <b>Correct selection</b>
+          <div class="button1">
+            <button onclick="google.script.run.correctTextGPT4();" title="A set of models that improve on GPT-3.5 and can understand as well as generate natural language or code.">Correct selection with model <b>GPT-4</b></button>
+          </div>
+          <div class="button1">
+            <button onclick="google.script.run.correctTextGPT4_turbo_preview();" title="The latest GPT-4 model intended to reduce cases of “laziness” where the model doesn’t complete a task. Returns a maximum of 4,096 output tokens.">Correct selection with model <b>GPT-4-Turbo-Preview</b></button>
+          </div>
+          <div class="button1">
+            <button onclick="google.script.run.correctTextGPT3_5Turbo();" title="A set of models that improve on GPT-3.5 and can understand as well as generate natural language or code">Correct selection with model <b>GTP-3.5-Turbo</b></button>
+          </div>
         </div>
+      </div>
 
-        <div class="btn-group">
-            <div class="center">
-                <b><small>Answer question</small></b>
-                <div class="button1">
-                    <button onclick="google.script.run.answerQuestionGPT4();" >Answer the selected question with model <b>GTP-4</b></button>
-                </div>
-                <div class="button1">
-                    <button onclick="google.script.run.answerQuestionGPT4_turbo_preview();">Answer the selected question with model <b>GPT-4-Turbo-Preview</b> </button>
-                </div>
-                <div class="button1">
-                    <button onclick="google.script.run.answerQuestionGPT3_5();">Answer the selected question with model <b>GTP-3.5-Turbo</b> </button>
-                </div>
-            </div>
+      <!-- Group 2: Answer Question Buttons -->
+      <div class="btn-group">
+        <div class="center">
+          <b>Answer question</b>
+          <div class="button1">
+            <button onclick="google.script.run.answerQuestionGPT4();" >Answer the selected question with model <b>GTP-4</b></button>
+          </div>
+          <div class="button1">
+            <button onclick="google.script.run.answerQuestionGPT4_turbo_preview();">Answer the selected question with model <b>GPT-4-Turbo-Preview</b> </button>
+          </div>
+          <div class="button1">
+            <button onclick="google.script.run.answerQuestionGPT3_5();">Answer the selected question with model <b>GTP-3.5-Turbo</b> </button>
+          </div>
         </div>
+      </div>
 
-         <div class="btn-group">
-            <div class="center">
-                <b> Format selection to code block</b>
-                <div class="button1">
-                    <button onclick="google.script.run.CodeBlock();" title="Code block inside a table.">Code block</button>
-                </div>
-                <div class="button1">
-                    <button onclick="google.script.run.CodeBlockJIRA();" title="Code block for JIRA markdown.">Code block for Jira</button>
-                </div>
-            </div>
+      <!-- Group 3: Format Selection Buttons -->
+      <div class="btn-group">
+        <div class="center">
+          <b> Format selection to code block</b>
+          <div class="button1">
+            <button onclick="google.script.run.CodeBlock();" title="Code block inside a table.">Code block</button>
+          </div>
+          <div class="button1">
+            <button onclick="google.script.run.CodeBlockJIRA();" title="Code block for JIRA markdown.">Code block for Jira</button>
+          </div>
         </div>
+      </div>
 
-        <button onclick="google.script.host.close();">Close</button>
+       <!-- Group 4: GPT Model Selection Form -->
+      <div class="btn-group">
+        <div class="center radio-options">
+          <br>Please, select a GPT model:</br>
+          <form id="myForm" onsubmit="submitOption()">
+            <label title="GPT-3.5 Turbo: A version of GPT-3.5 with enhanced performance">
+              <input type="radio" name="RadioOption" value="gpt-3.5-turbo" checked>
+              <span>GPT-3.5 Turbo</span>
+            </label>
+            <label title="GPT-4: The next generation of GPT models">
+              <input type="radio" name="RadioOption" value="gpt-4">
+              <span>GPT-4</span>
+            </label>
+            <label title="GPT-4 Turbo Preview: An experimental version of GPT-4 with turbocharged capabilities">
+              <input type="radio" name="RadioOption" value="gpt-4-turbo-preview3">
+              <span>GTP-4 Turbo Preview</span>
+            </label>
+            <br>
+            <input type="submit" value="Submit">
+          </form>
+        </div>
+      </div>
+         <div class="close-button">
+          <button id="closeBtn" class="btn" onclick="google.script.host.close();">Close</button>
+         </div>
     </div>
-
-
-
   </body>
 </html>
-
-
-
-
-
