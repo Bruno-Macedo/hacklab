@@ -374,6 +374,17 @@ cat file | iconv -t utf-16le | base64 -w 0 = result
 # Execute enconded command
 echo powershell -enc result
 
+
+# Read PScredential
+Import-CliXml
+Export-CliXml
+
+powershell -c "$credential = import-clixml -path
+C:\Data\Users\app\crypted_file.txt;$credential.GetNetworkCredential().password"
+
+$credential = import-clixml -path
+C:\Data\Users\app\user.txt
+$credential.GetNetworkCredential().password
 ```
 - Binary
   - dnSpy

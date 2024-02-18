@@ -74,7 +74,7 @@
 |Horizontall    |||
 |Shibboleth     |||
 |Writer         |||
-|Precise        |||
+|Precise        |18-02-2024|Bad, windows PScredentials|
 |Pandora        |||
 |Meta           |||
 |Paper          |||
