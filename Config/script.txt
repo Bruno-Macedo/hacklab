@@ -208,7 +208,7 @@ function insertTextAfterSelection(text) {
   //var theDoc = DocumentApp.getActiveDocument();
   var insertPoint = FindInsertPoint ();
   //var body = doc.getBody();
-  var newtext = body.insertParagraph(insertPoint + 2, text);
+  var newtext = body.insertParagraph(insertPoint + 1, text);
 
   newtext.
     editAsText().setBackgroundColor('#FFFF00');
@@ -271,6 +271,8 @@ function correctTextGPT4() {
 function correctTextGPT4_turbo_preview() {
   generatedText = ChatGPTprompt(PromptCorrectText, GPT_4_turbo_prieview); 
   //Logger.log("generatedText: " + generatedText);
+
+
   var BacktoBack = restoreOriginalContent(generatedText);
   insertTextAfterSelection(BacktoBack)
   //Logger.log("Text corrected successfully.");
@@ -279,6 +281,10 @@ function correctTextGPT4_turbo_preview() {
 function correctTextGPT3_5Turbo() {
   generatedText = ChatGPTprompt(PromptCorrectText, GPT_3_5_Turbo); 
   //Logger.log("generatedText: " + generatedText);
+
+  Logger.log("RemovedIPs: " + RemovedIPs)
+  Logger.log("RemovedURLs: " + RemovedURLs)
+
   var BacktoBack = restoreOriginalContent(generatedText);
   //Logger.log("BacktoBack: " + BacktoBack);
   insertTextAfterSelection(BacktoBack)
@@ -288,15 +294,19 @@ function correctTextGPT3_5Turbo() {
 function restoreOriginalContent(text) {
   // Replace placeholder tags with original IP addresses
 
- for (var i = 0; i < RemovedIPs.length; i++) {
+  if (RemovedIPs != null) {
+    for (var i = 0; i < RemovedIPs.length; i++) {
     var ipRegex = new RegExp("#IP_Address" + i + "#", "g");
     text = text.replace(PlaceHolderIP, RemovedIPs[i]);
+    }
   }
 
   // Replace placeholder tags with original URLs
-  for (var j = 0; j < RemovedURLs.length; j++) {
-    var urlRegex = new RegExp("#URLs" + j + "#", "g");
-    text = text.replace(PlaceHolderURL, RemovedURLs[j]);
+  if (RemovedURLs != null) {
+    for (var j = 0; j < RemovedURLs.length; j++) {
+      var urlRegex = new RegExp("#URLs" + j + "#", "g");
+      text = text.replace(PlaceHolderURL, RemovedURLs[j]);
+    }
   }
   return text;
 }
@@ -589,4 +599,98 @@ function processForm(url) {
 </html>
 
 
-
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Options</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        select, input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        input[type="submit"] {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+<div class="container mt-5">
+    <form id="taskOptions">
+        <div class="mb-3">
+            <label for="task" class="form-label">Task</label>
+            <select id="task" name="task" class="form-select">
+                <option value="generateRecommendations">Generate Recommendations</option>
+                <option value="answerQuestion">Answer Question</option>
+                <option value="correctText">Correct Text</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="model" class="form-label">GPT-Model</label>
+            <select id="model" name="model" class="form-select">
+                <option value="gpt-3.5-turbo" selected>GPT-3.5-Turbo</option>
+                <option value="gpt-4">GPT-4</option>
+                <option value="gpt-4-turbo-preview">GPT-4-Turbo-Preview</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="maxTokens" class="form-label">Max Tokens:</label>
+            <input type="range" class="form-range" id="maxTokens" name="maxTokens" min="1" max="10" oninput="this.nextElementSibling.value = this.value">
+            <output>5</output>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</div>
+<script> 
+document.getElementById('taskOptions')
+    .addEventListener('submit', function(buttonEvent) {
+            buttonEvent.preventDefault();
+            let task = document.getElementById('task').value;
+            let model = document.getElementById('model').value;
+            let maxTokens = document.getElementById('maxTokens').value;
+            google.script.run.generateRecommendations()
+            if (task === 'generateRecommendations') 
+                google.script.run.generateRecommendations(model);
+            else if (task === 'answerQuestion') 
+                google.script.run.answerQuestion(model);
+            else if (task === 'correctText') 
+                google.script.run.correctText(model);
+    })
+  </script>
+</body>
+</html>
