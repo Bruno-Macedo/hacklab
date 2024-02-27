@@ -69,7 +69,7 @@
 |Knife          |||
 |Pit            |||
 |Seal           |||
-|Previse        |||
+|Previse        |26.02.2024|full path for command in the script with root access??|
 |Forge          |||
 |Horizontall    |||
 |Shibboleth     |||

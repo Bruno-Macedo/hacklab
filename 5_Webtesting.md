@@ -7,6 +7,7 @@
 - [API](#api)
   - [Git Enumeration](#git-enumeration)
   - [PHP psy shell](#php-psy-shell)
+  - [PHP exec](#php-exec)
 
 ## Server Side Template Injection
 {{7x7}}
@@ -368,3 +369,6 @@ file_put_content("path/to/file", "content", FILE_APPEND)
 
 phpinfo()
 ls
+
+## PHP exec
+- exec()
