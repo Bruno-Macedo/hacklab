@@ -37,6 +37,10 @@
     - --script=smb-enum-shares.nse,smb-enum-users.nse
 
     - ports=$(sudo nmap -Pn -T4 $target -oN ports.txt | egrep "^[0-9]{2,5}" | sed -E "s#/.*##g" | tr "\n" "," | sed 's/.$//') && echo $ports
+  
+- rustscan
+  - docker run -it --rm --name rustscan rustscan/rustscan:2.1.1
+  - alias rustscan='docker run -it --rm --name rustscan rustscan/rustscan:2.1.1'
 
 - smtp/pop 
   - enumerate
@@ -297,7 +301,7 @@ Add-ObjectACL -PrincipalIdentity john -Credential $credt -Rights DCSync
   - linpeas
   - linenum
   - pspy - for process
-
+^
 - export PATH=/tmp:$PATH = possible?
 
 ## Web
