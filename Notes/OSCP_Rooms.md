@@ -54,7 +54,7 @@
 |OpenAdmin      |05-12-2023|See .db files, search vhost|
 |Magic          |||
 |Admirer        |12-02-2024|Better enumeration with other wordlists|
-|Blunder        |||
+|Blunder        |27.02.2024|Soon no easies|
 |Tabby          |||
 |Doctor         |||
 |SneakyMailer   |||
