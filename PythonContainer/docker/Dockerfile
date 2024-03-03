@@ -28,6 +28,7 @@ make \
     tk-dev \
     libffi-dev \
     liblzma-dev \
+    sudo \
     python3-openssl \
     git \\
     && apt-get clean && rm -rf /var/lib/apt/lists/*

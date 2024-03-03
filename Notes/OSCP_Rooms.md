@@ -55,7 +55,7 @@
 |Magic          |||
 |Admirer        |12-02-2024|Better enumeration with other wordlists|
 |Blunder        |27.02.2024|Soon no easies|
-|Tabby          |||
+|Tabby          |03-03-2024|Read docu|
 |Doctor         |||
 |SneakyMailer   |||
 |Passage        |||
