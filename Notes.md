@@ -81,6 +81,7 @@
 - [Windows enumeration](https://fuzzysecurity.com/tutorials/16.html?ref=172.16.77.130)
 
 - whoami /priv
+- "tasklist /svc
 - systeminfo
   - architecture 
     - [Environment]::Is64BitProcess
