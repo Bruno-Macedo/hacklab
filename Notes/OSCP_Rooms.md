@@ -109,7 +109,7 @@
 |Buff          |19-01-2024|Use alternative tools, smbshare for file transfer, chisel/soca for port forwarding|
 |Servmon       |17-01-2024|Not so happy with privesc - check if there is api access despite the normal access|
 |Active*       |27/28-12-2023|Very good!|
-|Remote        |06-03-2024|Interessant|
+|Remote        |06-03-2024|Interessanttm|
 |Fuse          |||
 |Omni          |||
 |Worker        |||

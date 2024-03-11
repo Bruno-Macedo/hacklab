@@ -160,3 +160,9 @@ openssl pkey -in ca.key -pubout | md5sum
 
 - Verify certificates
   - openssl verify -verbose -CAfile ca.crt client.cer
+  
+- pfx file: Personal Information Exchange = store/transport senstive information 
+- Extract key
+  - openssl pkcs12 -in originalfile.pfx -nocerts -out key.pem -nodes
+- Extrackt certificate
+  - openssl pkcs12 -in originalfile.pfx -nokeys -out cert.pem
