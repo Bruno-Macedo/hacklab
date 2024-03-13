@@ -1,6 +1,9 @@
 - [TMUX cheat sheet](#tmux-cheat-sheet)
 - [Docker](#docker)
 - [Python venv](#python-venv)
+- [Cloud](#cloud)
+  - [ScoutScuit](#scoutscuit)
+  - [CloudFox](#cloudfox)
 
 ## TMUX cheat sheet
 - tmux
@@ -88,4 +91,27 @@ docker exec 7b4294cce723 pandoc OSCP_Report_Steel_Mountail_THM.md \
 - python -m venv /path
 - source bin/activate
 - deactivate
+  
+## Cloud
+### ScoutScuit
+- [Scoutsout](https://github.com/nccgroup/ScoutSuite)
 - 
+```
+virtualenv -p python3 venv
+source venv/bin/activate
+pip install scoutsuite
+scout --help
+
+#GCP
+gcloud auth login
+gcloud auth application-default login
+
+
+scout.py gcp --user-account
+scout.py gcp --service-account </PATH/TO/KEY_FILE.JSON>
+scout.py gcp --user-account --all-subscription
+```
+
+### CloudFox
+- [CloudFox](https://github.com/BishopFox/cloudfox)
+  - Limited to AWS and Azure
