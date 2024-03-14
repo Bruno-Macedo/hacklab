@@ -184,6 +184,8 @@
 - check if file has no fullpath + create own script with reverse shell
 
 ## PATH
+- Modify $PATH variable
+- Add file
 - echo $PATH
 - export PATH=/path/to/folder:$PATH
 - PATH=$PATH:/path/to/folder

@@ -147,7 +147,7 @@
 - domain name
   - nslookup $target 127.0.0.1
   
-**w**
+**AD**
 - ldapsearch -h $target
   - ldapsearch -h domain.com -D 'ldap@support.htb' -w 'PASS' -b "DC=domain,DC=htb"| less"CN=Users,DC=domain,DC=com"
   - ldapsearch -h domain.htb -D "
@@ -256,30 +256,53 @@ Add-ObjectACL -PrincipalIdentity john -Credential $credt -Rights DCSync
 
 ## Linux
 - sudo -l
+- groups
+  - getent group NAME
+  - /etc/group
 - history
-- ps aux
+- ps aux / ps au
 - SUID - Privileges Escalation
   - find / -perm -u=s -type f 2>/dev/null
   - find / -type f -perm -04000 -ls 2>/dev/null 
   - find / -type f -perm -4000 -user root -ls 2>/dev/null
   - find / -type f -perm -u=s -user root -ls 2>/dev/null
+  - find / -path /proc -prune -o -type f -perm -o+w 2>/dev/null
 - Passwords:
   - grep --color=auto -rnw '/' -ie "Password" --color=always 2>/dev/null
   - grep --color=auto -rnw '/etc' -ie "Password" --color=always 2>/dev/null
   - find /etc -type f -exec grep -i -I "pass" {} /dev/null \;
 - Read all files in a folder
   - find /path/target -type f -exec cat {} +
+  - find / -type f -name ".*" -exec ls -l {} \; 2>/dev/null | grep blabla = hidden
+  - find / -type d -name ".*" -ls 2>/dev/null
+- Writeable paths
+  - find / -path /proc -prune -o -type d -perm -o+w 2>/dev/null
 - Executables
   - full path / path hijacking
 
-- Virtual hosts?
+- Network
+  - route
+  - netstat -rn
+  - /etc/resolv.conf
+  - arp -a
 - lscpu
-- lsblk -a
-- lsusb -v
+- Mount/umount
+    - lsblk -a
+    - fstab
+    - df -h
+    - cat /etc/fstab | grep -v "#" | column -t
+- Printers
+  - lpstat
+- shells
+  - cat /etc/shells
 - lspci -t -v
-- Groups: LXD????
+- Groups: 
+  - id: LXD????
 - crontab
-- Write permisions?
+- Static
+  - uname -a: kernel
+  - lscpu: cpu type
+  - lsusb -v
 - Automatic tools
   - LinEnum.sh 
   - LinPeas
