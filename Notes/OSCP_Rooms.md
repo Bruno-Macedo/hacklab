@@ -117,9 +117,9 @@
 |Intelligence  |||
 |APT           |||
 |Object        |||
-|Support       |2.2.2024|AD, do again, other attack|
+|Support       |02-2-2024|AD, do again, other attack|
 |Acute         |||
-|Timelapse     |||
+|Timelapse     |12/14-03-2024|LAPS/powerview/get|
 |StreamIO      |||
 |Scrambled     |||
 |
