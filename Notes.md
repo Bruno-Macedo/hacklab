@@ -202,12 +202,12 @@ Add-ObjectACL -PrincipalIdentity john -Credential $credt -Rights DCSync
 ``` 
 - run *secretsdump* (impackt) with new user to retrieve hashes
 
-### sm
+### SMB
 - SMBMAP
   - smbmap -H $target = Check Privileges 
   - smbmap -H $target -R --depth 5
-  - smbmap -u Administrator -p 'Password@1' -H $target
-- SMB-CLIENT
+  - smbmap -H $target -u Administrator -p 'Password@1' 
+- SMB-CLIENT: write/read
 - smbclient -L //$target/ = List Shares
 - smbclient -L //$target -U admin/administrator
 - smbclient //$target/Users = Interactive shell to a share
@@ -241,7 +241,7 @@ Add-ObjectACL -PrincipalIdentity john -Credential $credt -Rights DCSync
 - crakmapexec smb $TARGET
   - --shares
   - -u '' -p ''
-  - -u 'bla' -p ''
+
 
 ### FTP
 - Banner grabbing
@@ -265,7 +265,12 @@ Add-ObjectACL -PrincipalIdentity john -Credential $credt -Rights DCSync
   - find / -perm -u=s -type f 2>/dev/null
   - find / -type f -perm -04000 -ls 2>/dev/null 
   - find / -type f -perm -4000 -user root -ls 2>/dev/null
+  - find / -user root -perm -6000 -exec ls -ldb {} \; 2>/dev/null
   - find / -type f -perm -u=s -user root -ls 2>/dev/null
+  - find / -path /proc -prune -o -type f -perm -o+w 2>/dev/null
+- Capabilities
+  - find /usr/bin /usr/sbin /usr/local/bin /usr/local/sbin -type f -exec getcap {} \;
+- Writables path/files
   - find / -path /proc -prune -o -type f -perm -o+w 2>/dev/null
 - Passwords:
   - grep --color=auto -rnw '/' -ie "Password" --color=always 2>/dev/null
@@ -297,7 +302,7 @@ Add-ObjectACL -PrincipalIdentity john -Credential $credt -Rights DCSync
   - cat /etc/shells
 - lspci -t -v
 - Groups: 
-  - id: LXD????
+  - id: LXD, Docker, Disk, ADM
 - crontab
 - Static
   - uname -a: kernel
@@ -309,6 +314,7 @@ Add-ObjectACL -PrincipalIdentity john -Credential $credt -Rights DCSync
   - psexec.py
   - pspy
 - Read/write PATH (path hijacking)
+- Logs/logrotate
   
 - Shell stabilize
   - python3 -c 'import pty;pty.spawn("/bin/bash")'
@@ -325,7 +331,8 @@ Add-ObjectACL -PrincipalIdentity john -Credential $credt -Rights DCSync
   - linpeas
   - linenum
   - pspy - for process
-^
+  - [lynis](https://github.com/CISOfy/lynis)
+
 - export PATH=/tmp:$PATH = possible?
 
 ## Web

