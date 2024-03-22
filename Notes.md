@@ -6,11 +6,10 @@
 [pyenv for python2](https://www.kali.org/docs/general-use/using-eol-python-versions/)
 
 # Check list
-[] Process running
-  - db
-  - ?? ???
-[] privileges
-[] scripts
+- script: save all commands
+  - exit
+- Start-Transcript -Path "C:\Pentesting\03-21-2021-0200pm-exploitation.log"
+  - Stop-Transcript
 
 ## Automatic web enum
 - wpsscan -U user -P password
