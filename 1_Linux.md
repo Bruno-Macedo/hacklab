@@ -532,6 +532,7 @@ LD_PRELOAD=root.so executable restart
     - python3 vol.py -f file.vmem  windows.info
     - many other pluggins
 
+
 ## Recover files
 - lsblk = show all disk
 - interact with disk

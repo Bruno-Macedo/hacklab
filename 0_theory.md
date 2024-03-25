@@ -13,8 +13,6 @@
     - [IDS x IPS](#ids-x-ips)
 
 
-
-
 ## Definitions
 - **Attack Vector**: tool, technique method USED to attack
   - weapons, phishing, DOS, Web drive-by, Flaws in browser, unpachecksecd vulnerability
@@ -41,6 +39,13 @@
    - first level defense, network segmentation, zeto trust, least privileged access
   - response
     - Detection, log collection, analytics
+
+## Concept of attack
+|      Source ->    |     Processes ->    | Privileges -> | Destination |
+|-------------------|---------------------|---------------|-------------|
+|code,libs,         |PID,input,Vars       |System,User,   |Local: file,process,|
+|config,API, Input, |Logging,Proc, rules  |Groups, policy,|Network: Interface, address, Route |
+
 
 # Assembly in Windows
 [Tryhackme - Windows x64 Assembly](https://tryhackme.com/room/win64assembly)

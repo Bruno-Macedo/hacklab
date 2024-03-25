@@ -33,6 +33,10 @@
   - adding rule
     - conf file: [rule_name] Az"[0-9]" ^[!@#$]
 
+- zip2john file.zip > zip.hasj
+- ssh2john key > key.hash
+
+
 ## Hydra
 - hydra -l username -P wordlist.txt server service
 - hydra -l username -P wordlist.txt service://server (hydra -l -u $target smb -V -f)
@@ -70,7 +74,7 @@ hydra -l milesdyson -P log1.txt $target http-post-form '/squirrelmail/src/login.
 ```
 
 - FTP
-  - hydra -l [USERNAME] -P password.lst ftp://IP
+  - hydra -l [USERNAME] -P password.lst ftp://IP:PORT
 
 - SMPT
   - -l email@address.com -P [Password_List] smtp://IP -v
@@ -78,12 +82,17 @@ hydra -l milesdyson -P log1.txt $target http-post-form '/squirrelmail/src/login.
 - SSH
   - -L [USER_LIST] -P [PASS_LIST] ssh://IP -v
 
+- MSSQL
+  -  hydra -L user.txt –P pass.txt $TARGET mssql
 
 - Default Usernames:
 ```
 root
 admin
 ```
+
+# Medusa
+- medusa -U user -P pass -h $TARGET -M ftp
 
 ## User enumeration
 -  fuff -w [wordlist] -X [Method] -d " username=FUZZ& data to be sent" -H "additional header request" -u "url" -mr "we are looking for this answer / match regex"
@@ -118,7 +127,6 @@ admin
   - https://github.com/Mebus/cupp.git
 
 ## Zip files
-- John
 - fcrackzip
   - -D = dictionary
   - -u = only correct password
