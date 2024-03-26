@@ -263,7 +263,6 @@ domain=.
   - --shares
   - -u '' -p ''
 
-
 ### FTP
 - Banner grabbing
   - nc -vn $TARGET 21

