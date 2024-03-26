@@ -195,8 +195,6 @@ scout --help
 #GCP
 gcloud auth login
 gcloud auth application-default login
-
-
 scout.py gcp --user-account
 scout.py gcp --service-account </PATH/TO/KEY_FILE.JSON>
 scout.py gcp --user-account --all-subscription

