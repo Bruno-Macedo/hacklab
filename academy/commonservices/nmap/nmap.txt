@@ -1,8 +1,0 @@
-PORT     STATE SERVICE       VERSION
-21/tcp   open  tcpwrapped
-25/tcp   open  smtp          hMailServer smtpd
-80/tcp   open  http          Apache httpd 2.4.53 ((Win64) OpenSSL/1.1.1n PHP/7.4.29)
-443/tcp  open  ssl/https     Core FTP HTTPS Server
-587/tcp  open  smtp          hMailServer smtpd
-3306/tcp open  mysql         MySQL 5.5.5-10.4.24-MariaDB
-3389/tcp open  ms-wbt-server Microsoft Terminal Services
