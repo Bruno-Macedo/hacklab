@@ -2,6 +2,12 @@
 
  "SELECT * from [DB].[dbo].tbl_users"
 
+  master
+tempdb
+model
+msdb
+interns
+
 ## master
 "SELECT * from [master].[dbo].spt_fallback_db" -- X
 "SELECT * from [master].[dbo].spt_fallback_dev" -- X

