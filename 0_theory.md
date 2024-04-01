@@ -27,6 +27,64 @@
   - Disable macros
   - [Microsoft Attack surface reduction (ASR) rules reference](https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/attack-surface-reduction-rules-reference?view=o365-worldwide)
   - patch software
+  
+## Enumeration
+- Infrastrcuture-based
+- Host-based
+- OS-based
+- Layers
+  - Internet: internal/external access
+    - Domains, Subdomains, vHost, IP, Cloud
+    - Target: identify target systems/interfaces
+  - Gateway; security measures
+    - DMS, IPS/IDS, Proxies, VPN, Segmentation
+  - Services:
+    - Type, FUnctionality, config, port, version
+    - Target: reasion/functionality of target system
+  - Privileges: internal permissions and privileges
+    - groups, users, permissions, restrictions, environment
+    - Target: identify what is possible
+  - OS Setup: internal components and systems setup
+    - OS, PATCH level, network config, config files, sensitive files
+    - Target: sensitive information, how it is managed
+
+### Online presence
+- SSL certificates: read domains/subdomains
+  - vrt.sh
+  - curl -s https://crt.sh/\?q\=TARGET.com\&output\=json | jq . 
+- Domains
+  - curl -s https://crt.sh/\?q\=inlanefreight.com\&output\=json | jq . | grep name | cut -d":" -f2 | grep -v "CN=" | cut -d'"' -f2 | awk '{gsub(/\\n/,"\n");}1;' | sort -u
+- host:
+```
+# find where domains are hostes
+for i in $(cat subdomainlist);do host $i | grep "has address" | grep inlanefreight.com | cut -d" " -f1,4;done
+
+# scan with shodan
+for i in $(cat subdomainlist);do host $i | grep "has address" | grep inlanefreight.com | cut -d" " -f4 >> ip-addresses.txt;done
+for i in $(cat ip-addresses.txt);do shodan host $i;done
+```
+
+### DNS
+- A: IP --> Domain
+  - AAAA: IPv6
+- MX: mail records
+- NS: name servers to resolv FQDN to IP
+- TXT: verification keiys 
+
+### Cloud
+- hosted where:
+```
+for i in $(cat subdomainlist);do host $i | grep "has address" | grep inlanefreight.com | cut -d" " -f1,4;done
+
+# Search AWS
+intext:???? inurl:amazonaws.com
+
+# Search Azure
+intext:???? inurl:blob.core.windows.net
+```
+
+- [GrayHatWarfare](https://buckets.grayhatwarfare.com/)
+  - find AWS, Azure and GCP
 
 ## Defense in Depth
 - Severel layers of defense

