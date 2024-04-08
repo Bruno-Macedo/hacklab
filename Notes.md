@@ -18,6 +18,7 @@
 ## Basic network
 - nmap (all ports)
   - script: 
+    - find / -type f -name ftp* 2>/dev/null | grep scripts
     - locate -r nse$ | grep NAME
     - locate -r nse$ | xargs grep categories
     - locate -r nse$ | xargs grep categories | grep 'default\|version\|discovery|' | grep sNAME
@@ -31,6 +32,7 @@
   - scripts
     - --script ssl*
     - fpt-anon
+    - --script-trace: see commands sent
 
   - scripts
     - --script=nfs-ls,nfs-statfs,nfs-showmount

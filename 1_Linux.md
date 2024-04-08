@@ -251,11 +251,7 @@ LD_PRELOAD=root.so executable restart
   - Has the lib write permission?
     - python3 -c 'import sys; print("\n".join(sys.path))'
 
-## NFS
-- find root key + connect
-- /etc/exports ==> find no_root_squash = create x with SUID
-- showmount -e target-IP
-- mount no_root_squash from /etc/exports
+
 
 ## Executables
 -SUID = Set User ID = Run with the privilege of the owner not of the user
