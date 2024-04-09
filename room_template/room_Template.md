@@ -24,6 +24,7 @@ tmux setenv attack $attack && export attack=$attack
 
 # Scan open ports
 alias rustscan='docker run -it --rm --name rustscan rustscan/rustscan:2.1.1'
+rustscan 192.168.1.0/24 -t 500 -b 1500 -- -A
 
 TCPports=$(sudo nmap -Pn -p- -T4 $TARGET -oA nmap/TCPports -v | egrep "^[0-9]{2,5}" | sed -E "s#/.*##g" | tr "\n" "," | sed 's/.$//') && echo $TCPports
 nmap  -p$TCPports

