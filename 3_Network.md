@@ -128,7 +128,7 @@
   - declares SSH key type that client uses
 - -o PasswordAuthentication=no
   - no password
-- -o PreferredAuthentications=password|publickey,
+- -o PreferredAuthentications=publickey,password,keyboard-interactive
 - In the command: ~C = to execute ssh commands
 [Port Forwarding](https://notes.benheater.com/books/network-pivoting)
 
