@@ -1,3 +1,16 @@
+- [Basics](#basics)
+- [Hashcat](#hashcat)
+  - [Storage](#storage)
+- [John](#john)
+- [Hydra](#hydra)
+- [Medusa](#medusa)
+- [Crowbar](#crowbar)
+- [User enumeration](#user-enumeration)
+- [Brutespray](#brutespray)
+- [Creating Wordlists](#creating-wordlists)
+- [Zip files](#zip-files)
+- [Mozillas files](#mozillas-files)
+- [SSL](#ssl)
 
 
 ## Basics
@@ -7,6 +20,7 @@
 - Combine
   - cat file1 file2 > file3
   - sort fil3 | uniq u > cleaned
+- [CrackStation](https://crackstation.net/crackstation-wordlist-password-cracking-dictionary.htm)
 
 ## Hashcat
 - Identify hash
@@ -14,19 +28,89 @@
     - -j JOHN format
     - -m HASHCAT mode
   - hash-identifier: hash
+  - [Examples hashes](https://hashcat.net/wiki/doku.php?id=example_hashes)
+
+- [Crackstation](https://crackstation.net/)
 
 - wordlist
   - hashcat target /path/to/word/list
   - hashcat --example-hash
-- hashcat
-  - a 0 = dictionary attack
-    - dictionary = list | brute-force = guessing
-  - -m 0 = type of hash
-  - -a 3 = brute force method
-  - ?d = use digit for generating
-  - TOTAL_CHARACTERS = generate list
 
-- [Crackstation](https://crackstation.net/)
+- hashcat -a MODE -b TYPE hash_file
+  - w INTENSITY
+
+- Options
+  - -O optimize kernels
+  - -w specific worload profile
+    - 1,2,3 (intensive)
+  - --stdout = display
+  - TOTAL_CHARACTERS = generate list
+- **Modes**
+  - -a 0: dictionary: fast
+  - -a 3: brute force method
+  - -a 1: combination: two wordlists 
+    - -a 1 --stdout file1 file2
+  - -a 6 '?d?s': wordlist+mask
+  - -a 7 prepend: mask+wordlist
+  
+  - Mask: [generate words matching pattern](https://hashcat.net/wiki/doku.php?id=mask_attack)
+    - -1 AB Placeholder AB
+
+| Placeholder | Meaning  |
+| :---------: | :------: |
+|     ?l      |   a-z    |
+|     ?u      |   A-Z    |
+|     ?d      |   0-9    |
+|     ?h      |  0...f   |
+|     ?H      |  0...F   |
+|     ?s      |    @!    |
+|     ?a      | ?l?u?d?s |
+|     ?b      |   0x00   |
+
+```
+# Example
+Password<userid><year>
+<userid> = 5 digits = ?l?l?l?l?l
+<year>   = 4 digits = 20?1?d
+
+hashcat -m MODE -a TYPE hash_file -1 01 'Password?l?l?l?l?l20?1?d'
+Password   = 
+?l?l?l?l?l = <userid>  = a-z 
+20 
+?1    = 0|1
+?d    = 0-9 
+```
+
+- Utils
+  - [maskprocessor](https://github.com/hashcat/maskprocessor)
+
+- **Rules**
+  - -r rule_file
+    - /usr/share/hashcat/rules/*
+  - -g NUMBER = create random rules
+  - [Rules](https://hashcat.net/wiki/doku.php?id=rule_based_attack#implemented_compatible_functions)
+  - [nsa-rules](https://github.com/NSAKEY/nsa-rules)
+  - [Hob0Rules](https://github.com/praetorian-inc/Hob0Rules)
+  - [corporate.rule](https://github.com/sparcflow/HackLikeALegend/blob/master/old/chap3/corporate.rule)
+
+```
+l	Convert all letters to lowercase
+u	Convert all letters to uppercase
+c / C	capitalize / lowercase first letter and invert the rest
+t / TN	Toggle case : whole word / at position N
+...
+
+c so0 si1 se3 ss5 sa@ $2 $0 $1 $9
+so0 = replace o to 0
+$2 $0 $1 $9 = append to the end
+
+hashcat -r rule.txt combmd5 --stdout
+P@55w0rd_1lfr31ght2019
+```
+
+### Storage
+- ~/.local/share/hashcat/hashcat.potfile
+
   
 ## John
 - Using rules
@@ -114,25 +198,40 @@ admin
 - [Information here](https://github.com/x90skysn3k/brutespray)
 
 ## Creating Wordlists
-- cewl URL
+- [cewl](https://github.com/digininja/CeWL) 
+  - cewl URL
   - -w = output
   - -d 5 = depth
   - -m 5 = minimum
+  - -e extract emails
   
 - username_gennerator.py
 
 - crunch
   - combination of characters
   - crunch 2 2 123456abcd -o output
-  - -t startpassword[symbol1][symbol2]
+  - -t Password[pattern][pattern]
     - @ lower case
     - , upercase
     - % numeric
     - ^ special
+  - -d repetitions
 
-- cupp
+- cupp: Common User Password Profiler
   - based on information of the target, birthdate, pet, etc
-  - https://github.com/Mebus/cupp.git
+  - https://github.com/Mebus/cupp
+
+- [KWPROCESSOR](https://github.com/hashcat/kwprocessor)
+  - wordlist with keyboard walks
+  - --keywalk-west
+
+- [Princeprocessor](https://github.com/hashcat/princeprocessor)
+  - PRobability INfinite Chained Elements
+  - Create chains of words from the list
+  - --keyspace < words = number of combinations
+  - -o wordlist.txt < words = write output
+  - --pw-min | --pw-max
+  - --elem-cnt-min | --elem-cnt-max
 
 ## Zip files
 - fcrackzip
