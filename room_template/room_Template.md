@@ -31,7 +31,7 @@ nmap  -p$TCPports
 
 TCPports=$(rustscan -a $TARGET -r 1-65535 > nmap/TCPports.txt | egrep  "^Open.*$" | sed -e 's/\x1b\[[0-9;]*m//g' | sed -e 's/^Open.*://g;s/\r$//g;s/\[m//g' | tr "\n" "," | sed 's/,$//' ) && echo $TCPports
 
-UDPports=$(sudo nmap -T5 -Pn -sU $TARGET -oA nmap/UDPports.txt -v | egrep "^[0-9]{2,5}" | sed -E "s#/.*##g" | tr "\n" "," | sed 's/.$//') && echo $UDPports
+UDPports=$(sudo nmap --min-rate 5000 -T5 -Pn -sU $TARGET -oA nmap/UDPports.txt -v | egrep "^[0-9]{2,5}" | sed -E "s#/.*##g" | tr "\n" "," | sed 's/.$//') && echo $UDPports
 
 # Scan services of open ports
 sudo nmap -Pn -p$TCPports -sS -sV -sC -PA $TARGET -oA nmap/Tserv

