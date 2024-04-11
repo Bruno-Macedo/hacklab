@@ -7,5 +7,5 @@ services:
     restart: always
     volumes:
       - ../myapps:/home/myuser/app
-    security_opt:
-      - no-new-privileges:true
+    #security_opt:
+    #  - no-new-privileges:true

@@ -10,28 +10,33 @@ ENV TZ="Europe/Berlin" \
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 RUN apt-get update && apt-get install --no-install-recommends -y python3.9 \  
-python3-pip \
-make \
-    python3-wheel \
     build-essential \
-    libssl-dev \
-    zlib1g-dev \
-    libbz2-dev \
-    libreadline-dev \
-    libsqlite3-dev \
-    wget \
     curl \
-    llvm \
-    libncurses5-dev \
-    libncursesw5-dev \
-    xz-utils \
-    tk-dev \
+    git\
+    libbz2-dev \
     libffi-dev \
     liblzma-dev \
-    sudo \
+    libncurses5-dev \
+    libncursesw5-dev \
+    libreadline-dev \
+    libsqlite3-dev \
+    libssl-dev \
+    llvm \
+    make \
+    p7zip-full\
+    p7zip-rar\ 
     python3-openssl \
-    git \\
-    && apt-get clean && rm -rf /var/lib/apt/lists/*
+    python3-pip \
+    python3-wheel \
+    sudo \
+    tk-dev \
+    unzip \
+    wget \
+    xz-utils \
+    zip\
+    zlib1g-dev 
+
+RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
 RUN pip install requests
 

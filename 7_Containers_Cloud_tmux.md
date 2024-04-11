@@ -75,8 +75,6 @@ spec:
   - Extract info
     - kubeletctl --server 10.129.10.11 exec "cat /root/root/.ssh/id_rsa" -p privesc -c privesc
 
-
-
 - Nodes
   - https://bishopfox.com/blog/kubernetes-pod-privilege-escalation
   - bad POD:
@@ -125,6 +123,12 @@ docker exec 7b4294cce723 pandoc OSCP_Report_Steel_Mountail_THM.md \
 --highlight-style pygments \
 --resource-path=.:src
 ```
+- List all containers
+  - docker ps --all --format '{{.ID}}'
+    - '{{.Names}}'
+    - '{{.Images}}'
+    - '{{.Command}}'
+    - '{{.Status}}'
 
 - docker remove
 - Docker remove all images

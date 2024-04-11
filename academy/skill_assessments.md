@@ -4,7 +4,7 @@ TODOS:
 - Pivoting, Tunneling, and Port Forwarding
 - AD
 - AD Bloodhound
-- Hashcat
+
 
 *Command*: 
 
@@ -519,15 +519,50 @@ hydra -l simon -P mynotes.txt 10.129.38.94 ssh -v -I
 ### Assessment 
 
 
-*Command:*
+*Command:* Identify hash mode + crack it
+- hashid 0c67ac18f50c5e6b9398bfe1dc3e156163ba10ef -m
+- hashcat -a 0 -m 100 question1 rockyou.txt
 
-*Result:*
+*Result:*  format + password = answer 1 & 2
 
 ---
 
-*Command:*
+*Command:* Identify hash mode + crack
+- cat question2 | hashid -m
+- hashcat -a 0 -m 5600 combmd5 rockyou.txt
 
-*Result:*
+*Result:* hash mode + Password = answer 3
+
+---
+
+*Command:* Identify hash + crack
+- hashid did not return a value, so online search: 13100
+- hashcat -a 0 -m 13100 question4 rockyou.txt
+
+*Result:* hash mode + password = answer 4
+
+---
+
+*Command:* Identify hash + crack
+- cat question5 | hash id -m
+- hashcat -a 0 -m 2100 question4 rockyou
+
+*Result:* Mode + password = answer 5
+
+---
+
+*Command:* Created an own potfile just for this question + crack hash
+- hashcat -a 0 -m 1000 -g 1000 ../DC01.inlanefreight.local.ntds /usr/share/wordlists/rockyou.txt --username -w 3 -O --potfile-path  potfile_question6.txt
+
+*Result:* Found passwords
+
+---
+
+*Command:* Used audit too to find statistical data about the hashes/passwords
+- python3 dpat.py -c ../potfile_question6.txt -n ../DC01.inlanefreight.local.ntds
+
+*Result:* Found most frequent password = answer 6
+
 
 ---
 

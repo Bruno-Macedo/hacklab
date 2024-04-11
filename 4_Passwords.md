@@ -1,6 +1,6 @@
 - [Basics](#basics)
 - [Hashcat](#hashcat)
-  - [Storage](#storage)
+  - [Wireles](#wireles)
 - [John](#john)
 - [Hydra](#hydra)
 - [Medusa](#medusa)
@@ -21,7 +21,10 @@
   - cat file1 file2 > file3
   - sort fil3 | uniq u > cleaned
 - [CrackStation](https://crackstation.net/crackstation-wordlist-password-cracking-dictionary.htm)
-
+- Storage
+  - ~/.local/share/hashcat/hashcat.potfile
+  - --potfile-path: write own potfile
+  
 ## Hashcat
 - Identify hash
   - hashid -m HASH
@@ -29,8 +32,11 @@
     - -m HASHCAT mode
   - hash-identifier: hash
   - [Examples hashes](https://hashcat.net/wiki/doku.php?id=example_hashes)
-
+-  --username: ignore usernames in the file
 - [Crackstation](https://crackstation.net/)
+- **ntdsautid**
+- **dpat** - [Domain Password Audit Tool (DPAT)](https://github.com/clr2of8/DPAT)
+  - dtap.py -c CRACKED -o ORIGIN
 
 - wordlist
   - hashcat target /path/to/word/list
@@ -45,6 +51,7 @@
     - 1,2,3 (intensive)
   - --stdout = display
   - TOTAL_CHARACTERS = generate list
+  
 - **Modes**
   - -a 0: dictionary: fast
   - -a 3: brute force method
@@ -108,11 +115,40 @@ hashcat -r rule.txt combmd5 --stdout
 P@55w0rd_1lfr31ght2019
 ```
 
-### Storage
-- ~/.local/share/hashcat/hashcat.potfile
+- Extract hashes from files
+```
+9400 MS Office 2007
+9500 MS Office 2010
+9600 MS Office 2013
+11600 7-zip ...
+13400 KeePass ...
+10400 PDF
+```
+
+### Wireles
+- get cap/pcap file + extract hash with tool/online, crack hash
+
+- **MIC**: Message Integrity Check
+  - Capture 4-way handshake
+    - send de-authentication frames ==> reauthenticate: airodump.ng
+    - hashcat format hccapx
+    - [cap2hashcat online converter](https://hashcat.net/cap2hashcat/)
+    - [hashcat-utils](https://github.com/hashcat/hashcat-utils.git)
+      - /cap2hccapx.bin 
+    - -m 22000
+- **PMKID**: Pairwise Master Key Identifier
+  - For WPA/WPA2-PSK
+  - PKMID = PMK Name + MAC AP + MAC Station
+  - Extract hash from. cap
+    - [hcxtools](https://github.com/ZerBea/hcxtools):
+      - ./hcxpcapngtool 
+  - -m 22000
+
+
 
   
 ## John
+- [john](https://github.com/openwall/john/tree/bleeding-jumbo)
 - Using rules
   - john --wordlist=existing_list --rules=pick_one --stdout
   - --format=ENCRYPTION
@@ -121,6 +157,9 @@ P@55w0rd_1lfr31ght2019
 
 - zip2john file.zip > zip.hasj
 - ssh2john key > key.hash
+- office2john
+- keepass2john
+- pdf2john
 
 ## Hydra
 - hydra -l username -P wordlist.txt server service
