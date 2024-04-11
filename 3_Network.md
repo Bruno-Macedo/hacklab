@@ -19,17 +19,45 @@
 ## Basic Steps
 - Enumerate
 - Find everything that there is outside and inside
-  -  Number of machines
+  - Number of machines
   - services running
-  - Publici interface?
-  - git server ?
+  - Public interface
+  - git server
   - public IP
     - arp
+  - network connections
 - find services running, find cve for these services
 - stablish stable connection (pivoting): reverse shell, proxy, ssh, port forwarding, socat, sshuttle
 - get ssh key if they are available
 - upload/download files
 - No dns if web: add to etc/hosts
+- Pivot = Pivot host = Proxy = Foothold = Beach Head system = Jump host
+- [Diagrams](https://app.diagrams.net/)
+
+```mermaid
+flowchart TD
+subgraph Z[" "]
+direction LR
+    A[Attacker]:::foo -->|direct access| B(Target 1):::bar ---> C(Target 2):::bar
+    A[Attacker] --->|No Access| C(Target 2)
+    classDef foo stroke:#f00
+    classDef bar stroke:#0f0
+
+end
+```
+
+- Tunneling != Pivoting
+  - Tunneling = encapsulate
+  - pivoting = accessing through segmentation
+  - Lateral movement: [Palo Alto](https://www.paloaltonetworks.com/cyberpedia/what-is-lateral-movement) | [Mitre](https://attack.mitre.org/tactics/TA0008/)
+
+- Basic commands
+  - netstat
+    - -r route
+  - ip
+    - route
+
+
 
 ### Active
 - interacting
