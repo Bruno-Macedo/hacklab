@@ -52,7 +52,7 @@ truted zoneHTB_@cademy_stdnt10.129.218.108HTB_@cademy_stdnt!
       - set Session 1
       - set RHOST
     - run post/multi/gather/ping_sweep RHOSTS=172.16.5.0/23 = NO
-    - for i in {1..254} ;do (ping -c 5 -i 5 172.16.5.$i | grep "bytes from" &) ;done OK
+    - for i in {1..254} ;do (ping -c 5 -i 5 172.16.5.$i | grep "bytes from" &) ;done 
     - for i in {1..254} ;do (ping -c 1 172.16.5.$i | grep "bytes from" &) ;done
 
 4. Set up MSF sock proxy

