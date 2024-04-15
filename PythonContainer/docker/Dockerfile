@@ -38,6 +38,8 @@ RUN apt-get update && apt-get install --no-install-recommends -y python3.9 \
 
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
+RUN apt-get update && apt upgrade 
+
 RUN pip install requests
 
 #RUN curl https://pyenv.run | bash

