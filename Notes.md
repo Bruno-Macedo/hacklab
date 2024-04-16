@@ -44,10 +44,7 @@
   - docker run -it --rm --name rustscan rustscan/rustscan:2.1.1
   - alias rustscan='docker run -it --rm --name rustscan rustscan/rustscan:2.1.1'
 
-- smtp/pop 
-  - enumerate
-  - send email (file)
-  - locate it
+- Find internal hosts (ping sweep)
 
 ### DNS
 - Port 53 UDP/TCP
