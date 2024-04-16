@@ -11,6 +11,7 @@
     - [Firewalls](#firewalls)
   - [Network Security Evasion](#network-security-evasion)
     - [IDS x IPS](#ids-x-ips)
+  - [Living Off the Land](#living-off-the-land)
 
 
 ## Definitions
@@ -266,7 +267,6 @@ intext:???? inurl:blob.core.windows.net
   - Stageless: complete shellcode
   - staged: partial shellcode that "contacts" the complete one. First shellcode connects to attacker, Second donwload the final shellcode (less noisi, direct in memory)
 
-
 - Packers
   - transform structure of program
   - compress + protect agains reverse engineering
@@ -293,7 +293,6 @@ intext:???? inurl:blob.core.windows.net
 ### Firewalls
 - Statefull: stablished tcp session, detect/block packet outside session
 - Stateless: individual packeges, no analysis of session
-
 
 ## Network Security Evasion
 
@@ -326,3 +325,12 @@ intext:???? inurl:blob.core.windows.net
   - application layer
   - content awareness
   - agile engine
+
+## Living Off the Land
+- Using and abusing of what exists
+- How
+  - Reconnaissance
+  - Files operations
+  - Arbitrary code execution
+  - Lateral movement
+  - Security product bypass

