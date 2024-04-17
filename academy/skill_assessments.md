@@ -16,7 +16,6 @@
 
 
 TODOS:
-- File Transfer
 - Shells & Payloads
 - Documentation
 - AD Introduction

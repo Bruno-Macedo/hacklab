@@ -79,6 +79,7 @@
 - [Good Advices 2](https://infosecwriteups.com/privilege-escalation-in-windows-380bee3a2842)
 - [Windows enumeration](https://fuzzysecurity.com/tutorials/16.html?ref=172.16.77.130)
 
+- [LOLBAS](https://lolbas-project.github.io/)
 - whoami /priv
 - "tasklist /svc
 - systeminfo
@@ -142,7 +143,7 @@
 [Cheatsheet](https://viperone.gitbook.io/pentest-everything/everything/everything-active-directory/ad-enumeration)
 
 #### Enumerate
-[GTfobins for Active Directory](https://wadcoms.github.io/#)
+[GTfobins for Active Directory -WADComs](https://wadcoms.github.io/#)
 - domain name
   - nslookup $target 127.0.0.1
   
@@ -274,6 +275,7 @@ domain=.
 - nmap --script ftp-*
 
 ## Linux
+- [GTFOBins](https://gtfobins.github.io/)
 - sudo -l
 - groups
   - getent group NAME
