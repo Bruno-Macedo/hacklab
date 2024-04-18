@@ -17,13 +17,22 @@
 
 TODOS:
 - Shells & Payloads
+- AD Enumeration & Attack
+- AD BloodHound
+- AD LDAP
+- AD PowerView
+  - Boxes: AD Active, Resolute, Forest Cascate
+  - [Walkthroughs](https://0xdf.gitlab.io/tags.html#active-directory)
+  - [Good blog](https://adsecurity.org/?author=2)
 - Documentation
-- AD Introduction
-- AD Attack
-- AD Bloodhound
 - Boxes: Enterprise, Inception, Reddish
 - [Good blog](https://0xdf.gitlab.io/)
 - 
+  - Active
+  - Resolute
+  - Forest
+  - Cascade
+
 *Command*: 
 
 *Result:* 

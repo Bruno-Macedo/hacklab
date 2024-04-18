@@ -25,7 +25,8 @@
   - [Protocols](#protocols)
     - [Kerberos, DNS, LDAP, MSRPC](#kerberos-dns-ldap-msrpc)
     - [NTLM Authentication](#ntlm-authentication)
-  - [Users and Machine Accounts](#users-and-machine-accounts)
+  - [Users, Machine Accounts, Groups, Rights/privileges](#users-machine-accounts-groups-rightsprivileges)
+  - [Hardening](#hardening)
 
 
 ## Definitions
@@ -579,4 +580,76 @@ e46b.. = NT hash = crackable + pass-the-hash
   - Difficult to crack
   - 10 hahses for any domain users that logs in
 
-### Users and Machine Accounts
+### Users, Machine Accounts, Groups, Rights/privileges
+- Users:
+  - local x AD
+- [Local Accounts](https://learn.microsoft.com/en-us/windows/security/identity-protection/access-control/local-accounts)
+  - rights stay locally
+  - security principal
+  - Administrator:SID:S15-DOMAIN-500 ; Guest ; SYSTEM ; Network Service (Service Control Manager) ; Local Service
+- [Domain Users](https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/manage/understand-default-user-accounts)
+  - wider access
+  - KRBTGT
+  
+- [Attributes](https://learn.microsoft.com/en-us/windows/win32/ad/user-object-attributes)
+  - UserPrincipalName: username
+  - ObjectGUID
+  - SAMAccount: logon name
+  - ObjectSID: SID
+  - siDHistory
+  
+- **Domain-joined vs Non-Domain-joined Machines**
+  - Computer resources
+  - Domain joined
+    - access to the domain GP
+  - Non-domain joined
+    - not managed by domain policy
+    - separated
+    - accounts only withing the thos
+
+- [Groups](https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/manage/understand-security-groups#about-active-directory-groups)
+  - OU = grouping users/groups/computers for GP settings + admin tasks
+  - Groups = assign permissions + users/pc/contact
+  - type:  purpose = security | distribution
+    - security: assign permissions and rights
+    - distribution: distribute messages (email)
+  - scope: how can be used
+    - Domain Local Group: only inside the doomain
+    - Global Group: another domain
+    - Universal Group
+  - Attributes
+    - cn = Common-Name
+    - member
+    - groupType
+    - memberOf
+    - objectSid
+
+- **Rights**
+  - assigned to users/groups + deal with permissions
+
+- **Privileges** 
+  - permission to action (run program, shut down, reset password)
+  - assign individually
+  - [Abusing Tokens 1](https://blog.palantir.com/windows-privilege-abuse-auditing-detection-and-defense-3078a403d74e)
+  - [Abusing Tokens 2](https://book.hacktricks.xyz/windows-hardening/windows-local-privilege-escalation/privilege-escalation-abusing-tokens)
+
+### Hardening
+- LAPS = Local Administrator Password Solution
+  - rotate local admin password
+- Loggin + Monitoring
+- Group Policy Security Settings
+  - Account: users interaction with domain
+  - Local Policies: specific to computer
+  - Software restriction
+  - App Control: blocking users from runing exes
+- Group Managed Services Accounts (gMSA)
+  - account managed by the domain + high level
+- Account separation + password policiy + MFA
+- Limit Domain Account
+- Audit: Accounts, Permissions, Access
+- Restricted groups
+- Limiting server roles: web, mail domain separated
+- [Best practices](https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/plan/security-best-practices/best-practices-for-securing-active-directory)
+
+- Group Policy
+  - GPO = Group Policies Objects = virtual collection of policy settings applied to users/computeres
