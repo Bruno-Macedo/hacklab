@@ -27,6 +27,7 @@
     - [NTLM Authentication](#ntlm-authentication)
   - [Users, Machine Accounts, Groups, Rights/privileges](#users-machine-accounts-groups-rightsprivileges)
   - [Hardening](#hardening)
+  - [BloodHound](#bloodhound)
 
 
 ## Definitions
@@ -653,3 +654,10 @@ e46b.. = NT hash = crackable + pass-the-hash
 
 - Group Policy
   - GPO = Group Policies Objects = virtual collection of policy settings applied to users/computeres
+
+### BloodHound
+- Nodes: Computers, Users, GPS, OU, Groups
+- Edges: link betweem objects
+- Queries
+  - (i.e) find users in groups (Domain Admin)
+  - shortest path to domain admin
