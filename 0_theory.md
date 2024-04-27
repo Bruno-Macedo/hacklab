@@ -28,6 +28,7 @@
   - [Users, Machine Accounts, Groups, Rights/privileges](#users-machine-accounts-groups-rightsprivileges)
   - [Hardening](#hardening)
   - [BloodHound](#bloodhound)
+  - [Custmon Queries](#custmon-queries)
 
 
 ## Definitions
@@ -661,3 +662,71 @@ e46b.. = NT hash = crackable + pass-the-hash
 - Queries
   - (i.e) find users in groups (Domain Admin)
   - shortest path to domain admin
+
+### Custmon Queries
+[Cheat sheet](https://neo4j.com/docs/cypher-cheat-sheet/5/auradb-enterprise/)
+[jeffmcjunkin cheat sheet](https://gist.github.com/jeffmcjunkin/7b4a67bb7dd0cfbfbd83768f3aa6eb12)
+[Handbook](https://ernw.de/download/BloodHoundWorkshop/ERNW_DogWhispererHandbook.pdf)
+
+```
+# Examples:
+
+MATCH (var:User) RETURN var
+
+MATCH (var:User {name:"name@domain.locla"}) RETURN var
+# =
+MATCH (var:User) WHERE var.name = "PETER@INLANEFREIGHT.HTB" RETURN var
+
+# Query relationships
+MATCH (u:User {name:"PETER@INLANEFREIGHT.HTB"})-[r:MemberOf]->(peterGroups) RETURN peterGroups
+
+MATCH (n:User {name:"PETER@INLANEFREIGHT.HTB"})-[r:MemberOf]->(g:Group) RETURN n,r,g
+MATCH p=((n:User {name:"PETER@INLANEFREIGHT.HTB"})-[r:MemberOf]->(g:Group)) RETURN n,r,g
+
+p,u,r,g          = variables
+User:            = label
+- ->             = relations
+{name:"peter.."} = property
+
+MemberOf 1..* = minimum depth and maximum
+
+# Example
+MATCH p=(n:User)-[r1:MemberOf*1..]->(g:Group)
+WHERE nodes(p)[1].name CONTAINS 'ITSECURITY'
+RETURN p = find path where first group name contains itsecurity
+
+CONTAINS = =~ REGEX
+
+
+# Short path
+MATCH p=shortestPath((n)-[*1..]->(m:Group {name:"DOMAIN ADMINS@INLANEFREIGHT.HTB"})) 
+WHERE NOT n=m 
+RETURN p
+
++++ From one user to another user or machine/group/GPO +++
+MATCH p = shortestPath((n)-[*1..]->(c)) 
+WHERE n.name =~ '(?i)peter.*' AND NOT c=n 
+RETURN p
+
+allshortestpaths|shortestPath
+
++++ Specific regghts the user should not have +++
+MATCH p=(g:Group)-[r:Owns|WriteDacl|GenericAll|WriteOwner|ExecuteDCOM|GenericWrite|AllowedToDelegate|ForceChangePassword]->(c:Computer) 
+WHERE g.name STARTS WITH "DOMAIN USERS" 
+RETURN p
+
+# Only in neo4j
+- users with descriptio field
+MATCH (u:User) 
+WHERE u.description IS NOT NULL 
+RETURN u.name,u.description
+
+# Local admin and their host
+MATCH (c:Computer) OPTIONAL MATCH (u1:User)-[:AdminTo]->(c) OPTIONAL MATCH (u2:User)-[:MemberOf*1..]->(:Group)-[:AdminTo]->(c) WITH COLLECT(u1) + COLLECT(u2) AS TempVar,c UNWIND TempVar AS Admins 
+RETURN c.name AS COMPUTER, COUNT(DISTINCT(Admins)) AS ADMIN_COUNT,COLLECT(DISTINCT(Admins.name)) AS USERS 
+ORDER BY ADMIN_COUNT DESC
+
+# Find edge
+MATCH p=((n)-[r:WriteSPN]->(m)) RETURN p
+
+```
