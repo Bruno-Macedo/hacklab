@@ -18,8 +18,8 @@
 TODOS:
 - Shells & Payloads
 - AD Enumeration & Attack
-- AD BloodHound
 - AD LDAP
+- Kerberos Attack
 - AD PowerView
   - Boxes: AD Active, Resolute, Forest Cascate
   - [Walkthroughs](https://0xdf.gitlab.io/tags.html#active-directory)
