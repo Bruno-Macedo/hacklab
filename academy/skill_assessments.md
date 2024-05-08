@@ -14,6 +14,10 @@
   - [Cracking Passwords with Hashcat](#cracking-passwords-with-hashcat)
   - [Pivoting, Tunneling and Port Forwarding](#pivoting-tunneling-and-port-forwarding)
   - [Shells \& Payloads](#shells--payloads)
+  - [Network Enumeration with NMAP](#network-enumeration-with-nmap)
+    - [Easy Lab](#easy-lab)
+    - [Medium Lab](#medium-lab)
+    - [Medium Hard](#medium-hard)
 
 
 TODOS:
@@ -772,28 +776,46 @@ end
 
 *Result:* Access to target = question 7
 
+## Network Enumeration with NMAP
+
+### Easy Lab
+*Command:* Nmap scan without name resolution and disable ICMP
+- sudo nmap -Pn -T2 -F -sS -e tun0 10.129.2.209 -n --packet-trace --disable-arp-ping
+  - -Pn = No ICMP
+  - -T2 = Time template 2 (polite)
+  - -n = no name resolution
+  - --packet-trace = debug purpose to see the flow of the packet
+  - --disable-arp-ping = no ARP Ping
+  - -e = from interface withn the same network
+
+*Result:* OS name revelead witout being blocked
+
+### Medium Lab
+*Command:* nmap scan to specific port with UDP scan
+- sudo nmap -Pn -sSU -sV -p53 $TARGET --packet-trace --disable-arp-ping -S $ATTACKER
+  - -sSU = UDP scan
+  - -p53 = DNS port
+- Only with Pwnbox available
+
+*Result:* Flag
+
+### Medium Hard
+
+*Command:* Found open ports = not yet blocked
+- sudo nmap -Pn -sV 10.129.214.112 --packet-trace --disable-arp-ping -S 10.10.16.66 -vvv
+  
+*Result:* 50000/tcp - filtered
+
 ---
 
-*Command:* 
+*Command:* Scanned specific port using port 53 as source
+- sudo nmap -Pn -n -sS -sV -p50000 10.129.142.228 --packet-trace --disable-arp-ping -vv --source-port 53
 
-*Result:* 
-
----
-
-*Command:* 
-
-*Result:* 
+*Result:* 50000/tcp - open
 
 ---
 
-*Command:* 
+*Command:* Interact with service of port 50000 using nc
+- sudo nc -nv --source-port 53 $TARGET 50000
 
-*Result:* 
-
----
-
-*Command:* 
-
-*Result:* 
-
----
+*Result:* Flag

@@ -54,7 +54,6 @@ direction LR
 
 end
 ```
-
 - Tunneling != Pivoting
   - Tunneling = encapsulate
   - pivoting = accessing through segmentation

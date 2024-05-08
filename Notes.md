@@ -38,7 +38,7 @@
     - --script=nfs-ls,nfs-statfs,nfs-showmount
     - --script=smb-enum-shares.nse,smb-enum-users.nse
 
-    - ports=$(sudo nmap -Pn -T4 $target -oN ports.txt | egrep "^[0-9]{2,5}" | sed -E "s#/.*##g" | tr "\n" "," | sed 's/.$//') && echo $ports
+    - ports=$(sudo nmap -Pn -T4 $target -oN ports.txt | egrep "^[0-9]{2,5}" | sed -E "s#/.*##g" | tr "\n" "," | sed 's/.$//' )&& echo $ports
   
 - rustscan
   - docker run -it --rm --name rustscan rustscan/rustscan:2.1.1

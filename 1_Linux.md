@@ -1,4 +1,7 @@
-- [BASIC ENUM](#basic-enum)
+- [Enumeration](#enumeration)
+- [Port Scanning (NMAP - DB\_NMAP - Socat)](#port-scanning-nmap---db_nmap---socat)
+  - [Firewal Evasion](#firewal-evasion)
+  - [Summary](#summary)
 - [Existing Tools](#existing-tools)
 - [Ping and Port Scanning - Ping Sweep](#ping-and-port-scanning---ping-sweep)
 - [Shells](#shells)
@@ -25,16 +28,11 @@
   - [Using HTTPS](#using-https)
 - [Searchexploit](#searchexploit)
 - [Code Analyse](#code-analyse)
-- [Port Scanning (NMAP - DB\_NMAP - Socat)](#port-scanning-nmap---db_nmap---socat)
-  - [Firewal Evasion](#firewal-evasion)
-  - [Routes](#routes)
-  - [Fragmentation/MTU/Size](#fragmentationmtusize)
-  - [Summary](#summary)
 - [Sandbox Evasion](#sandbox-evasion)
 - [Memory Dump (more learn)](#memory-dump-more-learn)
 - [Recover files](#recover-files)
 
-## BASIC ENUM
+## Enumeration
 - Questions
   - Distro
   - shell/languages available
@@ -52,6 +50,128 @@
 - credentials
 - ping
   - [Default TTL](https://subinsb.com/default-device-ttl-values/)
+
+## Port Scanning (NMAP - DB_NMAP - Socat)
+- db_nmap (for metasploit) | nmap
+- Scripts
+  - --scrip *script_name*: most commom vulnerability scrips, CVEs will be shown
+    - https://www.exploit-db.com/
+    - https://nvd.nist.gov/vuln/full-listing
+  - -sC: other common scripts
+  - Search script: **locate -r nse$ | grep NAME**
+
+  - **Thecniques**
+  - -sS/sT/sA/sW/sM = SYN/Connect(Full=stealthy)/ACK/Windon/Maimon
+  - -su = UDP
+  - -sN/sF/sX = Null/FIN/Xmas
+  - --scanflags
+  - -sI = zombie
+  - -sO = IP protocol scan
+  - -b = FTP bounce
+
+- **Discovery**
+  - -sn = ping scan / no port scanning
+    - grep for | cut -d" " -f5
+    - -PE = send Echo Request
+    - --disable-arp-ping
+  - -Pn = no ping/all alive
+  - [Recommendation](https://nmap.org/book/host-discovery-strategies.html)
+
+- **Basic scans**
+  - -A: basic scan with OS include
+    - -sV -O -sC [default scripts] --traceroute
+  - -sV: version of services found
+  - -p-: all ports
+  - -n: no name resolution
+  - -e INTERFACE
+  - -PN no ping
+  - --packet-trace
+  - --reason / -v / -vv / -d / -dd
+  
+- **Output**
+  - --reason / -v / -vv / -d / -dd
+  - -oN = normal output
+  - -oG = grep output
+  - -oX = xml
+    - xsltproc target.xml -o target.html
+  - -oA = all
+
+- **Scripts**
+  - --script CATEGORY
+    - auth,broadcast,brute,defaut (-sC),discovery,dos,exploit,external,fuzzer,intrusive,malware,safe,version,vuln
+
+- **Performance**
+  - --initial-rtt-timeout:
+  - --max-rtt-timeout
+  - --max-retries
+  - --min-rate [we know the network bandwidth]
+  - [Timing](https://nmap.org/book/performance-timing-templates.html)
+    - T[0-1]
+  - -F = top 100 ports
+  -  -f = 8 bytes / -ff 16 byes = fragmentation
+  - --mtu 128 = custom size
+  - --data-length VALUE
+
+  - Headers (TTL, IP options, checksum)
+    - --ttl # 
+    - --ip-options HEX
+      - R, T, U ,L ,S 
+      - R = record-route
+      - T = record timestamp
+      - U = route and timestamp
+      - L = loose source
+      - S = strict source
+      - "L IP IP" = loose route packets routed to L IP
+      - "S IP IP" = strict route, every hope defined
+- 
+- hosts: list hosts from db
+  - -a: add
+  - -d: delete
+  - -R: inside a exploit/scanner to add the scanned host as RHOST
+
+- services: display services found in scans
+ - From services google for vulnerabilities /also search in metasploit
+ - Common services: http, ftp, smb, ssh, rdp
+
+- Invalid packets
+  - --badsum = alterad package
+  - --scanflags URG,ACK,PSH,RST,SYN,FYN {SYNRSTFIN}
+  - Alternative
+    - hping3
+      - -t time to live
+      - -b badsum
+      - -S,-A,-P-U-F-R
+
+### Firewal Evasion
+- Stateless: individual package
+- Statefull: stablished TCP session (all related packets)
+- -sA = ACK
+- Decoy
+  - -D ip,ip,ip,ip,ME
+  - -D RND,RND,RND,ME
+  - -S ID = Spoof IP
+  - -e INTERFACE
+  - --spoof-mac MAC_ADDRESS (spoof mac - same network segment)
+- Source Port
+  - --dns-server NS NS = For DMZ
+  - --source-port|-g 53/80/443 = for scan
+- NGFW: application layer
+
+### Summary
+| Approach      | NMAP Command                |
+| ------------- | --------------------------- |
+| Decoy         | -D IP,IP,ME, RND,RND,ME     |
+| Proxy         | --proxies URL,HOST:port     |
+| Spoofed mac   | --spoof-mac MAC             |
+| Spoofed ip    | -S IP                       |
+| Src Port      | -g PORT, --source-port PORT |
+| Fragment      | -f 8 bytes, -ff 18 bytes    |
+| MTU           | --mtu #                     |
+| Lenght packet | --data-length #             |
+| TTL           | --ttl #                     |
+| IP options    | -ip-options RTULS           |
+| bad sum       | --badsum                    |
+
 
 ## Existing Tools
 - ls /etc/*release = version, os
@@ -659,111 +779,6 @@ sudo tail -1 /var/www/uploads/SecretUploadDirectory/users.txt
 - snyk --scan-all-unmanaged
   - unpack zip file
 
-## Port Scanning (NMAP - DB_NMAP - Socat)
-- db_nmap (for metasploit) | nmap
-- Scripts
-  - --scrip *script_name*: most commom vulnerability scrips, CVEs will be shown
-    - https://www.exploit-db.com/
-    - https://nvd.nist.gov/vuln/full-listing
-  - -sC: other common scripts
-  - Search script: **locate -r nse$ | grep NAME**
-  
-- Basic scans
-  - -sS (Syn), -sA(Ack), -sU (UDP)
-  - -A: basic scan with OS include
-    - -sV -O -sC [default scripts] --traceroute
-  - -sV: version of services found
-  - -p-: all ports
-  - -Pn: no ping
-  - -e INTERFACE
-  - -PN no ping
-  
-- Output
-  - --reason / -v / -vv / -d / -dd
-  - -oN = normal output
-  - -oG = grep output
-
-- hosts: list hosts from db
-  - -a: add
-  - -d: delete
-  - -R: inside a exploit/scanner to add the scanned host as RHOST
-
-- services: display services found in scans
- - From services google for vulnerabilities /also search in metasploit
- - Common services: http, ftp, smb, ssh, rdp
-
-### Firewal Evasion
-- Stateless: individual package
-- Statefull: stablished TCP session (all related packets)
-- NGFW: application layer
-
-### Routes 
-- Controll source MAC/IP/PORT
-- Proxy
-  - --proxies proto://host:port,proto://host:port
-    - HTTP:HOST1:PORT,SOCKS4://HOST2:Port
-    - --proxies IP target
-  
-- Spoofed address (MAC, IP)
-  - --spoof-mac MAC_ADDRESS (spoof mac - same network segment)
-  - -S IP (spoof address - same network)
-  
-- Decoy: random address
-  - -D ip,ip,ip,ip,ME
-  - -D RMD,RND,RND,ME
-  
-- Fixed Port
-  - -g 123 / --source-port 123 ==> all trafic from the specific port number
-  - UPD 53 - dns (looks like dns query)
-  - TCP 80 - http (looks like from web server)
-
-### Fragmentation/MTU/Size 
-- Size and intensitiy
-  - -T[0-5] = Control speed
-  - -F = faster
-  -  -f = 8 bytes / -ff 16 byes = fragmentation
-  - --mtu 128 = custom size
-  - --data-length VALUE
-
-- Headers (TTL, IP options, checksum)
-  - --ttl # 
-  - --ip-options HEX
-    - R, T, U ,L ,S 
-    - R = record-route
-    - T = record timestamp
-    - U = route and timestamp
-    - L = loose source
-    - S = strict source
-    - "L IP IP" = loose route packets routed to L IP
-    - "S IP IP" = strict route, every hope defined
-
-- Invalid packets
-  - --badsum = alterad package
-  - --scanflags URG,ACK,PSH,RST,SYN,FYN {SYNRSTFIN}
-  - Alternative
-    - hping3
-      - -t time to live
-      - -b badsum
-      - -S,-A,-P-U-F-R
-
-### Summary
-| Approach      | NMAP Command                |
-| ------------- | --------------------------- |
-| Decoy         | -D IP,IP,ME, RND,RND,ME     |
-| Proxy         | --proxies URL,HOST:port     |
-| Spoofed mac   | --spoof-mac MAC             |
-| Spoofed ip    | -S IP                       |
-| Src Port      | -g PORT, --source-port PORT |
-| Fragment      | -f 8 bytes, -ff 18 bytes    |
-| MTU           | --mtu #                     |
-| Lenght packet | --data-length #             |
-| TTL           | --ttl #                     |
-| IP options    | -ip-options RTULS           |
-| bad sum       | --badsum                    |
-
-- Convert to html
-  -  xsltproc input.xml -o output.html
-
 ## Sandbox Evasion
 - Sleeping / Time Evasion
   - [Thead based](https://www.joesecurity.org/blog/660946897093663167#)
@@ -779,7 +794,6 @@ sudo tail -1 /var/www/uploads/SecretUploadDirectory/users.txt
   - echo %VARIABLE%
 
 **Learn more about it**
-
 
 ## Memory Dump (more learn)
 - volatility
