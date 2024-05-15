@@ -1,0 +1,131 @@
+#!/bin/bash
+
+#set -x  - start debug
+#set +x   - end debug
+# Display command
+#exe() { echo "\$ $@" ; "$@" ; }
+
+#  >&2 = redirect stdout
+
+# Funktion zur Erklaerung, wie der Skript funktioniert
+usage () {
+    echo  >&2
+#    echo "Nutzung THM: ${0} [-dt] = Start THM openvpn as daemon" >&2
+    echo "Nutzung HTB: ${0} [-dh] = Start THM openvpn as daemon" >&2
+    echo   >&2
+    echo "    -d    Start openvpn as a daemon" >&2
+    echo "    -k	Kill all openvpn services" >&2
+#    echo "    -t	Start openvpn with THM file" >&2
+    echo "    -h	Start openvpn with HTB file" >&2
+    echo "    -a	Start openvpn with Academy file" >&2
+    echo >&2
+    echo "Simple script to start and stop openvpn" >&2
+    echo >&2
+    exit 1
+}
+
+ACADEMY_FILE='/home/kaliwork/Downloads/academy-regular.ovpn'
+
+# Fehlermeldung
+ErroMessage() {
+    local MESSAGE="{@}"
+    if [[ "${?}" -ne 0 ]]
+    then
+        echo "${@}" >&2
+	exit 1
+    fi
+}
+
+# Eingabe der Parameter/Optionen
+while getopts "adkth" OPTION
+do
+    case ${OPTION} in
+    a) # HTB Academy
+        ACAD='true'
+	    ;;
+	d) # start openvpn in the background
+	    DAEMON='true' 
+	    ;;
+	k) # kill all openvpn process
+	    KILLALL='true' 
+	    ;;
+   # t) # THM  openvpn
+   #     THM='true'
+#	    ;;
+    h) # HTB openvpn
+        HTB='true'
+	    ;;
+    ?) # display options
+        usage 
+	    ;;
+    esac
+done
+
+#if [[ "${EUID}" -ne 0 ]]
+#then
+#    echo "YOu need to be sudo to connect to openvpn." >&2
+#    exit 1
+#fi
+
+
+#if [[ ${DAEMON} = 'true' && ${THM} = 'true' ]] 
+#then
+#    errormessage=$(sudo openvpn --config /home/kalilearn/Downloads/macedobruno.ovpn --daemon 2>&1)
+#    echo $errormessage 
+#    exit 0
+#fi
+
+if [[ ${DAEMON} = 'true' && ${HTB} = 'true' ]] 
+then
+    errormessage=$(sudo sysctl -w net.ipv6.conf.all.disable_ipv6=0 2>&1)
+    errormessage=$(sudo openvpn --config $ACADEMY_FILE --daemon 2>&1)
+    errormessage=$(sudo sysctl -p 2>&1)
+    echo $errormessage 
+    exit 0
+fi
+
+if [[ ${DAEMON} = 'true' && ${ACAD} = 'true' ]] 
+then
+    errormessage=$(sudo sysctl -w net.ipv6.conf.all.disable_ipv6=0 2>&1)
+    errormessage=$(sudo openvpn --config $ACADEMY_FILE --daemon 2>&1)
+    errormessage=$(sudo sysctl -p 2>&1)
+    echo $errormessage 
+    exit 0
+fi
+
+if [[ ${KILLALL} = 'true' ]]
+then
+    errormessage=$(sudo killall openvpn)
+    errormessage=$(sudo sysctl -w net.ipv6.conf.all.disable_ipv6=1 2>&1)
+    echo $errormessage
+    exit 0
+fi
+
+#if [[ ${THM} = 'true' ]]
+#then
+#    errormessage=$(sudo openvpn --config /home/kalilearn/Downloads/macedobruno.ovpn 2>&1)
+#    echo $errormessage 
+#    exit 0
+#fi
+
+if [[ ${HTB} = 'true' ]]
+then
+    errormessage=$(sudo sysctl -w net.ipv6.conf.all.disable_ipv6=0 2>&1)
+    errormessage=$(sudo openvpn --config $ACADEMY_FILE 2>&1)
+    echo $errormessage 
+    exit 0
+fi
+
+if [[ ${ACAD} = 'true' ]]
+then
+    errormessage=$(sudo sysctl -w net.ipv6.conf.all.disable_ipv6=0 2>&1)
+    errormessage=$(sudo openvpn --config /home/kalilearn/Downloads/academy-regular.ovpn 2>&1)
+    echo $errormessage 
+    exit 0
+fi
+
+if (( $OPTIND == 1 )); then
+   usage
+fi
+
+ErroMessage "Wrong option" 
