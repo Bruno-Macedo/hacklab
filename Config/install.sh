@@ -17,6 +17,6 @@ sudo apt install -y docker-ce docker-ce-cli containerd.io
 
 sudo apt autoremove -y
 
-#wget 'https://code.visualstudio.com/sha/download?build=stable&os=linux-deb-x64'
-#sudo dpkg -i *.deb
-#sudo apt-get install -f
+wget 'https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb'
+sudo dpkg -i *.deb
+sudo apt-get install -f
