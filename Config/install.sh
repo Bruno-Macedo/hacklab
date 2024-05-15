@@ -33,3 +33,6 @@ tmux source-file ~/.tmux.conf
 sudo apt-get  install ufw
 sudo ufw enable
 sudo apt-get install gufw
+
+sudo apt install gobuster -y
+sudo apt install seclists -y

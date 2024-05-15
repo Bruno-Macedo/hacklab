@@ -25,6 +25,7 @@ usage () {
 }
 
 ACADEMY_FILE='/home/kaliwork/Downloads/academy-regular.ovpn'
+BOX_FILE='/home/kaliwork/Downloads/lab_Patota.ovpn'
 
 # Fehlermeldung
 ErroMessage() {
@@ -78,7 +79,7 @@ done
 if [[ ${DAEMON} = 'true' && ${HTB} = 'true' ]] 
 then
     errormessage=$(sudo sysctl -w net.ipv6.conf.all.disable_ipv6=0 2>&1)
-    errormessage=$(sudo openvpn --config $ACADEMY_FILE --daemon 2>&1)
+    errormessage=$(sudo openvpn --config $BOX_FILE --daemon 2>&1)
     errormessage=$(sudo sysctl -p 2>&1)
     echo $errormessage 
     exit 0
@@ -111,7 +112,7 @@ fi
 if [[ ${HTB} = 'true' ]]
 then
     errormessage=$(sudo sysctl -w net.ipv6.conf.all.disable_ipv6=0 2>&1)
-    errormessage=$(sudo openvpn --config $ACADEMY_FILE 2>&1)
+    errormessage=$(sudo openvpn --config $BOX_FILE 2>&1)
     echo $errormessage 
     exit 0
 fi
@@ -119,7 +120,7 @@ fi
 if [[ ${ACAD} = 'true' ]]
 then
     errormessage=$(sudo sysctl -w net.ipv6.conf.all.disable_ipv6=0 2>&1)
-    errormessage=$(sudo openvpn --config /home/kalilearn/Downloads/academy-regular.ovpn 2>&1)
+    errormessage=$(sudo openvpn --config $ACADEMY_FILE 2>&1)
     echo $errormessage 
     exit 0
 fi

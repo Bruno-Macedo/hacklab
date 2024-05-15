@@ -243,6 +243,12 @@ admin123' UNION SELECT SLEEP(5),2;--
 
 # Burpsuite
 
+```
+# Python code
+proxies = {"http": "http://127.0.0.1:8080", "https": "http://127.0.0.1:8080"}
+
+```
+
 ## Repeater
 - manipulate the request
 - check response

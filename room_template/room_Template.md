@@ -26,7 +26,7 @@ tmux setenv attack $attack && export attack=$attack
 alias rustscan='docker run -it --rm --name rustscan rustscan/rustscan:2.1.1'
 rustscan 192.168.1.0/24 -t 500 -b 1500 -- -A
 
-TCPports=$(sudo nmap -Pn -p- -T4 $TARGET -oA nmap/TCPports -v --disable-arp-ping | egrep "^[0-9]{2,5}" | sed -E "s#/.*##g" | tr "\n" "," | sed 's/.$//') && echo $TCPports
+TCPports=$(sudo nmap -Pn -n -p- -T4 $TARGET -oA nmap/TCPports -v --disable-arp-ping | egrep "^[0-9]{2,5}" | sed -E "s#/.*##g" | tr "\n" "," | sed 's/.$//') && echo $TCPports
 nmap  -p$TCPports
 
 TCPports=$(rustscan -a $TARGET -r 1-65535 > nmap/TCPports.txt | egrep  "^Open.*$" | sed -e 's/\x1b\[[0-9;]*m//g' | sed -e 's/^Open.*://g;s/\r$//g;s/\[m//g' | tr "\n" "," | sed 's/,$//' ) && echo $TCPports
@@ -47,16 +47,21 @@ sudo sed -i "/$TARGET      $DOMAIN/d" /etc/hosts
 echo "$TARGET      $DOMAIN" | sudo tee -a /etc/hosts
 ```
 
+[] WEB
+    [] folders 
+    [] files -x txt,php,html
+    [] DNS + subdomain
+    [] Banner (curl -IL | whatweb)
+    [] Certificate
+    [] Source code
+    [] SQL injection
 [] Mount points
 [] SMB
 [] DNS
 [] ftp
-[] http enum
-    [] folders 
-    [] files -x txt,php,html
 [] run as admin
 [] cron jobs
-[] SQL injection
+
 [] Windows suggestor
 [] Upload to target
     [] linpeas
