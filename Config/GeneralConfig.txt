@@ -28,8 +28,10 @@ ssh cry0l1t3@<vps-ip-address> -i vps-ssh
 ## Aliases
 # Create file ~/.bash_aliases 
 alias up="sudo apt update && sudo apt upgrade -y && sudo apt autoremove -y"
-alias start="expressvpn disconnect ; code git ; vpn -ad ; tmux new -s htb"#
-alias rustscan='docker run -it --rm --name rustscan rustscan/rustscan:2.1.1''
+##alias start="expressvpn disconnect ; code workspace ; vpn -ad ; tmux new -s htb"
+##alias start="code workspace ; vpn -ad ; tmux new -s htb"
+alias rustscan="docker run -it --rm --name rustscan rustscan/rustscan:2.1.1"
+
 
 # Add lines to .bashrc
     if [ -f ~/.bash_aliases ]; then
