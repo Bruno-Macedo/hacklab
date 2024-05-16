@@ -48,3 +48,17 @@ Markdown Tables
 Pylance
 Python
 Python Debugger
+
+alias box='function boxfolder(){ cp -r room_template "$1"; mv "$1"/room_Template.md "$1"/"$1".md; }; boxfolder'
+
+echo -- 'alias box=\'function boxfolder(){ cp -r room_template \"$1\"; mv \"$1\"/room_Template.md \"$1\"/\"$1\".md; }; boxfolder\''
+
+echo "alias box='function boxfolder(){ cp -r /home/$USER/workspace/hacklab/room_template /home/$USER/workspace/hacklab/\"$1\"; mv /home/$USER/workspace/hacklab/\"$1\"/room_Template.md /home/$USER/workspace/hacklab/\"$1\"/\"$1\".md; }; boxfolder'"  | tee -a  ~/.zshrc
+
+
+echo "alias box='function boxfolder(){ cp -r /home/$USER/workspace/hacklab/room_template /home/$USER/workspace/hacklab/$1; mv /home/$USER/workspace/hacklab/$1/room_Template.md /home/$USER/workspace/hacklab/$1/$1.md; }; boxfolder'" | tee -a  ~/.zshrc
+
+
+
+
+echo "alias box='function boxfolder(){ cp -r /home/$USER/workspace/hacklab/room_template /home/$USER/workspace/hacklab/\$1; mv /home/$USER/workspace/hacklab/\$1/room_Template.md /home/$USER/workspace/hacklab/\$1/\$1.md; }; boxfolder'" | tee -a  ~/.zshrc
