@@ -86,6 +86,7 @@
   - -e INTERFACE
   - -PN no ping
   - --packet-trace
+  - --open = open ports
   - --reason / -v / -vv / -d / -dd
   
 - **Output**
