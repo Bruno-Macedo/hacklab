@@ -1,0 +1,17 @@
+#Remove and purge Kali-Menu:
+sudo apt-get remove --purge kali-menu && sudo apt-get clean
+
+#Remove local applications in your profile:
+rm -rf ~/.local/share/applications
+
+#Remove Kali Menus from .config:
+rm -rf ~/.config/menus
+
+#Reboot your machine:
+sudo reboot
+
+#Reinstall Kali-Menu:
+sudo apt-get install kali-menu -y
+
+#If the menu problem persists, you can try reinstalling #Kali-linux-full:
+sudo apt-get install kali-linux-full -y
