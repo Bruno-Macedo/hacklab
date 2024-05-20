@@ -14,6 +14,20 @@ ssh root@localhost -p 2222
 - Docker CentOS
 ```
 docker run -it --rm adevur/centos-8:latest /bin/bash
-
-
 ```
+
+- Ctrl + Alt + F2/3/4... = virtual terminal
+  - Ctrl+Alt+F1 = return to orignal
+- tty = which terminal
+
+## 103
+- Filesystem Hierarchy System (FHS)
+  - /boot - /etc - /home - /media - /mtn - /opt - /tmp 
+  - /usr
+    - /usr/bin = user binaries
+    - /usr/sbin = admin binaries
+    - /usr/local = local installation
+  - /var = logs (i.e.)
+
+### Paths
+- cd - = go to previous direcotry
