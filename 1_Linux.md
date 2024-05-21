@@ -382,6 +382,7 @@ searchsploit module_name
 2. service metasploit start
 3. update-rc.d postgresql enable *for performance*
 4. update-rc.d metasploit enable *for performance*
+   1. sudo apt install qemu-kvm libvirt-daemon-system
 5. db_rebuild_cache [in msf console] *for performance*
 
 - db_command ==> db_status, db_nmap etc
