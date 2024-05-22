@@ -18,6 +18,7 @@
     - [Easy Lab](#easy-lab)
     - [Medium Lab](#medium-lab)
     - [Medium Hard](#medium-hard)
+  - [PowerView](#powerview)
 
 
 TODOS:
@@ -25,6 +26,7 @@ TODOS:
 - AD Enumeration & Attack
 - AD LDAP
 - Kerberos Attack
+- Active Directory LDAP
 - AD PowerView
   - Boxes: AD Active, Resolute, Forest Cascate
   - [Walkthroughs](https://0xdf.gitlab.io/tags.html#active-directory)
@@ -819,3 +821,84 @@ end
 - sudo nc -nv --source-port 53 $TARGET 50000
 
 *Result:* Flag
+
+## PowerView
+
+*Command:*
+
+*Result:* 
+
+---
+
+*Command:*
+
+*Result:* 
+
+---
+
+*Command:*
+
+*Result:* 
+
+---
+
+*Command:*
+
+*Result:* 
+
+---
+
+*Command:*
+
+*Result:* 
+
+---
+
+*Command:*
+
+*Result:* 
+
+---
+
+*Command:*
+
+*Result:* 
+
+---
+
+*Command:*
+
+*Result:* 
+
+---
+
+*Command:*
+
+*Result:* 
+
+---
+
+*Command:*
+
+*Result:* 
+
+---
+
+*Command:*
+
+*Result:* 
+
+---
+
+*Command:*
+
+*Result:* 
+
+---
+
+*Command:*
+
+*Result:* 
+
+---
+

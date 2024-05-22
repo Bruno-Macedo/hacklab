@@ -6,8 +6,11 @@
     - [103.1 Basic](#1031-basic)
     - [103.2 Text/Content](#1032-textcontent)
     - [103.4 Redirecting](#1034-redirecting)
+    - [103.8ee Text Editor](#1038ee-text-editor)
+    - [103.5/103.6 Process](#10351036-process)
   - [104](#104)
     - [104.7](#1047)
+    - [104.5 / 104.6 - Modifying files externally](#1045--1046---modifying-files-externally)
 ```
 docker run \
     -itd \
@@ -204,6 +207,7 @@ docker run -it --rm adevur/centos-8:latest /bin/bash
   - if= inputfile
   - of= outputfile
   - status=progress
+  
 ### 103.4 Redirecting
 - change behavior, SEND/RECIEVE different directions
   - >  add
@@ -222,6 +226,49 @@ docker run -it --rm adevur/centos-8:latest /bin/bash
   - -i
 - `` = ()
 
+### 103.8ee Text Editor
+- emacs
+- nano (default)
+  - qqtzzg
+- vi = vim (default)
+  - Esc + : = 
+  - modes
+    - command
+    - insert/enter/edit
+    - EX = : = 
+      - r /path/to/file = read
+      - set number
+  - Exit:
+    - :wq | :wq! | q! | x! | shift + zz
+  - Move J-UMP
+  - Move K-up
+  - Move H-right
+  - Move L-eft
+  - ^ beginn , $ less
+  - / = search down
+  - ? = search up
+  - ctrl + u = up 
+  - ctrl + d = down
+
+- Commands
+  - a = appends after the cursos 
+  - u = undo
+  - o = new line below current
+  - dw = delete part
+    - d#w = total words
+    - dd = whole line
+    - p = paste
+    - shift+D
+  - copy
+    - yw = copy to buffer
+    - y#w = copy # to buffer
+    - yy = copy entiry line
+    - y#y = copy # lines to buffer
+- Convert ending
+  - set ff=dos
+
+### 103.5/103.6 Process 
+
 ## 104
 ### 104.7
 - locate: fast (not work for recently created/downloaded)
@@ -229,3 +276,71 @@ docker run -it --rm adevur/centos-8:latest /bin/bash
 - find
   - -name, -empty, -cmin, -group, -mmin, -perm, -regex, -size, -user
   - -maxdepthgrep 
+
+### 104.5 / 104.6 - Modifying files externally
+- File type codes
+  - \- file
+  - d directory
+  - l simboly link
+  - b block device
+  - c character device
+  
+- Groups
+  - id -Gn = allq
+    - -gn = effective group
+  - groupmens -g GROUP -l = which user belongs to a group
+  
+- Owner Group World
+  - read
+  - write
+  - x execute
+  - - none
+
+- chgrp GROUP file
+- chown = needs permission
+  - owner:group file.txt
+  
+- Permisions
+  - chmod
+    - u, g, o, a (all)
+    - + add
+    - -remove
+    - = set
+    - r,w,x
+    - u+x, o+r, g+r, a=rw
+  - Octal
+    - 0 = none
+    - 1 = execute
+    - 2 = write
+    - 4 = read
+    - Owner Group Other
+  
+  - Special permissions
+    - SUID = user's own permision
+      - u+s
+        - S = not set, only for executated, fileneed to be changed to executables
+    - SGID = groups permision
+      - g+s
+    - Sticky Bit = word level, allows sharing, only owner delete
+      - o+t
+  - Octal
+    - 4 SUID
+    - 2 SGID
+    - 1 STICKY
+
+- Creation mask
+  - files 0666
+  - dir   0777
+  - umask
+    - Special User Group World
+    - subract to create permissions
+    - -S = showdefaqult creation permission
+    - 777 - 775 default = 002
+    - umask u= g= o=
+
+- Hardlinks
+  - same inode
+  - 
+- Softlinks 
+  - pointer to a file
+  - ls -s
