@@ -72,6 +72,34 @@ docker run -it --rm adevur/centos-8:latest /bin/bash
   - -w = write  current history to file
   - -c = clear history
 
+- * (Wilcard)
+  - \*net\* = globing
+  - ? = one minimum
+  - []
+    - range [a-zA-Z0-9]
+
+- file = file type
+- Create files
+  - touch
+    - update timestamp = touch file.txt
+    - -m = modification time
+    - -a = access time
+  - echo "adsad" >> file.txt
+- rm
+  - -i = prompt before deletion
+  - -R = recursve
+- cp
+  - -r = recursive
+- mv
+  - rename
+  - -i = interactive
+
+- mkdir
+  - -p = parents directory
+- rmdir
+  - -p = parents
+
+
 ### 103.2 Text/Content
 - ls 
   - -L = dereference, folders/executables/symbolic links
@@ -134,6 +162,48 @@ docker run -it --rm adevur/centos-8:latest /bin/bash
   - s///g = replace global
   - s/^$/d = remove blank lines
   
+- Compression
+  - gzip
+    - gunzip
+    - zccat
+  - bzip
+    - bunzip2
+    - bzcat
+  - xz 
+    - unxz
+    - xzcat
+- tar: Backup = archive
+  - -c = create
+  - -u = update
+  - -v = verbose
+  - -f = name of archive
+  - Read
+    - -d = compare
+    - -t = list
+    - -w = verify
+  - Unpack
+    - -x = extract
+    - -O = send to STDOU
+  - Compress
+    - -j = bzip2
+    - -J = XZ
+    - -z = zip
+  
+- cpio = copy files to/from archive
+  - -o = create archivo
+    - create = cpio -ov > arch.cpio
+  - -i = read file
+  - -t = only name
+  - -I = file name
+    - view = cpio -itl arch.cpio
+  - --no-absolute-filenames
+    - Extract: cpio -ivl
+  
+- lsblk = disks
+- dd = create backup = convert+copy file
+  - if= inputfile
+  - of= outputfile
+  - status=progress
 ### 103.4 Redirecting
 - change behavior, SEND/RECIEVE different directions
   - >  add
