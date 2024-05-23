@@ -13,6 +13,8 @@
     - [104.7](#1047)
     - [104.5 / 104.6 - Modifying files externally](#1045--1046---modifying-files-externally)
   - [101.1, 102.1 104.1 Storage](#1011-1021-1041-storage)
+  - [104.1 / 104.3 - Manage storager](#1041--1043---manage-storager)
+  - [102.1 / 104.2 - Maintanng Storage Space](#1021--1042---maintanng-storage-space)
 ```
 docker run \
     -itd \
@@ -237,6 +239,7 @@ docker run -it --rm adevur/centos-8:latest /bin/bash
     - Extract: cpio -ivl
   
 - lsblk = disks
+  - read from /sys
 - dd = create backup = convert+copy file
   - if= inputfile
   - of= outputfile
@@ -480,10 +483,12 @@ docker run -it --rm adevur/centos-8:latest /bin/bash
   - vgextend
   - lvcreate
   - lvm --help
+  
 - Device mapper
   - /dev/mapper
   - lsblk -p
   - readlink -f /dev/mapper/DiskName
+
 - btrfs
   - butters file system
   - B-Tree data strcuture to read/write
@@ -510,15 +515,118 @@ docker run -it --rm adevur/centos-8:latest /bin/bash
     - /sys = devce, kernel info
     - /dev = system device, storage
 
-- lspci
+- lspci: slot class vendor, device, rvision,. interface
   - -s HEX -
   - -k kernel drive
+  - -t
 - lsusb
   - -d ID
   - -t tree
   - -s BUS:DEV = which device is using module
-- lsmod = modules loaded to kernell
-- kmod
-- modprobe = load/unload
-  - -r module name
-- rmmod = remove mode
+
+- Hardware
+  - MAJ(class/type):MIN()
+  - proc/device
+  - /proc/meminfo =
+  - /sys/block
+  - 512 * (size from /sys/block/dm-1/size)
+
+- Transating between Linux and Hardware
+  - drivers: tranlsate device linux
+  - ls /lib/modules/xxxx/kernel/drivers
+  - lsmod = modules loaded to kernell
+  - modinfo 
+  - kmod
+  - modprobe = load/unload (also independences)
+    - -r remove module name
+  - rmmod = remove mode
+  - insmod /path/to/md (not dependence)
+
+- HotPlugs
+  - while running (usb stick)
+- Could plug = already plugged before boot + to plug shutdown = /dev/sd*
+  - udevadm info /dev/path
+  - udev = setting up files in the /devfor cold plug device + rules in sysf /sys
+  - rules = /etc/udev/rules.
+- DBous = Deamong + communication for other services
+
+
+## 104.1 / 104.3 - Manage storager
+
+- Partitions
+  - /proc/partitions
+  - Partition Table: data structure where/size partition
+  - MBR: old - 2.2TB - 3 (primary, extended, logical)
+  - GPT = Globally Uniy Identifier
+    - > 2.2 TB, no types, portection, 
+  - gdisk /path/to/disk
+    - -l /path/to/disk = info
+  - fdisk /path/to/disk = older (for MBR)
+    - default MBR
+  - parted /path/to/disk = not friendy
+    - mkpart primary AFTER END
+
+- Make File System
+  - no supported: load module
+  - mkfs
+    - -t ext4
+    - -/dev/path/to/disk
+  - mkfs.ext4 /path/to/disk
+  - Mount FS
+    - blkid
+    - mount -t ext4 /path/to/drive /path
+    - umount /path = umount /path/to/drive
+    - Automatically
+      - /etc/fstab = file system table
+        - 1 checked
+        - options: auto (will mount), nouser (only su), rw (read write)
+        - mount -a = mount all of the fstab
+
+- Format swapp partion
+  - sudo mkswap /dev/path/disk
+
+## 102.1 / 104.2 - Maintanng Storage Space
+- FHS: Hierarchy
+  - Minimum: /boot, /, swap
+  - Same FS: /etc,/sbin,/dev,/bin/,/lib = along with root
+  - Separate FS: /var,/tmp,/usr/,/home,/opt,/boot,/usr/local
+- system.d
+  - mount file system by booting
+  - .mount
+  -  reads /etc/fstab
+  -  systemctl -t mount list-units
+     - -t = type
+        - list-units, list-dependencies, show, status
+      /etc/systemd/system 
+  
+- FS Consumption
+  - df = diskspace available
+    - -h human
+    - -T type(ext4)
+    - -i = inode
+  - du = disk usage
+    - -s summary
+    - -s --inodes
+    - -d deepth
+
+- Tuning FS
+  - adding label (i.e.)
+  - mke2fs
+    - -c create
+    - -L label
+  - tune2fs = update/adjust
+    - -l = list content of fs block
+    - UUID,Label;Mount-Count
+  - xfs_fsr xfs_admin = for XSF
+  - btrfs balance + btrfstune = for btrfs
+
+- Repair
+  - fsck -r (report) /dev/disk
+    - /etc/fstab = check+repair unmounted fs
+  - e2fsck
+  - XFS
+    - xfs_repart
+    - xfs_db xfs_repair -n = check
+  - btrfs
+    - btfs check
+    - btrfsck
