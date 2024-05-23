@@ -291,7 +291,7 @@ A. cat < myapp | cat > file1.log
 B. myapp 0>&1 | cat > file1.log 
 C. myapp | cat > file1.log
 D. myapp | tee file1.log
-E. tee myapp file1.log
+**E. tee myapp file1.log**
 
 
 
@@ -307,20 +307,20 @@ QUESTION 43
 What is the output of the following command? echo "Hello World" | tr -d aieou
 A. Hello World 
 B. eoo
-C. Hll Wrld
+**C. Hll Wrld**
 D. eoo Hll Wrld
 
 
 QUESTION 44
 Which of the following characters can be combined with a separator string in order to read from the current input source until the separator string, which is on a separate line and without any trailing spaces, is reached?
-A. << 
+**A. <<**
 B. <| 
 C. !< 
 D. &<
 
 QUESTION 45
 Which of the following commands will NOT update the modify timestamp on the file /tmp/myfile.txt?
-A. file /tmp/myfile.txt
+**A. file /tmp/myfile.txt**
 B. echo "Hello" >/tmp/myfile.txt
 C. sed -ie "s/1/2/" /tmp/myfile.txt
 D. echo -n "Hello" >>/tmp/myfile.txt 
@@ -339,13 +339,13 @@ What is the default action of the split command on an input file?
 A. It will break the file into new files of 1,024 byte pieces each.
 B. It will break the file into new files of 1,000 line pieces each.
 C. It will break the file into new files of 1,024 kilobyte pieces each.
-D. It will break the file into new files that are no more than 5% of the size of the original file.
+**D. It will break the file into new files that are no more than 5% of the **size of the original file.****
 
 
 QUESTION 48
 What is the difference between the i and a commands of the vi editor?
 A. i (interactive) requires the user to explicitly switch between vi modes whereas a (automatic) switches modes automatically.
-B. i (insert) inserts text before the current cursor position whereas a (append) inserts text after the cursor.
+**B. i (insert) inserts text before the current cursor position whereas a (append) inserts text after the cursor.**
 C. i (independent rows) starts every new line at the first character whereas a (aligned rows) keeps the indentation of the previous line. 
 D. i (interrupt) temporarily suspends editing of a file to the background whereas a (abort) terminates editing.
 
@@ -353,12 +353,12 @@ D. i (interrupt) temporarily suspends editing of a file to the background wherea
 QUESTION 49
 SIMULATION
 Which command displays a list of all background tasks running in the current shell? (Specify ONLY the command without any path or parameters.)
-
+**bg**
 
 QUESTION 50
 Which of the following commands moves and resumes in the background the last stopped shell job?
 A. run 
-B. bg
+**B. bg**
 C. fg 
 D. back
 
@@ -366,7 +366,7 @@ D. back
 QUESTION 51
 What is the effect of the egrep command when the -v option is used?
 A. It enables color to highlight matching parts.
-B. It only outputs non-matching lines.
+**B. It only outputs non-matching lines**.
 C. It shows the command's version information.
 D. It changes the output order showing the last matching line first.
 
@@ -376,7 +376,7 @@ QUESTION 52
 What does the ? symbol within regular expressions represent?
 A. Match the preceding qualifier one or more times. 
 B. Match the preceding qualifier zero or more times. 
-C. Match the preceding qualifier zero or one times. 
+**C. Match the preceding qualifier zero or one times.**
 D. Match a literal ? character.
 
 
@@ -391,7 +391,7 @@ D. By issuing a command such as :set repetition=4 which repeats every subsequent
 
 QUESTION 54
 Which of the following files, located in the user home directory, is used to store the Bash history?
-A. .bash_history 
+**A. .bash_history**
 B. .bash_histfile 
 C. .history
 D. .bashrc_history 
@@ -406,7 +406,7 @@ Which Bash environment variable defines in which file the user history is stored
 QUESTION 56
 Which of the following commands displays the contents of a gzip compressed tar archive?
 A. gzip archive.tgz | tar xvf - 
-B. tar ztf archive.tgz
+**B. tar ztf archive.tgz**
 C. gzip -d archive.tgz | tar tvf - 
 D. tar cf archive.tgz
 
@@ -414,13 +414,13 @@ QUESTION 57
 Which grep command will print only the lines that do not end with a / in the file foo?
 A. grep '/$' foo 
 B. grep '/#' foo 
-C. grep -v '/$' foo 
+**C. grep -v '/$' foo**
 D. grep -v '/#' foo
 
 QUESTION 58
 Which of the following commands is used to change options and positional parameters for a running Bash?
 A. history 
-B. set
+**B. set**
 C. bashconf 
 D. setsh
 E. envsetup

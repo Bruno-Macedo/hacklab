@@ -4,6 +4,7 @@
   - [103](#103)
     - [Paths](#paths)
     - [103.1 Basic](#1031-basic)
+      - [ENV](#env)
     - [103.2 Text/Content](#1032-textcontent)
     - [103.4 Redirecting](#1034-redirecting)
     - [103.8ee Text Editor](#1038ee-text-editor)
@@ -11,6 +12,7 @@
   - [104](#104)
     - [104.7](#1047)
     - [104.5 / 104.6 - Modifying files externally](#1045--1046---modifying-files-externally)
+  - [101.1, 102.1 104.1 Storage](#1011-1021-1041-storage)
 ```
 docker run \
     -itd \
@@ -102,7 +104,38 @@ docker run -it --rm adevur/centos-8:latest /bin/bash
 - rmdir
   - -p = parents
 
+#### ENV
+- not default
+  - $EDITOR
+  - $VISUAL
+- $PWD
+- $PS1
+- $HISTSIZE
+- $UID
+- $GROUPS
+- LC_ALL = local variable
+  - LC_*
+- LANG
+  
+- printenv
+  - printenv VARIABLE
 
+- set
+- local: envs + settings
+  - TZ = timezone
+  - LD_LIBRARY_PATH: PAth directores
+  - export PATH=$PATH:/path/to/exec
+  - PATH=$PATH:/path/to/exec
+- Invoking outside the path
+  - ./script
+- unset = remove variable
+
+- Modfiy variables
+  - $PS1 = prompt
+  - $PS2 = appearance of secondiry prompt
+
+- Subshell (set variables do not survive)
+  - $SHLVL = level shell
 ### 103.2 Text/Content
 - ls 
   - -L = dereference, folders/executables/symbolic links
@@ -149,6 +182,7 @@ docker run -it --rm adevur/centos-8:latest /bin/bash
   - split ORIGINAL filename
 - grep
   - -i case insensitive
+  - ^F Columns header
 - find -regex
 - REGEX
   - -d skip directory
@@ -225,6 +259,7 @@ docker run -it --rm adevur/centos-8:latest /bin/bash
   - -o: open tty for interactive
   - -i
 - `` = ()
+- 
 
 ### 103.8ee Text Editor
 - emacs
@@ -268,7 +303,67 @@ docker run -it --rm adevur/centos-8:latest /bin/bash
   - set ff=dos
 
 ### 103.5/103.6 Process 
+- ps
+  - -efl = aux
+  - GNU long
+    - double dash
+  - Unix: single das
+    - -e all
+    - -lf long format
+  - BSD
+    - aux
+- pgrep
+  - -u user
+  - -a all
+  - -t tty
+- pidof CMD
+- top
+  - n = most cpu usage
+  - shift+l = locate
+  - r = new nice
+- upime
+  - system up,number users, ram
+- free
+  - -h
+- watch
+  - -n # CMD = interval
 
+- Priority
+  - /proc/1 = static
+
+- Mutiplexer
+  - tmux
+  - screen
+    - screen ls
+  
+- Jobs = process on the background
+  - bg %
+  - fg %j
+  - jobs
+    - list jobs
+    - -l PID
+
+- Signals: message to process
+  - man -s 7 signal: list all
+  - SIGHUP: terminate when logout
+  - SIGKILL/KILL/9: kill
+  - SIGTERM/TERM/15: default, terminate if possible
+  - kill %JOB
+  - killall 
+  - nohup: ignores sighub, continues running after logout
+    - nohup PROCESS PID&
+    - dettach from section
+  - pkill: signal to process
+    - based on attributes
+
+- Process Priority
+  - NICE = -20(high)...19(low)
+  - nice -n PRI CMD
+  - renice +PRI
+    - renice -VALUE -p PID
+    - -g GROUP 
+    - -u USER
+  - top
 ## 104
 ### 104.7
 - locate: fast (not work for recently created/downloaded)
@@ -344,3 +439,86 @@ docker run -it --rm adevur/centos-8:latest /bin/bash
 - Softlinks 
   - pointer to a file
   - ls -s
+
+## 101.1, 102.1 104.1 Storage
+- ls /dev/sda?
+- lsblk
+  - lvm = logical volumes: single/multipla parti
+  - part = partition
+  - -f = file system
+  - -o NAME,SIZE,FIELD
+- cat  /proc/partitions = supported formats
+
+- File System = partition after formatation
+  - cat /proc/filesystems
+  - swap = extension to memory
+- Partition = logical subset of disk
+- mount = attach the filesystem to a point in the system
+  - existing files are unavaiblable until unmount + anywhere mount
+
+- Partitions
+  - /boot
+  - GRUP2 + boot/grub + first parititon
+  - EFI = Unified Extensibe Firmaware Interface + boot loaders + kernel images + FAT
+  - /var = variable data
+  - SWAP = swap memory disk<->RAM
+
+- Mass Storage
+  - hd* = old PATA
+  - sd* = SATA, SCSI, USB
+  - sr* = optical drive
+  - fd* = floppy drive
+  - NVMe = sshd connected to PCI Express Bus
+  - mmclk0 = SD cards
+  
+- Logical Volumes Management
+  - VG = volume group
+  - VG are made of physical volumes
+  - PV = disk designedte by LVM
+  - pvcreate
+  - vgcreate
+  - vgextend
+  - lvcreate
+  - lvm --help
+- Device mapper
+  - /dev/mapper
+  - lsblk -p
+  - readlink -f /dev/mapper/DiskName
+- btrfs
+  - butters file system
+  - B-Tree data strcuture to read/write
+  - for large files
+  - own RAID
+  - strcutures and subvolumes
+  - sublume = sub-section of btrfs parente
+  - mounted separatley from other subvolumes
+  - compression
+    - LZO, ZLIB, ZSTD
+
+- Device info
+  - lsdev = low levle device info
+    - mount pints to filesystem / RAM space
+    - proc = process, hardware info
+      - /dev/dma/ =  direct memory access
+      - /proc/cpuinfo
+      - /proc/interrupts = which hardware has data to cent
+      - /proc/ioports = memory location in cpu that send data back<-> forth
+      - /dev/disk/by-id = worl wide identifier wwid
+        - by-label
+        - by-uuid = Universally Unique Identifier 
+        - by-path = how is connected to the system
+    - /sys = devce, kernel info
+    - /dev = system device, storage
+
+- lspci
+  - -s HEX -
+  - -k kernel drive
+- lsusb
+  - -d ID
+  - -t tree
+  - -s BUS:DEV = which device is using module
+- lsmod = modules loaded to kernell
+- kmod
+- modprobe = load/unload
+  - -r module name
+- rmmod = remove mode
