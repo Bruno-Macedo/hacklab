@@ -15,6 +15,10 @@
   - [101.1, 102.1 104.1 Storage](#1011-1021-1041-storage)
   - [104.1 / 104.3 - Manage storager](#1041--1043---manage-storager)
   - [102.1 / 104.2 - Maintanng Storage Space](#1021--1042---maintanng-storage-space)
+  - [101.2 Booting](#1012-booting)
+    - [Bootloader menu](#bootloader-menu)
+  - [101.3 Initialization](#1013-initialization)
+  - [102.4 102.5 Manage Debian - Package Management](#1024-1025-manage-debian---package-management)
 ```
 docker run \
     -itd \
@@ -47,7 +51,6 @@ docker run -it --rm adevur/centos-8:latest /bin/bash
 - cd - = go to previous direcotry
 - options = change behavior
 - Paramenter = change on what operate
-
 
 ### 103.1 Basic
 - uname
@@ -289,7 +292,7 @@ docker run -it --rm adevur/centos-8:latest /bin/bash
   - ctrl + d = down
 
 - Commands
-  - a = appends after the cursos 
+  - a = appends after the cursor 
   - u = undo
   - o = new line below current
   - dw = delete part
@@ -367,6 +370,7 @@ docker run -it --rm adevur/centos-8:latest /bin/bash
     - -g GROUP 
     - -u USER
   - top
+- 
 ## 104
 ### 104.7
 - locate: fast (not work for recently created/downloaded)
@@ -552,7 +556,6 @@ docker run -it --rm adevur/centos-8:latest /bin/bash
 
 
 ## 104.1 / 104.3 - Manage storager
-
 - Partitions
   - /proc/partitions
   - Partition Table: data structure where/size partition
@@ -630,3 +633,188 @@ docker run -it --rm adevur/centos-8:latest /bin/bash
   - btrfs
     - btfs check
     - btrfsck
+
+## 101.2 Booting
+- mount | grep boot
+- Booting
+  - Firmware -- bootloader -- kernel --- items --- sys init --- services
+  - Classic: Firmware --- bootloader (first sectr mbr) - 
+    - chainloading: point to secondary boot loader
+    - LILO: old
+    - GRUB Legacy
+    - GRUB2: common
+  - /boot/vmlinuz....z = compressed = kernel = programs to load
+
+- System initialization = runs background
+  - SysVinit: (scripts stored /etc/init.d)
+  - Runlevels 0-6 (scripts stored /etc/rc.d/rc?.d)
+    - 0 = shutdown
+    - 1 = boot (root only) = rescue
+    - 3 = all user, no net
+    - 5 = graphical
+    - 6 = reboot
+  - default in /etc/inittab (now systemd)
+  - Change with init/telinit
+
+-  Legacy Bootloader = BIOS
+   -  menu.lst
+   -  grub.conf
+      - timeout
+      - title: start of configuration + info to display
+      - root
+      - kernel (ro by start)
+      - initrd = load RAM disk to run drivers (virtual disk load into memory) = Point to FS or RAM disk
+ - Install Grub
+   - grub-install (legacy)
+     - (hd0) = first hard drive
+     - (hd0,0) = first drive + first partition
+     - /dev/sda
+     - /dev/sda1
+
+- Modern boot
+  - Chainloading = in MBR, bootloader in MRpoints to another bootloader
+  - Firmware (UEFI) + mini-bootloader(boot manager) + Bootloader is in EFI system partition (ESP) + ESP mounted on /boot/efi + check sys/firmware/efi
+  - UEFI = /boot/efi (mounted)
+  - Initialization
+    - systemd
+      - parallel
+      - group services = target = unit
+      - systemctl = management
+
+- GRUB2
+  - grub.cfg = Modification /etc/default/grub
+    - /boot/grub/grub.cfg
+    - /boot/grub2/grub.cfg
+    - /boot/efi/EFI/distro/grub.cf
+  - /etc/grub.d = customize menu
+    - title = menuentry Kali
+    - root = hd1,gp1 = second disk + first partition
+    - linux = 
+      - linux = BIOS
+      - linux16 = BIOS
+      - linuxuefi = UEFI
+    - initrd = initial ram file dist = /boot/initrd
+      - BIOS: initrd = 
+      - UEFI: initrdefi =
+- grub-mkconfig > /path/to/grub
+- grub-mkconfig -o /path/to/grub
+- grub2-mkconfig > /path/to/grub
+- grub2,lcpmfog -o /path/to/grub
+- update-grub
+
+### Bootloader menu
+- GRUB legacy
+  - b = boot
+  - c = command/edit
+  - Command: i.e. displaymem
+  - root + kernel + initrd
+  - Kernel parameters
+    - kernel line: 
+      - parameter: 1/single/s = only root (no password needed)
+- GRUB2
+  - boot config
+  - Kernel parameters
+    - linux16 | linux =
+      - parameter: systemd.unit=emergency (password) | singles
+      - Rescue:    root + no network + all FS mounted (read/write)
+      - Emergency: root + no network + only / mounted (read-only)
+  
+- Messages
+  - dmesg = Kernel Ring Buffer (FIFO)
+    - -H
+  - journalctl
+    - -b = boot
+    - -k = dmesg
+  - /var/log/boot |bootstrap | boot.log (redhat)
+  - 
+
+## 101.3 Initialization
+- Runlevels
+  - **0: halted/stoppdes, shutdown**
+  - **1: single user s/S**
+  - **2: multiple users, no network**
+  - 3: network
+  - 4: customizable level
+  - 5: multi user, network, gui
+  - **6: reboot**
+  - rc.d/rc?.d => symbolic link to script
+    - K = kill
+    - S = start
+  - Change
+    - (old): /etc/inittab: id: N (previous) 5 (level)
+    - init LEVEL
+    - telinit
+
+- Modern initialization
+  - targets = group of services to start
+  - systemctl 
+    - get-default 
+    - set-default multi-user.target
+    - cat service
+      - UNIT: description/docssysss
+      - SERVICE: start the service
+      - INSTALL: what target install
+    - list-unit-files
+  - Status
+    - enables: start
+    - disabled: wont start
+    - static: manually started
+  - /etc/systemd/system/ =
+  - /run/systemd/system  = override  /etc/systemd/system
+  - /usr/lib/systemd     = override in /run /etc
+
+- systemctl stats SERV= direct controls systemd
+- service SERV status   = multiple init systems = high level
+
+- Manage services
+  - systemctl stats/stop/start/restart/ service
+    - isolate (group) emergency.target, rescue.targe, runlevel#
+  
+- shutdown options time message 
+  - systemctl = shutdown,halt,poweroff,reboot
+    - isolate poweroff|halt|reboot
+  - is-system-running
+    - degraded = not all services
+  - halt -p = shutdown --halt
+  - poweroff = shutdown -p --poweroff
+  - reboot
+  - shutdown +10 "wallmesage" = 10 minutls
+    - only to logged user in a tty#
+    - hh:mm
+    - +m
+    - now +0
+  - ACPI = Advanced Config and Power Interface
+    - sends signal to hardware
+  - wall = message
+    - mesg
+
+
+## 102.4 102.5 Manage Debian - Package Management
+- Package: apps (files, binaries|source), bundle of softwares, man, copyright
+  - Debian  = .deb
+    - name_version_arch.deb
+  - Red Hat = .rpm
+- make = compile + install
+- Download + install + update + remove + dependencies
+  - apt (new), apt-get, apt-cache  = debian
+  - yum, zypper                    = red hat
+  
+- dpkg (no network)
+  - -c content
+  - -I --info   version/info
+  - -s --status  installed/not
+  - -i install
+  - -V verify
+  - -C audit (broken packages)
+  - -r remove (not dependencies)
+  - dpkg-reconfigure
+- 
+
+- apt (dpkg background)
+  - /etc/apt/source.list = source/repository
+  - apt-get update
+  - apt-get install PACKAGE
+  - apt-get remove PACKAGE
+  - apt autoremove
+  - apt-cache depends
+
