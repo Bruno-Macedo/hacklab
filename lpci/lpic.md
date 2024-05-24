@@ -19,6 +19,9 @@
     - [Bootloader menu](#bootloader-menu)
   - [101.3 Initialization](#1013-initialization)
   - [102.4 102.5 Manage Debian - Package Management](#1024-1025-manage-debian---package-management)
+    - [RedHat](#redhat)
+  - [102.3 Libraries](#1023-libraries)
+  - [102.6 Virtualization](#1026-virtualization)
 ```
 docker run \
     -itd \
@@ -803,18 +806,120 @@ docker run -it --rm adevur/centos-8:latest /bin/bash
   - -c content
   - -I --info   version/info
   - -s --status  installed/not
-  - -i install
+  - -i install/upgrade
   - -V verify
   - -C audit (broken packages)
   - -r remove (not dependencies)
+  - -S search
+  - --get-selections
   - dpkg-reconfigure
 - 
 
 - apt (dpkg background)
   - /etc/apt/source.list = source/repository
   - apt-get update
+  - apt-get upgrade  dont check dependencies
   - apt-get install PACKAGE
+    - -f fix broken dependencies
   - apt-get remove PACKAGE
   - apt autoremove
   - apt-cache depends
+- apt-file (shows uninstalled)
+  - listing contents, finding
 
+### RedHat
+
+- rpm (not solve dependencies)
+  - name.-version-Release-Arch.rpm
+  - if not installed, update will install
+  - -i install
+  - -U upgrade
+  - -q query
+  - -qa list all
+  - -qf which files owns
+  - -e = remove (erase)
+  - -V = installed/not
+  - -qR = dependencies
+  
+- yum =handles dependencies
+  - search
+  - install
+  - update
+  - whatprovides
+  - info
+  - remove
+  - yum/etc/yum.conf (configuration)
+  - /etc/yum.repos.d
+    - /etc/yum.repos 
+  - yum-config-manager --add-repo
+    - repolist all
+    - clean packages|metadata
+- dnf (fedora)
+  - similar to yum
+- zypper (opensuse)
+  - similar apt yum
+  - refresh | ref
+  - search|se -i (installed)
+  - in = install
+  - se --provides = 
+  - info
+  - provides
+  - verify = check dependencies
+  - list-updated = show updates
+  - addrepo
+  - /etc/redhat-releaser
+  - /etc/zypp/zzpper.conf
+
+
+## 102.3 Libraries
+- for LOADIN
+- file with program code
+- /lib/xxx/name.so.VERSION
+- $LD_LIBRARY_PATH
+- $PATH
+- /etc/ld.so.conf
+- @ = dynamic link load
+- ldd /path/to/executable
+- Developing
+  - ldconfig = configure dynamic linker
+    - list of varaibles directories
+    - quick load program
+    - runned by package managment
+    - -v see
+    - -N dont build
+    - export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/path/to/our/folder
+
+- Troubleshooting
+  - ldd /path/to/exec
+  - ldconfig (update)
+    - -p print cacheq
+
+## 102.6 Virtualization
+- Phyisical --> Host OS --> Hypervisor (App) --> VMs
+  - Hypervisor 1: replace OS on Host (windows)
+  - Hypervisor 2: needs host OS (linux, vmware, dropbox)
+  - network swtich
+  - PV - paravirtualized = 
+- Container => direkt to Host OS
+
+- Creating VM
+  - enough CPU,RAM,DU,NIC
+  - grep ^flags /proc/cpuinfo | grep vmx = intel
+  - grep ^flags /proc/cpuinfo | grep svm = amd
+  - OVF (open virtualization format) OVA (open virtualization application)
+  - /var/lib/dbus/machine-id (delete second)
+  - /etc/machine-id (delete first)
+  - Host name
+  - NICMAC
+  -  dbus-uuidgen
+
+- Containers
+  - Host System --> Host OS ---> Container Engine ==> share OS of host
+  - Docker, LXD
+  - Orchastration Tool: Kubernetes/k8s
+
+- CSP = Cloud service provider
+- Infrastucture as a Service (IaaS) - hardware
+- Platform as a Servce (PaaS) - OS
+- Software as a Service (SaaS) - Application 
+- Management + Elasticity + Load Balancing + Block/object storage + networking
