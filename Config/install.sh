@@ -1,11 +1,11 @@
 #!/bin/bash
 
-ZSHRCFILE="~/.zshrc" 
-BASHALIAS="~/.bash_aliases"
+ZSHRCFILE="/home/$USER/.zshrc" 
+BASHALIAS="/home/$USER/.bash_aliases"
 
 # Aliases
-UPDATE='alias up="sudo apt update && sudo apt upgrade -y && sudo apt autoremove -y"'
-START='alias start="code workspace ; vpn -ad ; tmux new -s htb"'
+UPDATE='alias up="sudo apt update && sudo apt upgrade -y && sudo apt dist-upgrade && sudo apt autoremove -y"'
+START='alias start="code workspace ; vpn -ad ; tmux new -s htb ; cd workspace"'
 RUSTSCAN='alias rustscan="docker run -it --rm --name rustscan rustscan/rustscan:2.1.1"' 
 BOXTEMPLATE="alias box='function boxfolder(){ cp -r /home/$USER/workspace/hacklab/room_template /home/$USER/workspace/hacklab/\$1; mv /home/$USER/workspace/hacklab/\$1/room_Template.md /home/$USER/workspace/hacklab/\$1/\$1.md; }; boxfolder'" 
 CRACK='alias cme="crackmapexec"'
@@ -14,13 +14,12 @@ ARRAYALIAS=( "$UPDATE" "$START" "$RUSTSCAN" "$BOXTEMPLATE" "$CRACK")
 
 # Packages
 PACKGES=( ufw gufw gobuster seclists )
-
-sudo apt-get install ufw -y
-sudo ufw enable
-sudo apt-get install gufw -y
-sudo apt install gobuster -y
-sudo apt install seclists -y
-
+CHROME="/home/$USER/Downloads/chrome.deb"
+SCHROME="https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb"
+CODE="/home/$USER/Downloads/code.deb"
+SCODE="https://code.visualstudio.com/sha/download?build=stable&os=linux-deb-x64"
+DISCORD="/home/$USER/Downloads/discord.deb"
+SDISCORD="https://discord.com/api/download?platform=linux&format=deb"
 
 # First update /upgrade
 echo "First updated and upgrade after fresh install"
@@ -45,7 +44,7 @@ sudo apt install -y docker.io
 sudo systemctl enable docker --now
 sudo usermod -aG docker $USER
 echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian bookworm stable" | \
-  sudo tee /etc/apt/sources.list.d/docker.list 
+ sudo tee /etc/apt/sources.list.d/docker.list 
 curl -fsSL https://download.docker.com/linux/debian/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
 sudo apt update
 sudo apt install -y docker-ce docker-ce-cli containerd.io
@@ -53,11 +52,24 @@ echo "==========================Done=========================="
 echo
 
 # Download and install google chrome
-echo "Downloading and installing google chrome"
+echo "Downloading and installing google chrome, vs code and discord"
 echo "========================================================"
-wget 'https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb' -O ~/Downloads/chrome.deb
-sudo dpkg -i *.deb
+wget $SCHROME -O $CHROME
+sudo dpkg -i $CHROME
 sudo apt-get install -f
+
+wget $SCODE -O $CODE
+sudo dpkg -i $CODE
+sudo apt-get install -f
+
+wget $SDISCORD -O $DISCORD
+rm $CHROME $CODE $DISCORD
+echo "==========================Done=========================="
+echo
+
+echo "Cloning hacklab"
+echo "========================================================"
+git clone git@github.com:Bruno-Macedo/hacklab.git  /home/$USER/workspace/hacklab
 echo "==========================Done=========================="
 echo
 
@@ -65,7 +77,7 @@ echo
 echo "Setting up tmux"
 echo "========================================================"
 sudo apt-get install xclip -y
-cp ${PWD}/hacklab/Config/.tmux.conf ~/.tmux.conf
+cp /home/$USER/workspace/hacklab/Config/.tmux.conf ~/.tmux.conf
 tmux source-file ~/.tmux.conf
 echo "==========================Done=========================="
 echo
@@ -73,7 +85,14 @@ echo
 # Setting up vpn script
 echo "Setting up the vpn script"
 echo "========================================================"
-sudo cp ${PWD}/hacklab/Config/vpn /usr/bin/vpn
+sudo cp /home/$USER/workspace/hacklab/Config/vpn /usr/bin/vpn
+echo "==========================Done=========================="
+echo
+
+# Setting up checkproc
+echo "Setting up the checkproc script"
+echo "========================================================"
+sudo cp /home/$USER/workspace/scripts/checkproc /usr/bin/checkproc
 echo "==========================Done=========================="
 echo
 
@@ -89,16 +108,11 @@ do
   echo
 done
 
-#sudo apt-get install ufw -y
-#sudo apt-get install gufw -y
-#sudo apt install gobuster -y
-#sudo apt install seclists -y
-
 echo "==========================Done=========================="
 sudo ufw enable
 echo
 
-# Customizing aliases
+# Customizing aliases and rebooting
 echo "Setting up customized alias"
 echo "========================================================"
 touch $BASHALIAS 
@@ -112,39 +126,8 @@ do
   done
 done
 
-source .zshrc
-bash ; source .bashrc ; exit
-echo "==========================Done=========================="
-echo
-
-echo "Rebooting the system"
-echo "========================================================"
+source $ZSHRCFILE 
+bash -c "source $BASHALIAS" 
 sudo reboot now
 echo "==========================Done=========================="
 echo
-
-
-
-
-
-
-
-# Update + upgrade + autoremove
-##echo 'alias up="sudo apt update && sudo apt upgrade -y && sudo apt autoremove -y"' | tee -a $BASHALIAS
-# Start htb vpn + vs code + tmux
-##echo 'alias start="code workspace ; vpn -ad ; tmux new -s htb"' | tee -a $BASHALIAS
-# Enable rustscan with docker
-##echo 'alias rustscan="docker run -it --rm --name rustscan rustscan/rustscan:2.1.1"' | tee -a $BASHALIAS
-# Easier name for crackmapexec
-##echo 'alias cme="crackmapexec"' | tee -a $BASHALIAS
-# Easier creation of folders for boxes
-##echo "alias box='function boxfolder(){ cp -r /home/$USER/workspace/hacklab/room_template /home/$USER/workspace/hacklab/\$1; mv /home/$USER/workspace/hacklab/\$1/room_Template.md /home/$USER/workspace/hacklab/\$1/\$1.md; }; boxfolder'" | tee -a $BASHALIAS
-
-
-
-
-##echo 'alias up="sudo apt update && sudo apt upgrade -y && sudo apt autoremove -y"' | tee -a $ZSHRCFILE
-##echo 'alias start="code workspace ; vpn -ad ; tmux new -s htb"' | tee -a $ZSHRCFILE
-##echo 'alias rustscan="docker run -it --rm --name rustscan rustscan/rustscan:2.1.1"' | tee -a $ZSHRCFILE
-##echo 'alias cme="crackmapexec"' | tee -a $ZSHRCFILE
-##echo "alias box='function boxfolder(){ cp -r /home/$USER/workspace/hacklab/room_template /home/$USER/workspace/hacklab/\$1; mv /home/$USER/workspace/hacklab/\$1/room_Template.md /home/$USER/workspace/hacklab/\$1/\$1.md; }; boxfolder'" | tee -a  $ZSHRCFILE
