@@ -105,7 +105,7 @@ Insecure Direct Object Request
   - enumerate username until valid one ==> NULL payload for password + several tries until get different response
   - try password with these usernames ==> grep warning for incorrect passwords
 
-## DATABASE
+## SQL Injections
 
 ### Steps
 - Insert code, if not crash = injection
