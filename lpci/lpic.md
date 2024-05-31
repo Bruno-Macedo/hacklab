@@ -211,7 +211,7 @@ docker run -it --rm adevur/centos-8:latest /bin/bash
   - gzip
     - gunzip
     - zccat
-  - bzip
+  - bzip (replaced)
     - bunzip2
     - bzcat
   - xz 
@@ -445,10 +445,10 @@ docker run -it --rm adevur/centos-8:latest /bin/bash
 
 - Hardlinks
   - same inode
-  - 
+  - ln File.txt LINK
 - Softlinks 
   - pointer to a file
-  - ls -s
+  - ls -s file.txt LINK
 
 ## 101.1, 102.1 104.1 Storage
 - ls /dev/sda?
@@ -508,6 +508,10 @@ docker run -it --rm adevur/centos-8:latest /bin/bash
     - LZO, ZLIB, ZSTD
 
 - Device info
+  - /proc + /sys = during runtime, pseudo fs, 
+    - /proc = process, dma,ioports,interrupts,cpuinfo
+    - /sys = kernel data
+    - /dev/system device
   - lsdev = low levle device info
     - mount pints to filesystem / RAM space
     - proc = process, hardware info
@@ -690,6 +694,8 @@ docker run -it --rm adevur/centos-8:latest /bin/bash
     - /boot/grub2/grub.cfg
     - /boot/efi/EFI/distro/grub.cf
   - /etc/grub.d = customize menu
+    - **title + root + kernel (parameter) **+ initrd** = legacy
+    - **menuentry + set root + linux?? (parameter) + initrd = new**
     - title = menuentry Kali
     - root = hd1,gp1 = second disk + first partition
     - linux = 
@@ -712,7 +718,7 @@ docker run -it --rm adevur/centos-8:latest /bin/bash
   - Command: i.e. displaymem
   - root + kernel + initrd
   - Kernel parameters
-    - kernel line: 
+    - **kernel line:**
       - parameter: 1/single/s = only root (no password needed)
 - GRUB2
   - boot config
@@ -810,7 +816,7 @@ docker run -it --rm adevur/centos-8:latest /bin/bash
   - -V verify
   - -C audit (broken packages)
   - -r remove (not dependencies)
-  - -S search
+  - -S searchapp 
   - --get-selections
   - dpkg-reconfigure
 - 
