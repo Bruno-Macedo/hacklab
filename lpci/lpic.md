@@ -1,6 +1,6 @@
-# LPIC 1 - Cheat Sheet
+# LPIC 101 - Cheat Sheet
 
-- [LPIC 1 - Cheat Sheet](#lpic-1---cheat-sheet)
+- [LPIC 101 - Cheat Sheet](#lpic-101---cheat-sheet)
   - [103](#103)
     - [Paths](#paths)
     - [103.1 Basic](#1031-basic)
