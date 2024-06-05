@@ -251,7 +251,7 @@ func_name () {
   - Min Hour Day Month DayWeek Account Commando
   - run-parts = run all scripts in the script
     - cron.* = scripts that will be runned
-  - anacron: = not assume system, checks jobs + ensure run
+  - anacron: = not assume system, checks jobs + ensure run + NO HOUR
     - Period Dely JobId Command
   - /etc/cron.allow = allow to run
   - /etc/cron.deny = not allowed
@@ -302,7 +302,7 @@ func_name () {
   - --show
   - -r = read
   - -w = write
-  - --systohc = softare to hardware
+  - --systohc = softare to hardware (real)
   - /etc/adjtime = used to adjust
   - --adjust
   - --hctosys = to system
@@ -356,6 +356,7 @@ func_name () {
     - tracking = show saerver
     - sources -v = show servers
     - sourcestats
+    - cronyc = NTP source status/performance
     - Check of NP pool 
 
 
@@ -422,6 +423,7 @@ func_name () {
     - :: == 0000:0000
     - NDP: Neighbor Discovery Protocol
     - subnets not needed
+    - prefix/routing:host
 
 - TCP/UDP ports/services
   - /etc/services = map of ports:services
@@ -487,6 +489,8 @@ func_name () {
   - set-hostname
   - echo $HOSTNAME
 - APIPA = Automatic Private IP Addressing
+  - no address from DCHP
+  - range: 169.254.0.0 - 169.254.255.255
 - dhclient  
   - -r IF
   - -v verbose
@@ -511,6 +515,8 @@ func_name () {
 - ip 
   - -br addr show
   - route = route
+  - /sys/class/net = interfaces
+  - link set dev IF down/up
 
 - Change hostname
   - /etc/sysconfig/network | /etc/hostname
@@ -518,15 +524,34 @@ func_name () {
   - $HOSTNAME = set by logging
 
 - Network Manager
+  - nmtui = ui
   - nmcli =network manager command line interface
-    - general status
+    - general status (status = default)
     - -p pretty
     - -c n -p connection show id "name"
     - connection modify id 'IF' ipv4.method manual
     - connection modify id 'IF' ipv4.method new.address
     - connection up id 'IF'
+    - radio wifi on/off
     - general hostname 'NewName'
+    - device wifi connect NAME
+    - device wifi list | device wifi rescan
+      - device wifi connect NAME pass 1234 hidden yes
+        - ifname
   - interface= hostanme + ip dyn|sta + ip/dhcp + netmask + default gateway
+
+- systemd
+  - /lib/systemd/network: system network (+)
+  - /run/systemd/network: volatile runtime (++)
+  - /etc/systemd/network: local admi (+++)
+    - .netdev = systemd-networkd to create virtual devices (bridges,tun)
+    - .link = low-level config
+    - .network = setup network
+
+- Password wireless
+  - wpa supplicant = 
+  - wpa_passphrase File > /etc/wpa_supplicant/wpa_supplicant-wlo1.conf
+
 
 - iproute2
   - ip options object command
@@ -552,7 +577,8 @@ func_name () {
   - /etc/sysconfig/network
   - Settings
     - DEVICE=interface
-    - ONBOOT=
+    - NETWORK=ip
+    - ONBOOT=starts on boot
     - BOOTPROTO=dhcp
     - static settings
   - Legacy
@@ -582,3 +608,187 @@ func_name () {
   - #DNS=IP
   - systemd-resolve www.domain.ip
   - --statitcs
+
+
+## Troubleshooting networking 109.2, 109.3
+- Legacy
+  - ifconfig
+  - route
+  - netstat -r
+  - arp
+  - netstat -a
+  - -6 = ipv6
+- New
+  - ip address | ip link
+  - ip neigh|neighbor|neighbour
+  - ip route
+  - nc
+- ss = socket
+  - -s statistic
+
+- Troubeshooting Packet transmission
+  - ping -c 3
+    - time= round trip (req-rep)
+  - traceroute
+    - -n no name
+    - -I ICMP
+  - tracepath
+    - mtu provided
+
+- DNS Troubleshooting
+  - hostnamectl | getent hosts | hostname
+  - host www.name.de
+    - -a all
+    - check name resolution speed
+  - nslookup
+  - dig: FQDN records
+    - IN = internet Class
+    - A = ipv4
+    - AAAA = ipv6
+    - SEVER = which name server provided the anser
+    - @NAMESEVER www.name.de
+  - systemd-resolve www.name.de
+
+## Emails 108.3
+- Message User Agent: MUA
+  - create message
+  - KMAIL,Evolution,Thunderbird
+- Message Delivery Agent
+  - binmain,procmail
+- Message Submission Agent: MSA
+- Messate Tranfer Agent: MTA
+  - get message to remote system + sent to internal Message Delivery Agent (MDA)
+  - **Exim,Postfix,Sendmail** (also submission)
+
+- MTA Programs
+  - mail.mailutils
+  - Exim
+    - popular
+  - Postfix
+    - still developed
+    - emulation sendmail
+  - Sendmail
+    - difficult
+    - 1980
+    - sendmail target, Message blabla bla
+  - mail -s "Subject" target_username + write message + ctr+d (send)
+    - n 1 = message
+    - d 1 = delete
+  - mail -s "Subject remote" user@Hostname_remote + write message + ctr+d
+  - Commands
+    - mailq = view
+    - sendmail -bp  = view
+    - newaliases = update
+    - sendmail -l = update
+
+- Local Email
+  - mailq = list emails
+  - sendmail -bp = list emails
+  - mail -s "subject" target@remote_host
+  - postqueue -p = shows list o email = postfix
+    - mailq (no super user)
+  - postsuder -d Message = delete from id
+  - Forwarding
+    - echo WhoShouldReceiveMessage > .forward (~/.forward) = inside folder of absent user
+    - 644
+
+- Email Aliases
+  - /etc/aliases* = alternative name for user
+    - alias: original_user
+  - /etc/aliases.db = modified by /etc/aliases
+  - Update db:
+    - sendmail -l
+    - sendemail -I | -bi
+    - newaliases
+
+## Printer+Printing 108.4
+- cups = common unix printing system
+  - /etc/cups/cupsd.conf (primary)
+  - /etc/cups/printers.conf
+  - IPP = internet printing protocol
+  - PDP = printer daemon protocol
+- LP = Line printer
+  - legacy daemon
+  - /etc/printcap = legacy file
+  - Print
+    - lp -d (designate printer)
+    - lpr -P (printer)
+  - Status
+    - lpstat
+      - -p printers available
+    - lpq -P (printer)
+  - Remove
+    - cancel
+    - lprm -P (printer)
+
+- New printer
+  - /etc/cups/printers.conf = printers
+  - lpoptions -d name = set default
+  - lpadmin
+    - -p PrinterName
+    - -D Description
+    - -L Location
+    - -m PPD-file
+      - everywhere = automatically determine ppd
+    - -v device-URI lpd://URI
+    - -o Options
+    - -E enable
+    - -x remove printer
+  - lpinfo -m
+    - --make-and-model "name" -m
+  - lstat -a NAME
+  - cupsrecject|accept = not to queue
+  - cupsdisable|enable = not printer
+    - -r "write reason"
+
+- Troubleshooting
+  - lpstat -P printer = queue status
+  - lpstat -p printer = status to printer
+  - lpinfo -m = info about ppd
+  - Debugging
+    - /etc/cup/cupsd.conf
+    - cupsctl 
+      - debug logging
+      - --debug-logging
+      - --no-debug-logging
+    - logs: /var/log/cups
+
+## Logging Events 108.2
+- text | binary
+- Journal = db feature
+- /etc/rsyslog.d/* | /etc/rsyslogd.conf
+  - Date/Time - Event Type - Importance - Details
+    - facility: i.e. auth 4 authentication, lpr 6 printer service
+    - severity: 0 (emerg), 1 (alert), 2 (crt), 3 (err), 4 (warnung), 7 (debug)
+  - facility.priority action
+- systemd-journald
+  - databse, binary
+  - FSS = fowared secure sealing = avoid modification
+  - etc/systemd/journald.conf
+  - journactl
+    - -r reverse
+    - -e news at bottom
+
+- Legacy methods
+  - rsyslog
+  - syslogd | sysklogd
+  - /etc/rsyslog.conf
+    - facility.priority action
+  - remote server
+    - protocol(z#)
+      - @ = TCP, @@=UDP
+    - (z#) = compression
+    - host:port
+    - @(z2)localhost:1234
+    - *.* = all facilities and emergency
+  - Receive Logs
+    - load modules
+    - modify ports to listen
+    - set up template definition
+    - IP address or FQDN
+    - adapt firewall rules
+    - Template
+      - $template AUthPrivLog, "/path/to/file"
+      - authpriv.* ?AuthPrivLogFile
+
+- Systemd-Journald
