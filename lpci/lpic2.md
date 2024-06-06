@@ -359,7 +359,6 @@ func_name () {
     - cronyc = NTP source status/performance
     - Check of NP pool 
 
-
 ## Locale Management 107.3
 - locale = language + culture role (currency, numbers)
   - Category="Lang_Terrt.CharctSet@Modifier"
@@ -552,7 +551,6 @@ func_name () {
   - wpa supplicant = 
   - wpa_passphrase File > /etc/wpa_supplicant/wpa_supplicant-wlo1.conf
 
-
 - iproute2
   - ip options object command
   - ip   -br   address show
@@ -702,6 +700,7 @@ func_name () {
     - newaliases
 
 ## Printer+Printing 108.4
+- Steps: click print ==> print queue (directory) =>>
 - cups = common unix printing system
   - /etc/cups/cupsd.conf (primary)
   - /etc/cups/printers.conf
@@ -747,7 +746,7 @@ func_name () {
   - lpinfo -m = info about ppd
   - Debugging
     - /etc/cup/cupsd.conf
-    - cupsctl 
+    - cupsctl = info info info
       - debug logging
       - --debug-logging
       - --no-debug-logging
@@ -756,8 +755,10 @@ func_name () {
 ## Logging Events 108.2
 - text | binary
 - Journal = db feature
+  - utmpdump | last -f
 - /etc/rsyslog.d/* | /etc/rsyslogd.conf
   - Date/Time - Event Type - Importance - Details
+    - Rules: facilities, priority, actions
     - facility: i.e. auth 4 authentication, lpr 6 printer service
     - severity: 0 (emerg), 1 (alert), 2 (crt), 3 (err), 4 (warnung), 7 (debug)
   - facility.priority action
@@ -771,7 +772,7 @@ func_name () {
 
 - Legacy methods
   - rsyslog
-  - syslogd | sysklogd
+  - syslogd | sysklogd | syslog-ng
   - /etc/rsyslog.conf
     - facility.priority action
   - remote server
@@ -792,3 +793,260 @@ func_name () {
       - authpriv.* ?AuthPrivLogFile
 
 - Systemd-Journald
+  - Database file 
+  - binary
+  - /etc/systemd/journald.conf
+    - storage:
+      - volatile = only during runing
+      - auto =/var/log/journal (only)
+      - /var/log/journal = persistent on disk 
+      - /run/log/journal = volatile, in RAM
+    - compress
+    - Seal = protected with key or not
+    - SplitMode =
+      - uid = per user
+      - none = all
+    - ForwardToSyslog
+    - Rotation
+    - MaxFileSec = maximum time before rotation
+    - MaxRetentionSec = maxium time before deletion
+  - Location
+    - /var/log/journal
+  - journalctl
+    - less
+    - --no-pager
+    - -e = pager end
+    - -r =reverse
+    - -k = kernel
+    - -u = UnitName
+    - -u = pattern
+    - --facility
+    - -p priority
+    - -t identifier
+    - -D directory
+    - --file FileName
+    - --file /path/to/file
+    - --file fileNamePatter
+  - ForwardToSysLog=
+    - to rsyslogd
+      - ModLoad = imusock imjournal
+  - systemd-journal-remote = pull
+  - systemd-journal-upload = send 
+
+- Making Log/Journal entries
+  - unit = resource
+  - 
+  - logger
+    - -p facility.priority
+    - -s standard error
+    - -f FileName
+    - -n IPAddress -n FQND
+    - -T TCP, -p PORT
+  - syslog
+    - systemd-cat
+    - echo "dasdasdasdas" | systemd-cat
+    - systemd-cat echo "message"
+      - -t facility -p priority echo "priority message"
+
+- Manage log files
+  - /var/log
+  - rotation = messages in queue, new logfile started
+  - /etc/logrotate.conf
+    - hourly,daily, weekly,monthly,maxCapacitiy
+  - /etc/logrotate.d
+    - for each log
+  - journald.conf
+    - (persistent | volatiles) limits
+      - System..- = persistent
+      - Runtime.. = volatile
+    - time limits
+      - MaxFileSec = maximum time before rotation
+      - MaxRetentionSec = maximum time beore deletion
+  - Types
+    - Active: current
+    - archived: old rotated
+    - journalctl
+      - --disk-usage
+      - --vacuum-size = delete until size
+      - --vacuum-time = delete until datze
+      - --flush = fljush to make persistent
+      - --verify = check internal consistency
+    - -D directory
+    - --file FileName| /path/to/file | 
+    - -m --merge = merge files
+
+
+## Basic Sec Admin 110.2
+- system account = nologin = so session
+  - services, mail,printing,logging
+- /etc/login.defs
+- /etc/shadow
+  - user:hash:lastchange:beforechange:passwordrequired:until deactivate:expirationdate:
+    - !! ! = no password
+    - * = cannot log
+    - ! = locked
+- /etc/nologin = nobody login, except root
+  - PAM configuration for exception
+- TCP wrappers
+  - compiled with library
+  - tcpwrapper = allow/deny access
+  - /etc/hosts.allow | /etc/hosts.deny
+    - no record anywhere = allow
+    - 1o allow, 2o deny
+  - /etc/hosts.allow
+    - search for remote system records, not found goes to hosts.deny
+    - servicename:FQDM
+    - servicename:IP
+  - /etc/hosts.deny
+    - found = blocked, not found = allowed
+    - PARANOID = nothing at allsyss
+
+## More Basic Sec Adm 110.1
+- Account Login Security
+  - passwod
+    - -S USERNAME = status
+    - -e expire password
+  - chage 
+    - -l status
+  - /etc/security/limits.conf
+    - restrict configuration
+    - maxlogins: max # login for this user
+  - ulimit
+    - set liits to uers
+    - -a all settings
+    - -H hard and soft 
+  - su
+    - su - username
+    - su -c "command"
+
+- Configureand Manage Sudo
+  - super use do
+  - /etc/sudoers OR group sudoers
+  - as root
+  - sudo -u USERNAME cmd
+  - sudo -g GROUPNAME cmd
+  - everything logged
+  - user machine = (runasUser:Group) options: command
+  - test          = (ALL:ALL) NOPASSWD: ll
+  - root ALL=(ALL:ALL) ALL
+  - %group ALL=(ALL) ALL
+  - Alias
+    - User_Alias ALIAS= user1, user2, user3
+    - Host_Alias ALIAS=IP1,IP2,IP2
+  - ALIAS ALIAS = ALL
+  - VISUDO
+
+- Audit
+  - who = who are logged in
+    - -b boot
+    - -r runlevel
+    - -H headers
+  - w
+    - Date from: /var/log/utmp + /proc/
+    - current time on system + since last boot + number current ousers + cpu load 
+  - last = listing last logged users
+     - /var/log/wtmp*
+     - -f alternative_file
+   - lastb
+     - failed attempts
+     - /var/log/btmp
+   - find /usr/*bin -perm /u=s|4000 -type = f
+     - SUID = u=s = 4
+     - SGID = g=s = 2
+     - Both= /6000 | /u=s,g=s
+     - -perm perissions
+       - num or symb = only
+       - -num or -symb = this and others
+       - /num or /symb = either other
+     - -cmin stats minutes ago
+     - -mmin  change minute ago
+     - -size
+     - -group
+     - -user
+
+- Network Audits
+  - socket = connection to an openned port
+  - nmap
+    - -sT = TCP
+    - -sU = UDP
+    - -l = service listen
+    - -p = program+pid
+    - -t = tcp
+    - -u = udp
+    - -a = all
+    - --numeric-port
+  - lsof = listen open files
+    - -i = internet
+    - -i4TCP, i6UDP
+    - -s = select
+    - -sTCP=LISTNEN
+    - tcp:22
+  - fuser = pricess using files/sockets
+    - -v PORT/TCP
+    - -n: file/udp/-k kill port/TCP
+  - ss = check sockets
+    - -u = udp
+    - -t = tcl
+    - -l = listening
+  - systemctl list-unit-files --type=socket
+
+- Turning off services
+  - systemctl list-unit-files --type=service
+    - enabled = start at boot
+    - disabled = not start boot
+    - static = cannot be disabled
+    - systemctl stop service = until restarted/boot
+  - SysVinit
+    - service --status-all
+    - service NAME stats
+    - chkconfig --list
+  - xinetd = super daemon, super server
+    - listes for networkconnection
+    - /etc/xinetd.conf | /etc/xinetd.conf 
+    - bind | interface = prevent nework to service
+    - only_from
+    - access_time
+
+## Encryption 110.3
+- Concepts
+  - message digest, fingerprint hast
+  - collision free: not md5
+  - symmetric = same key
+  - assymetric = private & public key
+  - Digital signature = integrity
+
+- Encrypt files
+  - gpg
+    - -c file.txt symmetric
+    - -d  (grep secret from paths)
+    - .gnupg/ = all keys
+    - --gen-key
+    - --list-key
+    - --export -a "ID" > file. ==> create public key
+    - --import pub.key ==> import public key
+    - --recipeint "KeyId" --out Secretfile --encrypt file.txt ==> encrypt with other people pubKey
+    - --out File.txt --decrypt file. ==> decrypt with our privKey
+    - Signing
+      - --output "Signed_file" --sign EncryptedFile = Signing
+      - gpg --out EncryptedFile --verify SignedFile = checking signature
+    - Revoke
+      - gpg --out KeyRevokeCertificate.asc --gen-revoke "UID" = revoke
+      - gpg --import KeyRevokeCertificate.asc = import certification revocation into keyring + share certificate
+
+- Encrypt connection
+  - same username on client-server ssh IP
+  - scp filetosend user@ip:/path/to/target
+  - scp user@ip:/file/to/get /path/on/local
+  - single comand ssh
+    - ssh user@ip "command to send"
+  - configs
+    - ~/.ssh/config = overwrite,priority
+    - /etc/ssh/ssh_config = all users
+    - /etc/ssh/sshd_config = server config
+      - ForwardX11: graphical interface
+      - PermitRootLogin
+      - Protocol 2
+      - Port 22
+    - known_hostos
+      - client user remote open ssh keys: ~/.ssh/known_hosts
+      - system wide: /etc/ssh/ssh_known_hosts
