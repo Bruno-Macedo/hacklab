@@ -23,10 +23,21 @@
 
 
 TODOS:
-- AD Enumeration & Attack
-- AD LDAP
-- Kerberos Attack
-- Active Directory LDAP
+- AD
+  - AD Enumeration & Attack
+  - Kerberos Attack
+  - AD LDAP
+  - Active Directory LDAP
+  - DACL 1 and 2
+- SQL
+  - SQLmap
+  - SQL Blind
+- Login
+  - Authentication
+- General
+  - Penetration testing process
+
+
 - Boxes: AD Active, Resolute, Forest Cascate
   - [Walkthroughs](https://0xdf.gitlab.io/tags.html#active-directory)
   - [Good blog](https://adsecurity.org/?author=2)

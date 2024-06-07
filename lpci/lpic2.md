@@ -8,6 +8,7 @@
   - exec perm: chmod u+x script.sh + ./script.sh
   - diff loct: /path/to/script.sh
   - set $PATH: script on $PATH
+    - set -x = debbuging
   - sourcing:  source script.sh | . script.sh = same shell
   - Exec cmd:ex  exec ./script
 - Build commands
@@ -146,6 +147,7 @@ func_name () {
   - set,env,printev = only env variable
   - unset variable | better change than unset
   - export PATH=$PATH:/path/to/my/target = make all available
+    - declare -x = exportq
   - set
     - echo $- = how {} works
     - set +a = turn off flag
@@ -167,7 +169,7 @@ func_name () {
 - useradd | adduser = create user
   - -D = files used to create user (default)
   - -d = home directory
-  - -e YYYY-MM-DD = expire
+  - -e YYYY-MM-DD = expire date
   - -f 1 = secure account, after this amount of day the account is disabled
   - /etc/passwd = account info
     - username:X password in shadow:ID:group ID:Comment:
@@ -194,7 +196,8 @@ func_name () {
   - passwd = my own change
   - sudo passwd username
     - -d = delete
-    - -e = force change
+    - -e = force change = expire now
+    - -x 60 = maximum age
   - -S = status
     - -1 = inactive disabled
     - 99999 = not change nedded
@@ -215,7 +218,7 @@ func_name () {
     - groupdel NameGroup
   - If you dont belong to group: u need password
     - gpasswd: better to add user to group
-    - 
+      - -a USER group
 
 ## Jobs 107.2
 - at
@@ -279,7 +282,7 @@ func_name () {
   - NAME.timer
   - NAME.service
 
-- Transient time
+- Transient time (without service file)
   - User | System time user
   - sudo systemd-run --on-calender="*-*-*08:16:00" bash /home/kaliwork/workspace/hacklab/lpci script3.sh
     - systemctl cat run-ID.service
@@ -332,6 +335,7 @@ func_name () {
     - Select pool zone
     - config file /etc/ntp.conf
       - server ==> iburst = first correction fast
+      - restrict (directive: type of access a hsot has) default ignore
     - insane time = more 17 minutes different
       - ntpdate pool.net.org
     - start ntpd
@@ -423,7 +427,7 @@ func_name () {
     - NDP: Neighbor Discovery Protocol
     - subnets not needed
     - prefix/routing:host
-
+    - stateless = slaac = self configure with mac
 - TCP/UDP ports/services
   - /etc/services = map of ports:services
     - 20/21 = ftp
@@ -698,6 +702,7 @@ func_name () {
     - sendmail -l
     - sendemail -I | -bi
     - newaliases
+      - /etc/mail/aliases
 
 ## Printer+Printing 108.4
 - Steps: click print ==> print queue (directory) =>>
@@ -719,6 +724,7 @@ func_name () {
   - Remove
     - cancel
     - lprm -P (printer)
+      - -a all = remove all
 
 - New printer
   - /etc/cups/printers.conf = printers
@@ -758,7 +764,7 @@ func_name () {
   - utmpdump | last -f
 - /etc/rsyslog.d/* | /etc/rsyslogd.conf
   - Date/Time - Event Type - Importance - Details
-    - Rules: facilities, priority, actions
+    - Rules: facilities.priority actions
     - facility: i.e. auth 4 authentication, lpr 6 printer service
     - severity: 0 (emerg), 1 (alert), 2 (crt), 3 (err), 4 (warnung), 7 (debug)
   - facility.priority action
@@ -777,7 +783,9 @@ func_name () {
     - facility.priority action
   - remote server
     - protocol(z#)
-      - @ = TCP, @@=UDP
+      - @@ = TCP, @=UDP
+      - @@(z9)IP:PORT = TCP
+      - @(z9)IP:PORT = UDP
     - (z#) = compression
     - host:port
     - @(z2)localhost:1234
@@ -875,7 +883,6 @@ func_name () {
     - --file FileName| /path/to/file | 
     - -m --merge = merge files
 
-
 ## Basic Sec Admin 110.2
 - system account = nologin = so session
   - services, mail,printing,logging
@@ -887,7 +894,7 @@ func_name () {
     - ! = locked
 - /etc/nologin = nobody login, except root
   - PAM configuration for exception
-- TCP wrappers
+- TCP wrappers = libwrap
   - compiled with library
   - tcpwrapper = allow/deny access
   - /etc/hosts.allow | /etc/hosts.deny
@@ -918,6 +925,7 @@ func_name () {
   - su
     - su - username
     - su -c "command"
+    - -(dash) = load target user environment
 
 - Configureand Manage Sudo
   - super use do
@@ -938,7 +946,7 @@ func_name () {
 
 - Audit
   - who = who are logged in
-    - -b boot
+    - -b bootiburst
     - -r runlevel
     - -H headers
   - w
@@ -975,15 +983,17 @@ func_name () {
     - -u = udp
     - -a = all
     - --numeric-port
-  - lsof = listen open files
+  - lsof = listen open files = process accinting the dir
     - -i = internet
     - -i4TCP, i6UDP
     - -s = select
     - -sTCP=LISTNEN
+    - +D recursively + list all files accessed
     - tcp:22
-  - fuser = pricess using files/sockets
+  - fuser = pricess using files/sockets = less information
     - -v PORT/TCP
     - -n: file/udp/-k kill port/TCP
+    - -n tcp port
   - ss = check sockets
     - -u = udp
     - -t = tcl
@@ -1020,6 +1030,7 @@ func_name () {
     - -c file.txt symmetric
     - -d  (grep secret from paths)
     - .gnupg/ = all keys
+    - -a --armor ASCII ouztput
     - --gen-key
     - --list-key
     - --export -a "ID" > file. ==> create public key
@@ -1027,11 +1038,12 @@ func_name () {
     - --recipeint "KeyId" --out Secretfile --encrypt file.txt ==> encrypt with other people pubKey
     - --out File.txt --decrypt file. ==> decrypt with our privKey
     - Signing
-      - --output "Signed_file" --sign EncryptedFile = Signing
+      - --output "Signed_file" --sign SigneddFile = Signing
       - gpg --out EncryptedFile --verify SignedFile = checking signature
     - Revoke
       - gpg --out KeyRevokeCertificate.asc --gen-revoke "UID" = revoke
       - gpg --import KeyRevokeCertificate.asc = import certification revocation into keyring + share certificate
+  - Key-ID = last 8 digits
 
 - Encrypt connection
   - same username on client-server ssh IP
@@ -1050,3 +1062,165 @@ func_name () {
     - known_hostos
       - client user remote open ssh keys: ~/.ssh/known_hosts
       - system wide: /etc/ssh/ssh_known_hosts
+
+- OpenSSH Keys
+  - /etc/ssh/
+    - ssh_host_type_key
+  - known_hosts = public key of hosts
+  - ssh-keygen
+    - -t TYPE
+    - -f /etc/ssh/ssh_host_dsa_key
+
+- Authentication openSSH
+  - ssh-keygen
+    - -t type
+    - -f /path/to/file
+      - $HOME
+      - id_type.pub | id_type
+  - ssh-copy-id
+    - copies pub key to ssh server and add it to authorized_keys
+  - key for user
+  - For agent ==> key with password
+  - -i identify which key
+  - ssh-agent /bin/bash = agent running
+    - ssh-add privateKey
+
+- Tunneling | Port forwarding
+  - Local
+    - ssh -L local:IP.remoteport -Nf user@remote
+  - Remote
+    - ssh -R localport:ip:remote -Nf user@remote
+  - X11 = the app runs on remote, but display on client
+    - ssh -X user@remote
+    - ForwardX11 yes
+      - forward X11 through tunnel
+
+## Linux GUI 106.1, 106.
+- XDMCP = protocol for desktop env graphical login window
+- Display server
+  - Windows Manager
+    - Desktop Environment
+      - echo $DESKTOP_SESSION
+- Graphical Desktop
+  - connection between GUI and OS
+  - Software
+    - X11 (old, X, X Windows System, X.Org, X.org-X11, X.ORg Server)
+    - Wayland (new) protocol
+      - $WAYLAND_DISPLAY
+  - loginctl
+    - show-session SESSION_# -p type Audit,Type...
+    - Window Manager
+      - controls look and localtion of graphical windows
+        - Marco: MATE
+        - Kwin: KDE* (plasma)
+        - Mutter: GNONE*
+        - Muffim: Cinnamon
+        - Xfwm: XFCE (minimalist)
+  - Componentns
+    - Display manager
+    - menus
+    - panels
+    - widgets
+    - Launch: search files
+    - Icons
+  - Login Screen = Display Manager Software
+    - GDM Gnome
+    - SDDM KDE Plasma
+    - KDM Older KDE
+    - LightDm Mate,XFCE
+    - XMD Basic
+    - LXDE = minimal rersource - lightweight xqq desk env
+  - systemctl status display-manager
+  - REmote desktop
+    - RDP: remote desktop protocol
+    - Spice: Simple Protol for Independent Computeing Envinroments
+    - VNC: Virtual Network Computing (with ssh)
+
+- Config X11
+  - /etc/X11/xorg.conf = primary configfile
+  - /etc/X11/xorg.conf.d/00-keyboard.conf
+  - Xorg -configure = create config
+    - :1 -configure
+    - ServerFlags: for x11 itself
+    - ServerLayout: Pullt together
+    - Files: reference for drives,fonts,keyboards
+    - Modules: device modules to load
+    - InputDevice|InputClass: config input devices, keyboard|mouse
+    - Monitor: monitor
+    - Screen: monitor and video card items, resolution
+    - Device: video card itens
+    - Modes: video
+```
+Section "InputDevice"
+  ID
+  Driver
+  Option Protocol
+  Option
+EndSection
+```
+  - service DisplayManager restart
+  - systemctl restart display-manager
+
+- Wayland
+  - new display protocol
+  - client window with own code
+  - WAYLAND_DISPLAY
+
+- Troubleshooting X11
+  - xauth = server access control for x
+    - allow remote system to send graphical to client
+    - not secure
+    - cookie: ~/.Xauthority = not encrypted
+    - connect to ssh -X target
+    - $DISPLAY = where direct X-GUI traffic
+      - SystemName:number of displays.Screen Number
+      - export DISPLAY=Target:0.0
+  - ~/.xsession-errors = display manager erros (not login)
+  - xwinifo = current window info
+  - xdpyinfo = displax X11 server data
+  - xauth list = authorization
+  - xhost +IP = add to ACL
+
+## Accessibility 106.3
+- Config
+  - Theme: layout, size, colors
+  - GNOME shell
+    - gnome-tweak-tool
+    - gnome-shell-extensions
+  - Steps
+    - close all GUI apps + logout
+    - log into gui
+    - gnome tewak app
+      - extensions
+      - enable user theme
+    - close gnome tweak
+    - run gnome tweak app
+      - appearance
+      - select new theme
+  - Appearance
+    - High contrast
+    - text size
+    - cursos size
+    - sound keys
+    - magnifier = zoom
+  - Complex
+    - voice recognition
+    - screen reader (orca)
+    - braille display (brtty)
+  
+- Tactic Accessibility
+  - On-screen keaboard
+  - Sticky Keys= keys registered
+  - Toogle keys = sound with keys
+  - Repeat keys = rate and delay
+  - Slow keys = requires longer press
+  - Bounce keys = ignores multple press
+- Mouse
+  - Click assist: cnage mouse settings
+  - mouse keys: keybooard to simulate mouse
+  - double click delay = increases requred time between click
+  - gesture: mouse to start app
+
+
+1.
+2
