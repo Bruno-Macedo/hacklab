@@ -8,7 +8,7 @@
   - exec perm: chmod u+x script.sh + ./script.sh
   - diff loct: /path/to/script.sh
   - set $PATH: script on $PATH
-  - sourcing:  source script.sh | . script.sh = same shell
+  - sourcing:  source script.sh | . script.sh | exec ./script.sh = same shell
   - Exec cmd:ex  exec ./script
 - Build commands
   - $()
@@ -117,8 +117,10 @@ done
   - ~/.bash_profile
   - ~/.bash_login
   - ~/.profile
-  - ~/.bashrc
   - ~/.bash_logout
+  - Interactive Non-Login Shell
+    - /etc/bash.bashrc
+    - ~/.bashrc
 - Priority: only one is runed
   - local > global
   - ~/.bash_profile, ~/.bash_login, ~/.profile
@@ -126,7 +128,7 @@ done
   - set env variables + alias + change appearance
 
 - Alias: modifed command
-  - alias -p
+  - alias -p && alias = show all alias
   - unalias CMD
   - Where set
   - alias name="script to be run"
@@ -143,10 +145,10 @@ func_name () {
 ```
 
 - Env/user variables
-  - set,env,printev = only env variable
+  - env,printev = only env variable
   - unset variable | better change than unset
   - export PATH=$PATH:/path/to/my/target = make all available
-  - set
+  - set = alll env (user system)
     - echo $- = how {} works
     - set +a = turn off flag
     - set -a = turn on flag
@@ -219,7 +221,7 @@ func_name () {
 
 ## Jobs 107.2
 - at
-  - now (when), HH:MM, noon,midnight,teatime(4:00 PM)
+  - now (when), HH:MM,now,noon,midnight,teatime(4:00 PM)
     - June 24, MMDDYY, offset: today + 3 hours/day/months,  
   - ctr+d
   - location: sent mail message
