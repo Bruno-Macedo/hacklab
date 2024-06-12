@@ -62,6 +62,7 @@ echo "$TARGET      $DOMAIN" | sudo tee -a /etc/hosts
 [] Mount points
 [] SMB
 [] DNS
+    [] Subdomain?
 [] ftp
 [] run as admin
 [] cron jobs
