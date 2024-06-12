@@ -51,3 +51,5 @@ Python Debugger
 
 
 box='function boxfolder(){ cp -pr /home/kaliwork/workspace/hacklab/room_template /home/kaliwork/workspace/hacklab/$1; mv /home/kaliwork/workspace/hacklab/$1/room_Template.md /home/kaliwork/workspace/hacklab/$1/$1.md; }; boxfolder'
+
+box='function boxfolder(){ cp -pr /home/kalilearn/workspace/hacklab/room_template /home/kalilearn/workspace/hacklab/$1; mv /home/kalilearn/workspace/hacklab/$1/room_Template.md /home/kalilearn/workspace/hacklab/$1/$1.md; }; boxfolder'

