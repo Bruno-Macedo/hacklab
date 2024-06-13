@@ -422,10 +422,10 @@ find . -exec /bin/sh \; -quit
 vim -c ':!/bin/sh'
 ```
    
--  export TERM=xterm = commands like clear
--  ctr + z = back to our shel
--  stty raw -echo; fg = back to reverse shell
--  stty size
+- export TERM=xterm = commands like clear
+- ctr + z = back to our shel
+- stty raw -echo; fg = back to reverse shell
+- stty size
   - stty raw -echo; fg
   - stty rows ## columns ##
 

