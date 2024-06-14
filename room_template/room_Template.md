@@ -26,17 +26,14 @@ tmux setenv attack $attack && export attack=$attack
 alias rustscan='docker run -it --rm --name rustscan rustscan/rustscan:2.1.1'
 rustscan 192.168.1.0/24 -t 500 -b 1500 -- -A
 
-TCPports=$(sudo nmap -Pn -p- -T4 $TARGET -oA nmap/TCPports | egrep "^[0-9]{2,5}" | sed -E "s#/.*##g" | tr "\n" "," | sed 's/.$//') | sudo chown -R $USER:$(id -gn) nmap && echo $TCPports
-
+TCPports=$(nmap -Pn -p- -T4 $TARGET -oN nmap/TCPports.txt | egrep "^[0-9]{2,5}" | sed -E "s#/.*##g" | tr "\n" "," | sed 's/.$//') && echo $TCPports
 
 
 # Faster
-TCPports=$(sudo nmap -Pn -p- -T4 $TARGET -oA nmap/TCPports -v --disable-arp-ping | egrep "^[0-9]{2,5}" | sed -E "s#/.*##g" | tr "\n" "," | sed 's/.$//') | sudo chown -R $USER:$(id -gn) && echo $TCPports
+TCPports=$(nmap -Pn -p- -T4 $TARGET -oN nmap/TCPports.txt -v --disable-arp-ping | egrep "^[0-9]{2,5}" | sed -E "s#/.*##g" | tr "\n" "," | sed 's/.$//') && echo $TCPports
 
 
-
-
-TCPports=$(rustscan -a $TARGET -r 1-65535 > nmap/TCPports.txt | egrep  "^Open.*$" | sed -e 's/\x1b\[[0-9;]*m//g' | sed -e 's/^Open.*://g;s/\r$//g;s/\[m//g' | tr "\n" "," | sed 's/,$//' ) && echo $TCPports
+TCPports=$(rustscan -a $TARGET -r 1-65535 > nmap/RustPorts.txt | egrep  "^Open.*$" | sed -e 's/\x1b\[[0-9;]*m//g' | sed -e 's/^Open.*://g;s/\r$//g;s/\[m//g' | tr "\n" "," | sed 's/,$//' ) && echo $TCPports
 
 UDPports=$(sudo nmap --min-rate 5000 -T5 -Pn -sU $TARGET -oA nmap/UDPports.txt -v --disable-arp-ping| egrep "^[0-9]{2,5}" | sed -E "s#/.*##g" | tr "\n" "," | sed 's/.$//') | sudo chown -R $USER:$(id -gn)&& echo $UDPports
 
