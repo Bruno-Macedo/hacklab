@@ -1,6 +1,6 @@
 #### Wifi kali ####
 iwlist wlan0 scan  = find SSID
-nmcli d wifi connect "Ireni Macedo" = connect 
+nmcli device wifi connect "Ireni Macedo" = connect 
 
 #### bloodhound ####
 neo4j:admin
@@ -25,12 +25,7 @@ echo '<vps-ssh.pub>' > ~/.ssh/authorized_keys
 chmod 600 ~/.ssh/authorized_keys
 ssh cry0l1t3@<vps-ip-address> -i vps-ssh
 
-## Aliases
-# Create file ~/.bash_aliases 
-alias up="sudo apt update && sudo apt upgrade -y && sudo apt autoremove -y"
-##alias start="expressvpn disconnect ; code workspace ; vpn -ad ; tmux new -s htb"
-##alias start="code workspace ; vpn -ad ; tmux new -s htb"
-alias rustscan="docker run -it --rm --name rustscan rustscan/rustscan:2.1.1"
+
 
 
 # Add lines to .bashrc
@@ -39,17 +34,30 @@ alias rustscan="docker run -it --rm --name rustscan rustscan/rustscan:2.1.1"
     fi
     source ~/.bash_aliases
 
-# Vs code extensions
-Dev Containers
-docker
-Markdown All in One
-Markdown Preview Mermaid
-Markdown Tables
-Pylance
-Python
-Python Debugger
+
 
 
 box='function boxfolder(){ cp -pr /home/kaliwork/workspace/hacklab/room_template /home/kaliwork/workspace/hacklab/$1; mv /home/kaliwork/workspace/hacklab/$1/room_Template.md /home/kaliwork/workspace/hacklab/$1/$1.md; }; boxfolder'
 
 box='function boxfolder(){ cp -pr /home/kalilearn/workspace/hacklab/room_template /home/kalilearn/workspace/hacklab/$1; mv /home/kalilearn/workspace/hacklab/$1/room_Template.md /home/kalilearn/workspace/hacklab/$1/$1.md; }; boxfolder'
+
+
+## Aliases
+# Create file ~/.bash_aliases 
+
+##alias start="expressvpn disconnect ; code workspace ; vpn -ad ; tmux new -s htb"
+##alias start="code workspace ; vpn -ad ; tmux new -s htb"
+alias rustscan="docker run -it --rm --name rustscan rustscan/rustscan:2.1.1"
+box='function boxfolder(){ cp -pr /home/kalilearn/workspace/hacklab/room_template /home/kalilearn/workspace/hacklab/$1; mv /home/kalilearn/workspace/hacklab/$1/room_Template.md /home/kalilearn/workspace/hacklab/$1/$1.md; }; boxfolder'
+alias up="sudo apt update && sudo apt upgrade -y && sudo apt dist-upgrade && sudo apt autoremove -y"
+alias start="code workspace ; vpn -ad ; tmux new -s htb ; cd workspace"
+
+
+BOXTEMPLATE="alias box='function boxfolder(){ cp -r /home/$USER/workspace/hacklab/room_template /home/$USER/workspace/hacklab/\$1; mv /home/$USER/workspace/hacklab/\$1/room_Template.md /home/$USER/workspace/hacklab/\$1/\$1.md; }; boxfolder'" 
+CRACK='alias cme="crackmapexec"'
+
+box='function boxfolder(){ cp -pr /home/kalilearn/workspace/hacklab/room_template /home/kalilearn/workspace/hacklab/$1; mv /home/kalilearn/workspace/hacklab/$1/room_Template.md /home/kalilearn/workspace/hacklab/$1/$1.md; }; boxfolder'
+
+alias commit='function commit(){git add $(pwd) ; git commit \"$1\" ; git push ; }; commit'
+
+alias box='function boxfolder(){  /home/$USER/workspace/hacklab/\$1/\$1.md; }; boxfolder'

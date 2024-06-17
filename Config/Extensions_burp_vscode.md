@@ -1,4 +1,4 @@
-#### Burp extesions ####
+## Burp extesions
 Headers Analyzer
 Retire.js
 Error Message Checks
@@ -18,3 +18,14 @@ XSS Validator
 
 Authz
 AuthMatrix
+
+
+## Vscode
+Dev Containers
+docker
+Markdown All in One
+Markdown Preview Mermaid
+Markdown Tables
+Pylance
+Python
+Python Debugger
