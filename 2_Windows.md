@@ -1,6 +1,10 @@
 
-- [Sysinternals](#sysinternals)
-  - [Tools](#tools)
+- [Basics](#basics)
+  - [Powershell](#powershell)
+    - [Enum with Powershell](#enum-with-powershell)
+  - [WMI](#wmi)
+  - [Sysinternals Tools](#sysinternals-tools)
+    - [Tools](#tools)
   - [Abusing Internals](#abusing-internals)
   - [Commands](#commands)
   - [Connecting with nc](#connecting-with-nc)
@@ -13,8 +17,6 @@
     - [Schedule Tasks](#schedule-tasks)
     - [Logon as Trigger](#logon-as-trigger)
     - [Login Screen](#login-screen)
-  - [Powershell](#powershell)
-    - [Enumeration](#enumeration)
 - [Bypass User Account Control (UAC)](#bypass-user-account-control-uac)
   - [GUI bypass](#gui-bypass)
   - [Auto Elevating](#auto-elevating)
@@ -35,7 +37,145 @@
     - [Incognito](#incognito)
     - [Potato family](#potato-family)
 
-## Sysinternals
+## Basics
+- Version
+  - Get-WmiObject
+    - -Class win32_OperatingSystem | Win32_Process | Win32_Service | Win32_Bios 
+  - Get-ComputerInfo
+
+### Powershell
+- .NET framkework: software plattform für windows
+- Commands = cmdlets
+  - Verb-Noum
+  - Get
+  - Start
+  - Stop
+  - Read
+  - Write
+  - New
+  - Out
+- Get-Help [cmdlet] = display info
+  - help
+  - Update-Help
+  - Help cmdlet-name -Online
+- Get-Command
+  - Verb-*
+  - *-Npin
+  - New.*
+- Get-Alias
+  - New-Alias -Name "Name of alias" Command
+- Import-Module .\ScriptName.ps1 = all functions available
+  - Get-Module | select Name,ExpotedCommands | fl
+
+- Pipelines |
+  - objects are passed
+  - Verb-Noum | get-Member => Info about cmdled, object (properties and methods)
+    - -MemberType Method/Property/ScriptProperty
+  
+- Properties
+  - COMMAND | Get-Member -MemberType Methody,Property,Other
+
+- Manipulate
+  - Select-Object -Property
+  - Where-Object => grep
+    - -Property PropertyName -operator Value
+    -  {$_.PropertyName -operator Value}
+       -  -Property Status -eq Running
+    -  -operator
+       -  -Contains
+       -  -EQ
+       -  -GT
+- Sort-Object
+- Find FIle
+  - Get-ChildItem -Recurse -Path "C:\" | Where-Object {$_.Name -match 'interesting*'}
+  - Get-ChildItem \\IP-SMB\share
+    - -Recurse
+    - -Force
+    - -Hidden
+    - -Path
+    - -ErrorAction
+    - -Include "\*.EXT\*"
+  - Select-String 
+    -  -Pattern API_KEY
+  
+- Measure-Object = count
+- Oldest -MaxEvent 1
+- Base64
+  - certutil.exe -decode INPUT_FILE OUTPUT_FILE
+  - Encode: 
+    - $Input = Textblablabla
+    - $Bytes = [System.Text.Encoding]::Unicode.GetBytes($Text)
+    - $EncodedText =[Convert]::ToBase64String($Bytes)
+    - $EncodedText
+  - Decode
+    - $ENCODED = Get-Content -Path "C:\Users\Administrator\Desktop\b64.txt"  
+  -  $DecodedText = [System.Text.Encoding]::Unicode.GetString([System.Convert]::FromBase64String($EncodedText))
+  
+#### Enum with Powershell
+- COMMAND | get-member
+- Get-LocalUser = show users
+  - Where-Object {$_.SID -match 'S-1-5-21-1394777289-3961777894-1791813945-501'}
+  - Get-LocalUser | Select-Object -Property Name,Enabled,SID
+  - Get-LocalUser | Where-Object {$_.PasswordRequired -match 'False' } | measure-object
+  
+- Get-Localgroup
+- Network
+  - get-NetIPAddress
+  - Get-NetTCPConnection 
+  - Test-NetConnection
+  - Invoke-WebRequest
+    - curl in powershell
+    - Remove-Item alias:curl = to use curl and not invoke
+- Patches
+  - Get-HotFix
+- Scheduled-Task
+  - Get-ScheduledTask
+- Owner
+  - Get-Acl
+  
+### WMI
+- WMI = Windows Management Instrumentation
+  - subsystem of powershell
+  - status information
+  - Config security setting on remote machine, setting and chaging user and group permission
+  - modify system properties
+  - Code exec
+  - schedule
+  - logging
+- 
+- Commands
+  - wmic qfe get Caption, Description = updates
+  - wmic product get name,version,vendor
+  - wmic ALIAS list brief
+    - OS|BIOS|CPU|NIC|USERACCOUNT
+  - wmic service where "name like 'name'" get Name,Version,Pathname
+  - **wmic** find users || dir /p datei.txt (find file) = find file
+  - wmic /namespace:\\root\securitycenter2 path antivirusproduct (workstation) = find AV
+  - wmic service get name,displayname,pathname,startmode | findstr /v /i "C:\Windows"
+    - find services not in folder c:\windows
+    - find services without quotation marks
+    - account for the service: sc qc SERVICE_NAME ==>local system
+
+- Services
+  - wmic product get name,version
+    - wmic service where "name like 'name'" get Name,Version,Pathname
+  - get-ChildItem -Hidden -Path C:\Users\NANE
+    - -Force
+    - -Recurse
+    - -Path
+    - -Include *.EXtension*
+    - -File
+    - -ErrocAction
+
+- Powershell
+  - [Get-WmiObject](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.management/get-wmiobject?view=powershell-5.1)
+    - -Class Win32_OperatingSystem | select SystemDirectory,BuildNumber,SerialNumber,Version | ft
+  - [Invoke-WmiMethod](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.management/invoke-wmimethod?view=powershell-5.1)
+
+- MMC
+  - Microsoft Management Console
+C
+### Sysinternals Tools
 - [LOLBAS](https://lolbas-project.github.io/#)
 - [Where Download](https://learn.microsoft.com/en-us/sysinternals/downloads/)
 - [Where Download 2](https://live.sysinternals.com/)
@@ -46,8 +186,8 @@
     - Install-WindowsFeature WebDAV-Redirector -Restart
     - Get-WindowsFeature WebDAV-Redirector | Format-Table -Autosize
   - Run
-    - net use * \\live.sysinternals.com\tools\procmon.exe
-  - \\live.sysinternals.com\tools\procmon.exe
+    - net use * \\live.sysinternals.com\tools\procmon.exe --accepteula
+  - \\live.sysinternals.com\tools\procmon.exe --accepteula
 
 ```
 # Troubeshoot
@@ -59,7 +199,7 @@
   - UPnP Device Host
 ```
 
-### Tools
+#### Tools
 - Process analyser
   - Procmon, Process Explorer, Process Hacker 2
 - DLL
@@ -173,18 +313,10 @@
 ### Commands
 - powershell -exec bypass
 - powershell -ep bypass
+  - Set-ExecutionPolicy Bypass -Scope Process
+  - Get-ExecutionPolicy -List
 - systeminof
   - part of Active Directory (workgroup / domain)
-- wmic = Windows Management Instrumentation Command-line
-  - wmic qfe get Caption, Description = updates
-  - wmic product get name,version,vendor
-  - wmic service where "name like 'name'" get Name,Version,Pathname
-  - **wmic** find users || dir /p datei.txt (find file) = find file
-  - wmic /namespace:\\root\securitycenter2 path antivirusproduct (workstation) = find AV
-  - wmic service get name,displayname,pathname,startmode | findstr /v /i "C:\Windows"
-    - find services not in folder c:\windows
-    - find services without quotation marks
-    - account for the service: sc qc SERVICE_NAME ==>local syste?
 
 - Find 
   - get-Process -Name
@@ -256,15 +388,6 @@
   - findstr /si '<ProcessCreate onmatch="exclude">' C:\tools\*
 
 - Services
-  - wmic product get name,version
-    - wmic service where "name like 'name'" get Name,Version,Pathname
-  - get-ChildItem -Hidden -Path C:\Users\NANE
-    - -Force
-    - -Recurse
-    - -Path
-    - -Include *.EXtension*
-    - -File
-    - -ErrocAction
   - get-Process
     - -Name
   - netstat -noa
@@ -421,88 +544,6 @@ python3 secretsdump.py -sam /home/kali/Downloads/sam.save -security /home/kali/D
   - Ease access 
   - c:\Windows\System32\sethc.exe
 
-### Powershell
-- .NET framkework: software plattform für windows
-- Commands = cmdlets
-  - Verb-Noum
-  - Get
-  - Start
-  - Stop
-  - Read
-  - Write
-  - New
-  - Out
-- Get-Help [cmdlet] = display info
-- Get-Command
-  - Verb-*
-  - *-Npin
-  - New.*
-  
-- Pipelines |
-  - objects are passed
-  - Verb-Noum | get-Member => Info about cmdled, object (properties and methods)
-    - -MemberType Method/Property/ScriptProperty
-  
-- Properties
-  - COMMAND | Get-Member -MemberType Methody,Property,Other
-
-- Manipulate
-  - Select-Object -Property
-  - Where-Object => grep
-    - -Property PropertyName -operator Value
-    -  {$_.PropertyName -operator Value}
-       -  -Property Status -eq Running
-    -  -operator
-       -  -Contains
-       -  -EQ
-       -  -GT
- - Sort-Object
-- Find FIle
-  - Get-ChildItem -Recurse -Path "C:\" | Where-Object {$_.Name -match 'interesting*'}
-  - Get-ChildItem \\IP-SMB\share
-    - -Recurse
-    - -Force
-    - -Hidden
-    - -Path
-    - -ErrorAction
-    - -Include "\*.EXT\*"
-  - Select-String 
-    -  -Pattern API_KEY
-  
-- Measure-Object = count
-- Oldest -MaxEvent 1
-- Base64
-  - certutil.exe -decode INPUT_FILE OUTPUT_FILE
-  - Encode: 
-    - $Input = Textblablabla
-    - $Bytes = [System.Text.Encoding]::Unicode.GetBytes($Text)
-    - $EncodedText =[Convert]::ToBase64String($Bytes)
-    - $EncodedText
-  - Decode
-    - $ENCODED = Get-Content -Path "C:\Users\Administrator\Desktop\b64.txt"  
-  -  $DecodedText = [System.Text.Encoding]::Unicode.GetString([System.Convert]::FromBase64String($EncodedText))
-  
-#### Enumeration
-- COMMAND | get-member
-- Get-LocalUser = show users
-  - Where-Object {$_.SID -match 'S-1-5-21-1394777289-3961777894-1791813945-501'}
-  - Get-LocalUser | Select-Object -Property Name,Enabled,SID
-  - Get-LocalUser | Where-Object {$_.PasswordRequired -match 'False' } | measure-object
-  
-- Get-Localgroup
-- Network
-  - get-NetIPAddress
-  - Get-NetTCPConnection 
-  - Test-NetConnection
-  - Invoke-WebRequest
-    - curl in powershell
-    - Remove-Item alias:curl = to use curl and not invoke
-- Patches
-  - Get-HotFix
-- Scheduled-Task
-  - Get-ScheduledTask
-- Owner
-  - Get-Acl
 
 ## Bypass User Account Control (UAC)
 - New Process are runned as non-privileged-account
@@ -714,8 +755,6 @@ $snap.LogPipelineExecutionDetails = $false
 - **File Explorer**
   - explorer.exe /root,"C:\Windows\System32\calc.exe"
 - 
-- **WMIC**
-  - wmic.exe process call create calc
   
 - **Rundll32**
   -  rundll32.exe javascript:"\..\mshtml.dll,RunHTMLApplication ";eval("w=new ActiveXObject(\"WScript.Shell\");w.run(\"calc\");window.close()");

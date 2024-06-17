@@ -19,6 +19,7 @@
   - [Firewalls](#firewalls)
 - [Network Security Evasion](#network-security-evasion)
   - [IDS x IPS](#ids-x-ips)
+- [Windows](#windows)
 - [Living Off the Land](#living-off-the-land)
   - [Detection and Evading file transfer](#detection-and-evading-file-transfer)
 - [ACTIVE DIRECTORY DOMAIN SERVICE (AD DS)](#active-directory-domain-service-ad-ds)
@@ -375,6 +376,86 @@ intext:???? inurl:blob.core.windows.net
   - application layer
   - content awareness
   - agile engine
+
+## Windows
+- Folder structures
+  - AppData
+    - Roaming: machine-independent data
+    - Local: specific to the computer, not sync
+    - LocalLow: lower integritity
+- Commands
+  - dir /a = all
+  - tree /f
+  
+- FS
+  - FAT32
+    - files less 4 GB
+    - no date protection or compression
+    - compatibility
+  - NTFS
+    - default
+    - restore
+    - security
+    - journaling
+    - not mobile
+    - not for tv,camera
+  
+- Permissions
+  - [icalcs = Integrity Control Access Control List](https://ss64.com/nt/icacls.html)
+    - F = full
+    - D = delete
+    - N = no Access
+    - M = modify
+    - RX = read and execute
+    - R = read
+    - W = write only
+  - Resource level
+    - (CI): container inherit
+    - (OI): object inherit
+    - (IO): inherit only
+    - (NP): do not propagate inherit
+    - (I): permission inherited from parent container
+  - icalcs
+    - /gran username:f
+    - /remove username
+
+- Logs
+  - Event Viewer
+  - Computer Management
+
+- [Services](https://en.wikipedia.org/wiki/List_of_Microsoft_Windows_components#Services)
+  - sc.exe
+  - Get-Service
+    - | ? {$_.Status -eq "Running"} | select -First 10 | table
+    - lsass.exe = Local Security Authority Subsystem Service = login/password
+  - sc
+    - qc SERVICENAME = query config
+    - //IP|hostaneme SERVICENAME
+    - stop | start | query NAME
+    - config NAME binPath=C:\path\to\exe.exe  
+    - sdshow =security descriptor = Security description definition language (SDDL)
+      - DACL = control access
+      - SACL = account for + log
+
+```
+D: (A;;CCLCSWRPLORC;;;AU)
+D: - the proceeding characters are DACL permissions
+AU: - defines the security principal Authenticated Users
+A;; - access is allowed
+CC - SERVICE_QUERY_CONFIG is the full name, and it is a query to the service control manager (SCM) for the service configuration
+LC - SERVICE_QUERY_STATUS is the full name, and it is a query to the service control manager (SCM) for the current status of the service
+SW - SERVICE_ENUMERATE_DEPENDENTS is the full name, and it will enumerate a list of dependent services
+RP - SERVICE_START is the full name, and it will start the service
+LO - SERVICE_INTERROGATE is the full name, and it will query the service for its current status
+RC - READ_CONTROL is the full name, and it will query the security descriptor of the service
+```
+  - Get-Acl
+    - -PATH HKLM:\path\to\service
+
+- Sessions
+  - Local System = root
+  - Local Service = similar to local user
+  - Network Service = similar to standard domain user
 
 ## Living Off the Land
 - Using and abusing of what exists
