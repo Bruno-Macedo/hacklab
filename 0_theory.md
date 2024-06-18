@@ -457,6 +457,30 @@ RC - READ_CONTROL is the full name, and it will query the security descriptor of
   - Local Service = similar to local user
   - Network Service = similar to standard domain user
 
+- Security
+  - SID = security identifier
+  - SAM = Security Accounts Manager
+    - grants rights
+  - ACE = Access Control Entries
+    - manages rights
+  - [UAC = User Access Control](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/user-account-control/how-it-works)
+    - prevent malware from running/manipulating processes
+  - [Registry](https://learn.microsoft.com/en-us/windows/win32/sysinfo/registry-value-types)
+    - HKLM = Root Key Local Machine
+    - HKCU = User specific
+    - low-level settings for windows and apps
+    - Run and RunOnce regstriy keys
+      - reg query
+```
+HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Run
+HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run
+HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\RunOnce
+HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\RunOnce
+```
+
+- Denfender
+  - Get-MpComputerStatus
+
 ## Living Off the Land
 - Using and abusing of what exists
 - How

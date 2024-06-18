@@ -21,7 +21,7 @@
   - [PowerView](#powerview)
   - [SQL Injection Fundamentals](#sql-injection-fundamentals)
   - [SQLMAP Essentials](#sqlmap-essentials)
-  - [??](#)
+  - [Windows Fundamentals](#windows-fundamentals)
 
 
 TODOS:
@@ -991,17 +991,17 @@ end
 
 *Result:*  Flag
 
-## ??
+## Windows Fundamentals
 
-*Command:* 
+*Command:* Create share on the ui + Click on authorization
   
-*Result:* 
+*Result:* Name of the group of has read access
 
 ---
 
-*Command:* 
+*Command:* Right click on the new folder + Properties
   
-*Result:* 
+*Result:* Name of the tab
 
 ---
 
