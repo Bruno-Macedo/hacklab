@@ -1,5 +1,5 @@
 
-- [Basics](#basics)
+- [Enumeration](#enumeration)
   - [Powershell](#powershell)
     - [Enum with Powershell](#enum-with-powershell)
   - [WMI](#wmi)
@@ -37,10 +37,11 @@
     - [Incognito](#incognito)
     - [Potato family](#potato-family)
 
-## Basics
-- Version
+## Enumeration
+
+- Users, Version
   - Get-WmiObject
-    - -Class win32_OperatingSystem | Win32_Process | Win32_Service | Win32_Bios 
+    - -Class win32_OperatingSystem | Win32_Process | Win32_Service | Win32_Bios | win32_useraccount
   - Get-ComputerInfo
 
 ### Powershell

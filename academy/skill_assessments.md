@@ -1001,25 +1001,25 @@ end
 
 *Command:* Right click on the new folder + Properties
   
-*Result:* Name of the tab
 
 ---
 
-*Command:* 
+*Command:* Get-Service | where-object {$_.DisplayName -like "*upd*"}
   
-*Result:* 
+*Result:* name of service
 
 ---
 
-*Command:* 
+*Command:* wmic command
+-  Get-WmiObject win32_useraccount | Select name,sid
   
-*Result:* 
+*Result:* SID of all users
 
 ---
 
-*Command:* 
+*Command:* get-localgroup | select name,sid
   
-*Result:* 
+*Result:* SID of all groups
 
 ---
 
