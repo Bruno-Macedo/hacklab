@@ -45,19 +45,9 @@ box='function boxfolder(){ cp -pr /home/kalilearn/workspace/hacklab/room_templat
 ## Aliases
 # Create file ~/.bash_aliases 
 
-##alias start="expressvpn disconnect ; code workspace ; vpn -ad ; tmux new -s htb"
-##alias start="code workspace ; vpn -ad ; tmux new -s htb"
-alias rustscan="docker run -it --rm --name rustscan rustscan/rustscan:2.1.1"
-box='function boxfolder(){ cp -pr /home/kalilearn/workspace/hacklab/room_template /home/kalilearn/workspace/hacklab/$1; mv /home/kalilearn/workspace/hacklab/$1/room_Template.md /home/kalilearn/workspace/hacklab/$1/$1.md; }; boxfolder'
 alias up="sudo apt update && sudo apt upgrade -y && sudo apt dist-upgrade && sudo apt autoremove -y"
-alias start="code workspace ; vpn -ad ; tmux new -s htb ; cd workspace"
-
-
-BOXTEMPLATE="alias box='function boxfolder(){ cp -r /home/$USER/workspace/hacklab/room_template /home/$USER/workspace/hacklab/\$1; mv /home/$USER/workspace/hacklab/\$1/room_Template.md /home/$USER/workspace/hacklab/\$1/\$1.md; }; boxfolder'" 
-CRACK='alias cme="crackmapexec"'
-
-box='function boxfolder(){ cp -pr /home/kalilearn/workspace/hacklab/room_template /home/kalilearn/workspace/hacklab/$1; mv /home/kalilearn/workspace/hacklab/$1/room_Template.md /home/kalilearn/workspace/hacklab/$1/$1.md; }; boxfolder'
-
-alias commit='function commit(){git add $(pwd) ; git commit \"$1\" ; git push ; }; commit'
-
-alias box='function boxfolder(){  /home/$USER/workspace/hacklab/\$1/\$1.md; }; boxfolder'
+alias start='code workspace ; vpn -ad ; tmux new -s htb ; cd workspace'
+alias rustscan='docker run -it --rm --name rustscan rustscan/rustscan:2.1.1'
+alias box='function boxfolder(){ cp -r /home/$USER/workspace/hacklab/room_template /home/$USER/workspace/hacklab/\$1; mv /home/$USER/workspace/hacklab/\$1/room_Template.md /home/$USER/workspace/hacklab/\$1/\$1.md;  nxcdb -cw \$1; nxcdb -sw \$1;}; boxfolder'
+alias cme="crackmapexec"
+alias nxc="netexec"

