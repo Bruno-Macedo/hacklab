@@ -314,9 +314,10 @@ intext:???? inurl:blob.core.windows.net
 3. Convert to hex: xxd -i thm.text
 ```
 
-- Staged x Stageless payload
+- [Staged x Stageless payload](https://www.rapid7.com/blog/post/2015/03/25/stageless-meterpreter-payloads/)
   - Stageless: complete shellcode
   - staged: partial shellcode that "contacts" the complete one. First shellcode connects to attacker, Second donwload the final shellcode (less noisi, direct in memory)
+
 
 - Packers
   - transform structure of program
