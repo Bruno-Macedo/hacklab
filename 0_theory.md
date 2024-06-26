@@ -640,6 +640,7 @@ INLANEFREIGHT.LOCAL/
   - Security Groups (SID + GUID)
     - groups and machines
     - Domain Admin, Server|Backup|Account Operators, Domain Users|COmputer|Controllers
+      - privileged access
     - grant permission over resources
   - Organizational Units (OU)
     - container to store similar objects
@@ -666,12 +667,14 @@ INLANEFREIGHT.LOCAL/
 - Kerberos - 88
   - Authentication protocol
   - DC has Key Distribution Center (KDC) = issue tickets
-    - User requests ticket from KDC ==> TGT
+    - User requests ticket from KDC ==> TGT (valid user info)
     - With TGT ==> Domain Controller ==> TGS (with NTLM hash)
     - TGS (encrypted with NTLM hahs of the service account)==> access to services
+    - KDC key = encrypted key for validate TGT
   - Symmetrict/asymmetric - mutual authentication DomainControle/KDC
 - DNS
   - Request name.local ==> Receives IP
+  - [NetBIOS, LLMNR](https://www.a2secure.com/blog-en/how-to-use-responder-to-capture-netntlm-and-grab-a-shell/)
 - LDAP - 389(636)
   - Lightweight Directory Access Protocol
   - Authentication
