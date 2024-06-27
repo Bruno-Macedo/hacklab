@@ -24,6 +24,11 @@
 - Storage
   - ~/.local/share/hashcat/hashcat.potfile
   - --potfile-path: write own potfile
+
+```
+# Alias
+hashcat --potfile-path $(basename "$PWD").potfile
+```
   
 ## Hashcat
 - Identify hash
@@ -34,6 +39,7 @@
   - [Examples hashes](https://hashcat.net/wiki/doku.php?id=example_hashes)
 -  --username: ignore usernames in the file
 - [Crackstation](https://crackstation.net/)
+
 - **ntdsautid**
 - **dpat** - [Domain Password Audit Tool (DPAT)](https://github.com/clr2of8/DPAT)
   - dtap.py -c CRACKED -o ORIGIN
@@ -50,6 +56,8 @@
   - -w specific worload profile
     - 1,2,3 (intensive)
   - --stdout = display
+  - --outfile="filename.txt"
+  - --force = ignore wartning
   - TOTAL_CHARACTERS = generate list
   
 - **Modes**
@@ -143,8 +151,6 @@ P@55w0rd_1lfr31ght2019
     - [hcxtools](https://github.com/ZerBea/hcxtools):
       - ./hcxpcapngtool 
   - -m 22000
-
-
 
   
 ## John

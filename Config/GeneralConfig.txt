@@ -51,3 +51,10 @@ alias rustscan='docker run -it --rm --name rustscan rustscan/rustscan:2.1.1'
 alias box='function boxfolder(){ cp -r /home/$USER/workspace/hacklab/room_template /home/$USER/workspace/hacklab/\$1; mv /home/$USER/workspace/hacklab/\$1/room_Template.md /home/$USER/workspace/hacklab/\$1/\$1.md;  nxcdb -cw \$1; nxcdb -sw \$1;}; boxfolder'
 alias cme="crackmapexec"
 alias nxc="netexec"
+alias hc='hashcat --potfile-path $(basename "$PWD").potfile'
+
+TARGET=IP
+tmux setenv TARGET $TARGET && export TARGET=$TARGET
+
+alias tmuxt='function tmuxtarget(){ TARGET=$1; tmux setenv TARGET $TARGET && export TARGET=$TARGET
+;}; tmuxtarget' 

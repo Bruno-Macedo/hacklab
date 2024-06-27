@@ -7,13 +7,17 @@ BASHALIAS="/home/$USER/.bash_aliases"
 UPDATE='alias up="sudo apt update && sudo apt upgrade -y && sudo apt dist-upgrade && sudo apt autoremove -y"'
 START='alias start="code workspace ; vpn -ad ; tmux new -s htb ; cd workspace"'
 RUSTSCAN='alias rustscan="docker run -it --rm --name rustscan rustscan/rustscan:2.1.1"' 
-BOXTEMPLATE="alias box='function boxfolder(){ cp -r /home/$USER/workspace/hacklab/room_template /home/$USER/workspace/hacklab/\$1; mv /home/$USER/workspace/hacklab/\$1/room_Template.md /home/$USER/workspace/hacklab/\$1/\$1.md; }; boxfolder'" 
+BOXTEMPLATE="alias box='function boxfolder(){ cp -r /home/$USER/workspace/hacklab/room_template /home/$USER/workspace/hacklab/\$1; mv /home/$USER/workspace/hacklab/\$1/room_Template.md /home/$USER/workspace/hacklab/\$1/\$1.md;  nxcdb -cw \$1; nxcdb -sw \$1;}; boxfolder'" 
 CRACK='alias cme="crackmapexec"'
+NETEXEC='alias nxc="netexec"'
+HC='alias hc="hashcat --potfile-path $(basename "$PWD").potfile"'
+TMUXT='alias tmuxt="function tmuxtarget(){ TARGET=$1; tmux setenv TARGET $TARGET && export TARGET=$TARGET ;}; tmuxtarget"' 
 
-ARRAYALIAS=( "$UPDATE" "$START" "$RUSTSCAN" "$BOXTEMPLATE" "$CRACK") 
+ARRAYALIAS=( "$UPDATE" "$START" "$RUSTSCAN" "$BOXTEMPLATE" "$CRACK" "$HC" "$TMUXT") 
+
 
 # Packages
-PACKGES=( ufw gufw gobuster seclists )
+PACKGES=( ufw gufw gobuster seclists netexec)
 CHROME="/home/$USER/Downloads/chrome.deb"
 SCHROME="https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb"
 CODE="/home/$USER/Downloads/code.deb"

