@@ -56,5 +56,8 @@ alias hc='hashcat --potfile-path $(basename "$PWD").potfile'
 TARGET=IP
 tmux setenv TARGET $TARGET && export TARGET=$TARGET
 
-alias tmuxt='function tmuxtarget(){ TARGET=$1; tmux setenv TARGET $TARGET && export TARGET=$TARGET
-;}; tmuxtarget' 
+alias tmuxt='function tmuxtarget(){ TARGET=$1; tmux setenv TARGET $TARGET && export TARGET=$TARGET ;}; tmuxtarget' 
+
+
+## Config only for work laptop
+alias netjob="nmcli dev disconnect eth1 ; nmcli dev connect wlan0 ; curl 'https://www.hotspot.de/csa/captcha/service.php?jsoncallback=jQuery33109583761977157348_1719554274693&action=captcha&_=1719554274694' > /dev/null 2>&1"

