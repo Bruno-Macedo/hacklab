@@ -235,6 +235,7 @@ xfreerdp localhost:3300 = xfreerdp target:3389
 
 - **Rerverse Port Forwarding**
   - portfwd -R
+
 ```
 portfwd add -R -l LOCAL_Port -p TARGET_PORT -L $ATTACKER
 portfwd add -R -l 8081 -p 1234 -L 10.10.14.18
