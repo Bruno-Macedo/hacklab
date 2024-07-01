@@ -22,6 +22,7 @@
   - [SQL Injection Fundamentals](#sql-injection-fundamentals)
   - [SQLMAP Essentials](#sqlmap-essentials)
   - [Windows Fundamentals](#windows-fundamentals)
+  - [Windows Attacks \& Defense](#windows-attacks--defense)
 
 
 TODOS:
@@ -988,7 +989,6 @@ end
 *Command:* Running with suggestion of sqlmap
 - sqlmap -r skills.txt --tamper=between --batch --dump -T final_flag
 
-
 *Result:*  Flag
 
 ## Windows Fundamentals
@@ -1021,7 +1021,7 @@ end
   
 *Result:* SID of all groups
 
----
+## Windows Attacks & Defense
 
 *Command:* 
   
